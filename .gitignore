@@ -1,6 +1,6 @@
 # Temp folder where things should be synced to and from the scratch org
-temp/**
-!temp/README.md
+src-temp/**
+!src-temp/README.md
 
 # Salesforce cache
 .sfdx/
