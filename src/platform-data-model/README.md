@@ -1,4 +1,4 @@
-# platform-datamodel
+# platform-data-model
 
 Package containing the core platform datamodel. This is the first package installed.
 
