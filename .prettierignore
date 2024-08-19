@@ -2,28 +2,31 @@
 # More information: https://prettier.io/docs/en/ignore.html
 #
 
-.localdevserver
-.ssdx
-.sfdx
-coverage/
-.vscode
-.github
-jsconfig.json
-.eslintignore
-.eslintrc.json
-
 package-lock.json
-package.json
 
-**/*.apex
-**/staticresources/*
+# .localdevserver
+# .ssdx
+# .sfdx
+# coverage/
+# .vscode
+# .github
+# ! **/*.yml
+# jsconfig.json
+# .eslintignore
+# .eslintrc.json
 
-# flows in permsets will break the xml
-**/permissionsets/*
-**/permissionsetgroups/*
+# package-lock.json
+# package.json
 
-# Exclude project config (edited by CI workflow)
-sfdx-project.json
+# **/*.apex
+# **/staticresources/*
 
-# Exclude Salesforce Metadata XML
-**/*.xml
+# # flows in permsets will break the xml
+# **/permissionsets/*
+# **/permissionsetgroups/*
+
+# # Exclude project config (edited by CI workflow)
+# sfdx-project.json
+
+# # Exclude Salesforce Metadata XML
+# **/*.xml
