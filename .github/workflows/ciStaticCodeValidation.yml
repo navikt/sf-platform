@@ -25,6 +25,8 @@ jobs:
   validate:
     name: Validate Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     defaults:
       run:
         shell: "bash"
@@ -34,11 +36,6 @@ jobs:
         with:
           ref: ${{ inputs.gitRef }}
           fetch-depth: "0"
-      - name: "Set Git Config"
-        run: |
-          git config --global user.email "<>"
-          git config --global user.name "GitHub Action"
-          git config --system --add safe.directory $GITHUB_WORKSPACE
 
       - name: "Authenticate Dev Hub"
         uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@master
