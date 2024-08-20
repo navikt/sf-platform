@@ -13,5 +13,10 @@
 **/aura/**/*.xml
 **/aura/**/*.tokens
 .sfdx
+.sfdx/
+.sf/
+.sfpowerscripts/
+.localdevserver/
+node_modules/
 
 **/lwc/pubsub/README.md
