@@ -58,7 +58,7 @@ jobs:
           else
             mapfile -t diffed_files_to_lint < <(git diff --diff-filter=d --name-only HEAD~ -- \*.js)
             npx eslint --no-error-on-unmatched-pattern "${diffed_files_to_lint[@]}"
-          if
+          fi
 
       - name: "Get diff sf file names"
         id: getDiff
