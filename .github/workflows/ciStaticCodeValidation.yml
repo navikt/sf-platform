@@ -37,13 +37,6 @@ jobs:
           ref: ${{ inputs.gitRef }}
           fetch-depth: "0"
 
-      - name: "Authenticate Dev Hub"
-        uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@master
-        with:
-          auth-url: ${{ secrets.SF_DEVHUB_URL }}
-          alias: devhub
-          setDefaultDevhubUsername: true
-
       - name: "Install dev dependencies"
         run: |
           npm ci
