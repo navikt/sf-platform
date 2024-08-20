@@ -1,3 +1,4 @@
+name: "Run static code validation"
 on:
   workflow_call:
     inputs:
@@ -31,7 +32,7 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.gitRef || '$GITHUB_REF' }}
+          ref: ${{ inputs.gitRef }}
           fetch-depth: "0"
       - name: "Set Git Config"
         run: |
