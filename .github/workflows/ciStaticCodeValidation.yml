@@ -1,0 +1,94 @@
+on:
+  workflow_call:
+    inputs:
+      validateEntireRepo:
+        description: "Should the workflow only check the diff code or the entire repo"
+        default: false
+        required: false
+        type: boolean
+      gitRef:
+        description: "Witch git ref to use"
+        required: false
+        type: string
+    secrets:
+      SF_DEVHUB_URL:
+        required: true
+  workflow_dispatch:
+    inputs:
+      validateEntireRepo:
+        description: "Should the workflow only check the diff code or the entire repo"
+        default: true
+        required: false
+        type: boolean
+jobs:
+  validate:
+    name: Validate Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: "bash"
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.gitRef || '$GITHUB_REF' }}
+          fetch-depth: "0"
+      - name: "Set Git Config"
+        run: |
+          git config --global user.email "<>"
+          git config --global user.name "GitHub Action"
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+
+      - name: "Authenticate Dev Hub"
+        uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@master
+        with:
+          auth-url: ${{ secrets.SF_DEVHUB_URL }}
+          alias: devhub
+          setDefaultDevhubUsername: true
+
+      - name: "Install dev dependencies"
+        run: |
+          npm ci
+
+      - name: "Verify prettier"
+        run: |
+          if [ ${{ inputs.validateEntireRepo }} ]; then
+            npx prettier . --check
+          else
+            #Find diff
+            mapfile -t diffed_files_to_lint < <(git diff --name-only --diff-filter=d HEAD~ -- \*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml})
+            npx prettier "${diffed_files_to_lint[@]}" --check
+          fi
+
+      - name: "Run eslint"
+        run: |
+          if [ ${{ inputs.validateEntireRepo }} ]; then
+            npx eslint --no-error-on-unmatched-pattern .
+          else
+            mapfile -t diffed_files_to_lint < <(git diff --diff-filter=d --name-only HEAD~ -- \*.js)
+            npx eslint --no-error-on-unmatched-pattern "${diffed_files_to_lint[@]}"
+          if
+
+      - name: "Get diff sf file names"
+        id: getDiff
+        if: ${{ inputs.validateEntireRepo }} == false
+        run: |
+          mapfile -t diffedSfFiles < <(git diff --name-only --diff-filter=d HEAD~ -- \*.{cls,cmp,component,css,html,js,json,page,trigger,xml})
+          json=$(jq -c -n '$ARGS.positional' --args "${diffedSfFiles[@]}")
+          echo "diffedSfFiles=$json" >> $GITHUB_OUTPUT
+
+      - name: Run Salesforce Code Analyzer
+        id: run-code-analyzer
+        uses: forcedotcom/run-code-analyzer@v1
+        if: steps.getDiff.outputs.diffedSfFiles != '[]'
+        with:
+          run-command: run
+          run-arguments: --normalize-severity --outfile results.html ${{ inputs.validateEntireRepo == true && '' || format(' --target {1}',fromJson( steps.getDiff.outputs.diffedSfFiles)) }}
+          results-artifact-name: salesforce-code-analyzer-results
+
+      - name: Check the Salesforce Code Analyzer outputs to determine whether to fail
+        if: |
+          steps.run-code-analyzer.outputs.exit-code > 0 ||
+          steps.run-code-analyzer.outputs.num-sev1-violations > 0 ||
+          steps.run-code-analyzer.outputs.num-violations > 10
+        run: exit 1
