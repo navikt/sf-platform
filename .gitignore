@@ -7,6 +7,7 @@ src-temp/**
 .sf/
 .sfpowerscripts/
 .localdevserver/
+.ssdx
 
 #Snyk cache
 .dccache
