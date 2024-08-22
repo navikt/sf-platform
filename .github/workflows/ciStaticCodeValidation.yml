@@ -3,12 +3,12 @@ on:
   workflow_call:
     inputs:
       validateEntireRepo:
-        description: "Should the workflow only check the diff code or the entire repo"
-        default: false
+        description: "Validate entire repo (setting to false will only validate the diff against main)"
+        default: true
         required: false
         type: boolean
       gitRef:
-        description: "Witch git ref to use"
+        description: "Which git ref to use"
         required: false
         type: string
     secrets:
@@ -64,17 +64,17 @@ jobs:
         id: getDiff
         if: ${{ inputs.validateEntireRepo }} == false
         run: |
-          mapfile -t diffedSfFiles < <(git diff --name-only --diff-filter=d HEAD~ -- \*.{cls,cmp,component,css,html,js,json,page,trigger,xml})
+          mapfile -t diffedSfFiles < <(git diff --name-only --diff-filter=d HEAD~ -- src\**\*.{cls,cmp,component,css,html,js,json,page,trigger,xml})
           json=$(jq -c -n '$ARGS.positional' --args "${diffedSfFiles[@]}")
           echo "diffedSfFiles=$json" >> $GITHUB_OUTPUT
 
       - name: Run Salesforce Code Analyzer
         id: run-code-analyzer
         uses: forcedotcom/run-code-analyzer@v1
-        if: steps.getDiff.outputs.diffedSfFiles != '[]'
+        if: steps.getDiff.outputs.diffedSfFiles != '[]' || inputs.validateEntireRepo
         with:
           run-command: run
-          run-arguments: --normalize-severity --outfile results.html ${{ inputs.validateEntireRepo == true && '' || format(' --target {1}',fromJson( steps.getDiff.outputs.diffedSfFiles)) }}
+          run-arguments: --normalize-severity --outfile results.html --target ${{ inputs.validateEntireRepo == true && 'src' || fromJson( steps.getDiff.outputs.diffedSfFiles) }}
           results-artifact-name: salesforce-code-analyzer-results
 
       - name: Check the Salesforce Code Analyzer outputs to determine whether to fail
