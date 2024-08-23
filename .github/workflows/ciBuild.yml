@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:latest
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
       - name: "Checkout"
