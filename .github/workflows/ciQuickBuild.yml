@@ -6,6 +6,9 @@ on:
       - "!src/**/.md"
   workflow_dispatch:
   workflow_call:
+    secrets:
+      SF_DEVHUB_URL:
+        required: true
 
 jobs:
   validate:
