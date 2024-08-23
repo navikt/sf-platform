@@ -60,6 +60,9 @@ jobs:
             npx eslint --no-error-on-unmatched-pattern "${diffed_files_to_lint[@]}"
           fi
 
+      # Install SF CLI
+      - uses: navikt/crm-workflows-base/.github/actions/installSF@master
+
       - name: "Get diff sf file names"
         id: getDiff
         if: ${{ inputs.validateEntireRepo }} == false
