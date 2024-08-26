@@ -16,11 +16,11 @@
  *     'WHERE DeveloperName = \'Name\'',
  *     (List<CustomMetadata__mdt>) JSON.deserialize('[{"CustomField__c":"Value"}]', List<CustomMetadata__mdt>.class)
  * );
- * 
+ *
  * List<CustomMetadata__mdt> nameCMList = (List<CustomMetadata__mdt>) new CustomMetadataDAO()
  *     .getCustomMetadataRecords(
- *         'SELECT MasterLable, CustomField__c ' + 
- *         'FROM CustomMetadata__mdt ' + 
+ *         'SELECT MasterLable, CustomField__c ' +
+ *         'FROM CustomMetadata__mdt ' +
  *         'WHERE DeveloperName = \'Name\''
  *     );
  *
@@ -35,17 +35,24 @@ public class CustomMetadataDAOTest {
      * @description Simple test for the getMetadata method.
      */
     @IsTest
-    static void testGetMetadata(){
+    static void testGetMetadata() {
         List<SObject> customMetadataRecords;
         System.Test.startTest();
-            customMetadataRecords = new CustomMetadataDAO().getCustomMetadataRecords('SELECT MasterLabel FROM API_Base_Configuration__mdt');
+        customMetadataRecords = new CustomMetadataDAO()
+            .getCustomMetadataRecords(
+                'SELECT MasterLabel FROM API_Base_Configuration__mdt'
+            );
         System.Test.stopTest();
-        System.assertEquals([SELECT MasterLabel FROM API_Base_Configuration__mdt].size(), customMetadataRecords.size(), 'Size should match');
+        System.assertEquals(
+            [SELECT MasterLabel FROM API_Base_Configuration__mdt].size(),
+            customMetadataRecords.size(),
+            'Size should match'
+        );
     }
 
     /**
      * @description A utility method to set custom metadata records for the tests.
-     * 
+     *
      * @param query The SOQL query string to fetch the Custom Metadata Records.
      * @param records Set Custom Metadata Records for the tests.
      * @example
@@ -55,11 +62,11 @@ public class CustomMetadataDAOTest {
      *     'WHERE DeveloperName = \'Name\'',
      *     (List<CustomMetadata__mdt>) JSON.deserialize('[{"CustomField__c":"Value"}]', List<CustomMetadata__mdt>.class)
      * );
-     * 
+     *
      * List<CustomMetadata__mdt> nameCMList = (List<CustomMetadata__mdt>) new CustomMetadataDAO()
      *     .getCustomMetadataRecords(
-     *         'SELECT MasterLable, CustomField__c ' + 
-     *         'FROM CustomMetadata__mdt ' + 
+     *         'SELECT MasterLable, CustomField__c ' +
+     *         'FROM CustomMetadata__mdt ' +
      *         'WHERE DeveloperName = \'Name\''
      *     );
      *

@@ -2,7 +2,7 @@
 
 Package containing the core platform utilities.
 
-The package can only contain utilities that are used by the sf-platform,  and can be used by any other re.
+The package can only contain utilities that are used by the sf-platform, and can be used by any other re.
 
 ## Maintainer
 

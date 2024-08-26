@@ -15,8 +15,8 @@
  * @example
  * List<CustomMetadata__mdt> nameCMList = (List<CustomMetadata__mdt>) new CustomMetadataDAO()
  *     .getCustomMetadataRecords(
- *         'SELECT MasterLable, CustomField__c ' + 
- *         'FROM CustomMetadata__mdt ' + 
+ *         'SELECT MasterLable, CustomField__c ' +
+ *         'FROM CustomMetadata__mdt ' +
  *         'WHERE DeveloperName = \'Name\''
  *     );
  *
@@ -35,14 +35,14 @@ public class CustomMetadataDAO {
 
     /**
      * @description Get the Custom Metadata Records based on the SOQL query string provided.
-     * 
+     *
      * @param query The SOQL query string to fetch the Custom Metadata Records.
      * @returns Return a list of Custom Metadata Records as `List<SObject>`
      * @example
      * List<CustomMetadata__mdt> nameCMList = (List<CustomMetadata__mdt>) new CustomMetadataDAO()
      *     .getCustomMetadataRecords(
-     *         'SELECT MasterLable, CustomField__c ' + 
-     *         'FROM CustomMetadata__mdt ' + 
+     *         'SELECT MasterLable, CustomField__c ' +
+     *         'FROM CustomMetadata__mdt ' +
      *         'WHERE DeveloperName = \'Name\''
      *     );
      *
@@ -53,7 +53,10 @@ public class CustomMetadataDAO {
      */
     public List<SObject> getCustomMetadataRecords(String query) {
         System.debug(LoggingLevel.DEBUG, 'query: ' + query);
-        System.debug(LoggingLevel.DEBUG, 'customMetadataRecordsMap: ' + customMetadataRecordsMap);
+        System.debug(
+            LoggingLevel.DEBUG,
+            'customMetadataRecordsMap: ' + customMetadataRecordsMap
+        );
         if (!customMetadataRecordsMap.containsKey(query)) {
             customMetadataRecordsMap.put(query, Database.query(query));
         }
