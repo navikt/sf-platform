@@ -1,11 +1,11 @@
-name: "Replenish platform pool"
+name: "Replenish platform pools"
 on:
   workflow_dispatch:
     inputs:
       gitRef:
-      description: "Commit Id from where the pools should be created"
-      required: false
-      default: "main"
+        description: "Commit Id from where the pools should be created"
+        required: false
+        default: "main"
 
   # Det er satt opp skedulering for når poolet oppdateres.
   # Det er ikke behov for å kjøre denne jobber 24/7 og det er derfor satt opp noen skeduleringer (husk at tid er UTC)
