@@ -52,7 +52,8 @@ jobs:
     permissions:
       contents: read
       packages: read
-    secrets: inherit
+    secrets:
+      CRM_PROD_SFDX_URL: ${{ secrets.SF_DEVHUB_URL}}
 
   deleteOrphans:
     if: ${{ always() }}
