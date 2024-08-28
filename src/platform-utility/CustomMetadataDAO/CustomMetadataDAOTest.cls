@@ -53,6 +53,8 @@ public class CustomMetadataDAOTest {
     /**
      * @description A utility method to set custom metadata records for the tests.
      *
+     * @author Kenneth Soerensen (kenneth.sorensen@nav.com), NAV
+     * @since 0.1.0, August 2024
      * @param query The SOQL query string to fetch the Custom Metadata Records.
      * @param records Set Custom Metadata Records for the tests.
      * @example

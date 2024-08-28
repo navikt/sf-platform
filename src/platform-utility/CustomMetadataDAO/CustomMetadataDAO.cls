@@ -29,6 +29,9 @@
 public class CustomMetadataDAO {
     /**
      * @description Is used to set the Custom Metadata Records in Unit Tests.
+     *
+     * @author Kenneth Soerensen (kenneth.sorensen@nav.com), NAV
+     * @since 0.1.0, August 2024
      */
     @TestVisible
     static private Map<String, List<SObject>> customMetadataRecordsMap = new Map<String, List<SObject>>();
@@ -36,6 +39,8 @@ public class CustomMetadataDAO {
     /**
      * @description Get the Custom Metadata Records based on the SOQL query string provided.
      *
+     * @author Kenneth Soerensen (kenneth.sorensen@nav.com), NAV
+     * @since 0.1.0, August 2024
      * @param query The SOQL query string to fetch the Custom Metadata Records.
      * @returns Return a list of Custom Metadata Records as `List<SObject>`
      * @example
