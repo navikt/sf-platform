@@ -1,11 +1,11 @@
 name: "Replenish platform pool"
 on:
   workflow_dispatch:
-  inputs:
-    gitRef:
-    description: "Commit Id from where the pools should be created"
-    required: false
-    default: "main"
+    inputs:
+      gitRef:
+      description: "Commit Id from where the pools should be created"
+      required: false
+      default: "main"
 
   # Det er satt opp skedulering for når poolet oppdateres.
   # Det er ikke behov for å kjøre denne jobber 24/7 og det er derfor satt opp noen skeduleringer (husk at tid er UTC)
@@ -61,4 +61,4 @@ jobs:
     with:
       deleteJobType: "orphans"
     secrets:
-      CRM_PROD_SFDX_URL: ${{ secrets.CRM_PROD_SFDX_URL}}
+      CRM_PROD_SFDX_URL: ${{ secrets.SF_DEVHUB_URL}}
