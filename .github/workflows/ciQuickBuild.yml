@@ -37,19 +37,9 @@ jobs:
         run: |
           sfp quickbuild --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch ${GITHUB_REF#refs/heads/}
 
-      - name: "Publish artifacts"
-        if: ${{ success() }}
-        uses: actions/upload-artifact@v4
+      - uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@main
         with:
-          name: quickbuild-artifacts
-          path: artifacts
-
-        # Upload Flxbl logs
-      - name: "Publish logs"
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: "logs"
-          path: .sfpowerscripts
-          if-no-files-found: ignore
-          retention-days: 1
+          artifactName: "build-artifacts"
+          uploadArtifacts: true
+          logName: "logs"
+          publishLogs: true
