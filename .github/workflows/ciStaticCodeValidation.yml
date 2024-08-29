@@ -56,14 +56,14 @@ jobs:
             
             prettierPathsToValidate ="${prettier_diffed_files_to_lint[@]}"
             eslintPathsToValidate="${eslint_diffed_files_to_lint[@]}"
-            echo "codeAnalyzer_json=$codeAnalyzer_json" >> $GITHUB_ENV
+            sfCodeAnalyzerPathToValidate=$codeAnalyzer_json" >> $GITHUB_ENV
             
           fi
             
             echo "prettierPathsToValidate=$prettierPathsToValidate" >> $GITHUB_OUTPUT
             echo "eslintPathsToValidate=$eslintPathsToValidate" >> $GITHUB_OUTPUT
             echo "codeAnalyzer_json=$codeAnalyzer_json" >> $GITHUB_OUTPUT
-            echo "sfCodeAnalyzerPathToValidate=${{ fromJson(env.codeAnalyzer_json) }}" >> $GITHUB_OUTPUT
+            echo "sfCodeAnalyzerPathToValidate=sfCodeAnalyzerPathToValidate" >> $GITHUB_OUTPUT
 
       - uses: navikt/sf-platform/.github/actions/prettierCheck@main
         with:
