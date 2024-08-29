@@ -1,0 +1,55 @@
+name: "Create Scratch Pool"
+description: "Create scratch pools"
+inputs:
+  devhub:
+    description: "Devhub alias or username"
+    required: true
+  poolConfigPath:
+    description: "Path to the pool config file"
+    required: true
+  nodeToken:
+    description: "A Github PAT"
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: "Check Scratch Limits"
+      shell: bash
+      run: |
+
+        sf org list limits --target-org ${{ inputs.devhub }} --json >> limits.json
+
+        remainingDailyScratchOrgs=$(jq '.result[] | select(.name=="DailyScratchOrgs").remaining' limits.json)
+        remainingActiveScratchOrgs=$(jq '.result[] | select(.name=="ActiveScratchOrgs").remaining' limits.json)
+
+        rm limits.json
+
+        # If to few remaining daily scratch orgs, exit
+        if [ $remainingDailyScratchOrgs -lt 15 ]
+        then
+            echo "::error title=Close to remaining Daily Scratch Org Limit::Remaining DailyScratchOrgs: $remainingDailyScratchOrgs"
+            exit 1
+        fi
+
+        # If to few remaining active scratch orgs, exit
+        if [ $remainingActiveScratchOrgs -lt 10 ]
+        then
+            echo "::error title=Close to remaining Active Scratch Orgs::Remaining ActiveScratchOrgs: $remainingActiveScratchOrgs"
+            exit 1
+        fi
+
+    # Authenticate to npm
+    - uses: actions/setup-node@v4
+      with:
+        registry-url: "https://npm.pkg.github.com"
+
+    - name: "Prepare a pool of scratch orgs"
+      continue-on-error: true
+      shell: bash
+      run: |
+        echo "poolTag=$(jq --raw-output '.tag' ${{inputs.poolConfigPath}})" >> $GITHUB_ENV
+
+        #Prepare Pool
+        sfp pool prepare --poolconfig ${{ inputs.poolConfigPath }} --targetdevhubusername ${{ inputs.devhub }}
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.nodeToken }}
