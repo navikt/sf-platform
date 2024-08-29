@@ -12,7 +12,7 @@ runs:
       run: |
         echo "Path to validate: ${{ inputs.pathToValidate }}"
 
-    - name: Prettier Check
+    - name: Eslint Check
       shell: bash
       run: |
-        npx prettier --check --ignore-path .gitignore --ignore-path .prettierignore" ${{ inputs.pathToValidate }}
+        npx eslint --no-error-on-unmatched-pattern ${{ inputs.pathToValidate }}
