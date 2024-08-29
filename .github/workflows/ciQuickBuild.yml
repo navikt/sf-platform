@@ -13,8 +13,6 @@ on:
 jobs:
   validate:
     uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
-    secrets:
-      SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL  }}
 
   quickBuild:
     name: "Quickbuild"
