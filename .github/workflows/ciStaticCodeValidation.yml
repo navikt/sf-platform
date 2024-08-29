@@ -45,7 +45,7 @@ jobs:
         id: paths
         run: |
           if [ ${{ inputs.validateEntireRepo }} ]; then
-            prettierPathsToValidate ='.'
+            prettierPathsToValidate='.'
             eslintPathsToValidate='.'
             sfCodeAnalyzerPathToValidate='src'
           else
@@ -53,15 +53,17 @@ jobs:
             mapfile -t eslint_diffed_files_to_lint < <(git diff --name-only --diff-filter=d HEAD~ -- \*.js})
             mapfile -t codeAnalyzer_diffed_sf_files < <(git diff --name-only --diff-filter=d HEAD~ -- src\**\*.{cls,cmp,component,css,html,js,json,page,trigger,xml})
             codeAnalyzer_json=$(jq -c -n '$ARGS.positional' --args "${codeAnalyzer_diffed_sf_files[@]}")
-
+            
             prettierPathsToValidate ="${prettier_diffed_files_to_lint[@]}"
             eslintPathsToValidate="${eslint_diffed_files_to_lint[@]}"
-            sfCodeAnalyzerPathToValidate=fromJson($codeAnalyzer_json)
+            echo "codeAnalyzer_json=$codeAnalyzer_json" >> $GITHUB_ENV
+            
           fi
-
-          echo "prettierPathsToValidate=$prettierPathsToValidate" >> $GITHUB_OUTPUT
-          echo "eslintPathsToValidate=$eslintPathsToValidate" >> $GITHUB_OUTPUT
-          echo "sfCodeAnalyzerPathToValidate=$sfCodeAnalyzerPathToValidate" >> $GITHUB_OUTPUT
+            
+            echo "prettierPathsToValidate=$prettierPathsToValidate" >> $GITHUB_OUTPUT
+            echo "eslintPathsToValidate=$eslintPathsToValidate" >> $GITHUB_OUTPUT
+            echo "codeAnalyzer_json=$codeAnalyzer_json" >> $GITHUB_OUTPUT
+            echo "sfCodeAnalyzerPathToValidate=${{ fromJson(env.codeAnalyzer_json) }}" >> $GITHUB_OUTPUT
 
       - uses: navikt/sf-platform/.github/actions/prettierCheck@main
         with:
