@@ -31,3 +31,5 @@ jobs:
           setDefaultDevhubUsername: true
 
       - uses: navikt/sf-platform/.github/actions/ciBuildAndPublishArtifact@main
+        with:
+          nodeToken: ${{ secrets.GITHUB_TOKEN }}

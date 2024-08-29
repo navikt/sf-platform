@@ -1,5 +1,10 @@
 name: "Build and publish artifact"
 description: "Build and publish an artifact to github npm registery"
+inputs:
+  nodeToken:
+    description: "A Github PAT"
+    required: true
+
 runs:
   using: composite
   steps:
@@ -18,7 +23,7 @@ runs:
       run: |
         sfp publish --artifactdir artifacts --npm --scope @${{ github.repository_owner }}  --gittag --pushgittag
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ inputs.nodeToken }}
 
     - uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@main
       with:
