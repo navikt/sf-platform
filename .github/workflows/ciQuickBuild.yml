@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@master
         with:
@@ -32,14 +34,4 @@ jobs:
           alias: devhub
           setDefaultDevhubUsername: true
 
-      - name: "Quickbuild package"
-        id: quickbuildPackage
-        run: |
-          sfp quickbuild --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch ${GITHUB_REF#refs/heads/}
-
-      - uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@main
-        with:
-          artifactName: "build-artifacts"
-          uploadArtifacts: true
-          logName: "logs"
-          publishLogs: true
+      - uses: navikt/sf-platform/.github/actions/ciQuickBuild@main
