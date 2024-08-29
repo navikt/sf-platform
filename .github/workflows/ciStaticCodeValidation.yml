@@ -62,8 +62,7 @@ jobs:
             
             echo "prettierPathsToValidate=$prettierPathsToValidate" >> $GITHUB_OUTPUT
             echo "eslintPathsToValidate=$eslintPathsToValidate" >> $GITHUB_OUTPUT
-            echo "codeAnalyzer_json=$codeAnalyzer_json" >> $GITHUB_OUTPUT
-            echo "sfCodeAnalyzerPathToValidate=sfCodeAnalyzerPathToValidate" >> $GITHUB_OUTPUT
+            echo "sfCodeAnalyzerPathToValidate=$sfCodeAnalyzerPathToValidate" >> $GITHUB_OUTPUT
 
       - name: Prettier Check
         uses: navikt/sf-platform/.github/actions/prettierCheck@main
