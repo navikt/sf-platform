@@ -57,6 +57,13 @@ jobs:
     steps:
       - run: echo "poolTag=$(jq --raw-output '.tag' ${{ matrix.poolType.poolConfigPath }})" >> $GITHUB_ENV
 
+      - name: Print Vaules
+        run: |
+          echo Pool Tag: ${{ env.poolTag }}
+          echo Pool Type: ${{ matrix.poolType }}
+          echo Pool Config Path: ${{ matrix.poolConfigPath }}
+          echo Pool Delete Job Type: ${{ matrix.deleteJobType }}
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.gitRef }}
@@ -75,13 +82,13 @@ jobs:
         with:
           devhub: "devhub"
           poolTag: ${{ env.poolTag }}
-          deleteJobType: ${{ matrix.poolType.deleteJobType }}
+          deleteJobType: ${{ matrix.deleteJobType }}
 
       - name: "Create Pool"
         uses: navikt/sf-platform/.github/actions/ciCreatePool@main
         with:
           devhub: "devhub"
-          poolConfigPath: ${{ matrix.poolType.poolConfigPath }}
+          poolConfigPath: ${{ matrix.poolConfigPath }}
           nodeToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Delete orphans"
