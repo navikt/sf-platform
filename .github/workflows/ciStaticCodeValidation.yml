@@ -65,32 +65,15 @@ jobs:
             echo "codeAnalyzer_json=$codeAnalyzer_json" >> $GITHUB_OUTPUT
             echo "sfCodeAnalyzerPathToValidate=sfCodeAnalyzerPathToValidate" >> $GITHUB_OUTPUT
 
-      - uses: navikt/sf-platform/.github/actions/prettierCheck@main
+      - name: Prettier Check
+        uses: navikt/sf-platform/.github/actions/prettierCheck@main
         with:
           pathToValidate: ${{ steps.paths.outputs.prettierPathsToValidate }}
 
-      # - name: "Verify prettier"
-      #   run: |
-      #     if [ ${{ inputs.validateEntireRepo }} ]; then
-      #       npx prettier . --check
-      #     else
-      #       #Find diff
-      #       mapfile -t diffed_files_to_lint < <(git diff --name-only --diff-filter=d HEAD~ -- \*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml})
-      #       npx prettier "${diffed_files_to_lint[@]}" --check
-      #     fi
-      # - name: "Verify prettier"
-      # uses: navikt/sf-platform/.github/actions/prettierCheck
-      # with:
-      #   pathToValidate: .
-
-      - name: "Run eslint"
-        run: |
-          if [ ${{ inputs.validateEntireRepo }} ]; then
-            npx eslint --no-error-on-unmatched-pattern .
-          else
-            mapfile -t diffed_files_to_lint < <(git diff --diff-filter=d --name-only HEAD~ -- \*.js)
-            npx eslint --no-error-on-unmatched-pattern "${diffed_files_to_lint[@]}"
-          fi
+      - name: Eslint check
+        uses: navikt/sf-platform/.github/actions/eslintCheck@main
+        with:
+          pathToValidate: ${{ steps.paths.outputs.eslintPathsToValidate }}
 
       # Install SF CLI
       - uses: navikt/crm-workflows-base/.github/actions/installSF@master
