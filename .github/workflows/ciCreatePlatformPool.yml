@@ -6,6 +6,22 @@ on:
         description: "Commit Id from where the pools should be created"
         required: false
         default: "main"
+      ciPoolTag:
+        description: "Ci Pool Tag"
+        required: true
+        default: "ciPlatform"
+      ciPoolConfigPath:
+        description: "Ci Pool Config Path"
+        required: true
+        default: "config/sf-ci-platform-pool-def.json"
+      devPoolTag:
+        description: "Dev Pool Tag"
+        required: true
+        default: "platform"
+      devPoolConfigPath:
+        description: "Dev Pool Config Path"
+        required: true
+        default: "config/sf-platform-pool-def.json"
 
   # Det er satt opp skedulering for når poolet oppdateres.
   # Det er ikke behov for å kjøre denne jobber 24/7 og det er derfor satt opp noen skeduleringer (husk at tid er UTC)
@@ -17,49 +33,59 @@ on:
   #   - cron: "15 2 * * *" # At 02:15.
 
 jobs:
-  clearCiPlatformPool:
-    if: github.event.schedule == '15 2 * * *'
-    uses: navikt/crm-workflows-base/.github/workflows/ciDeletePool.yml@master
-    with:
-      poolTag: "ciPlatform"
-      deleteJobType: "allscratchorgs"
-    secrets:
-      CRM_PROD_SFDX_URL: ${{ secrets.SF_DEVHUB_URL}}
-
-  cleanupPlatformPool:
-    if: github.event.schedule == '15 2 * * *'
-    uses: navikt/crm-workflows-base/.github/workflows/ciDeletePool.yml@master
-    with:
-      poolTag: "platform"
-      deleteJobType: "unassigned"
-    secrets:
-      CRM_PROD_SFDX_URL: ${{ secrets.SF_DEVHUB_URL}}
-
   createPool:
-    if: ${{ always() }}
-    needs: [clearCiPlatformPool, cleanupPlatformPool]
+    name: "Replenish Pool"
+    runs-on: ubuntu-latest
+    container: ghcr.io/flxbl-io/sfp:latest
+    timeout-minutes: 720 #Set to Maximum Time out
     strategy:
       matrix:
-        poolConfigPath:
-          [
-            "config/sf-ci-platform-pool-def.json",
-            "config/sf-platform-pool-def.json",
-          ]
-    uses: navikt/crm-workflows-base/.github/workflows/ciCreateScratchPool.yml@dxAtScale
-    with:
-      gitRef: ${{ inputs.gitRef || 'main' }}
-      poolConfigPath: ${{ matrix.poolConfigPath }}
+        include:
+          - poolType: "CI"
+            # poolTag: ${{ inputs.ciPoolTag }}
+            poolConfigPath: ${{ inputs.ciPoolConfigPath }}
+            deleteJobType: allscratchorgs
+          - poolType: "DEV"
+            # poolTag: ${{ inputs.devPoolTag }}
+            poolConfigPath: ${{ inputs.devPoolConfigPath }}
+            deleteJobType: unassigned
+    env:
+      poolTag: ""
     permissions:
       contents: read
       packages: read
-    secrets:
-      CRM_PROD_SFDX_URL: ${{ secrets.SF_DEVHUB_URL}}
+    steps:
+      - run: echo "poolTag=$(jq --raw-output '.tag' ${{ matrix.poolType.poolConfigPath }})" >> $GITHUB_ENV
 
-  deleteOrphans:
-    if: ${{ always() }}
-    needs: createPool
-    uses: navikt/crm-workflows-base/.github/workflows/ciDeletePool.yml@master
-    with:
-      deleteJobType: "orphans"
-    secrets:
-      CRM_PROD_SFDX_URL: ${{ secrets.SF_DEVHUB_URL}}
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.gitRef }}
+          fetch-depth: 0
+
+      - name: "Authenticate Dev Hub"
+        uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@dxAtScale
+        with:
+          auth-url: ${{ secrets.CRM_PROD_SFDX_URL }}
+          alias: devhub
+
+      - name: "Clear pool"
+        id: clearPool
+        if: ${{ github.event.schedule == '15 2 * * *' }}
+        uses: navikt/sf-platform/.github/actions/ciDeletePool@main
+        with:
+          devhub: "devhub"
+          poolTag: ${{ env.poolTag }}
+          deleteJobType: ${{ matrix.poolType.deleteJobType }}
+
+      - name: "Create Pool"
+        uses: navikt/sf-platform/.github/actions/ciCreatePool@main
+        with:
+          devhub: "devhub"
+          poolConfigPath: ${{ matrix.poolType.poolConfigPath }}
+          nodeToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Delete orphans"
+        uses: navikt/sf-platform/.github/actions/ciDeletePool@main
+        with:
+          devhub: "devhub"
+          deleteJobType: orphans
