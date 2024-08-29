@@ -20,7 +20,7 @@ runs:
       if: ${{ inputs.uploadArtifacts }}
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.logName }}
+        name: ${{ inputs.artifactName }}
         path: artifacts
         retention-days: 10
 
