@@ -1,0 +1,35 @@
+name: "Upload workflow artifacts and logs"
+description: "Uploads logs and sfp generated artifacts to the workflow"
+inputs:
+  artifactName:
+    description: "Name of the artifact"
+    required: true
+  uploadArtifacts:
+    description: "If true upload the artifacts"
+    required: true
+  logName:
+    description: "Name of the logs"
+    required: true
+  publishLogs:
+    description: "If true upload the flxbl logs"
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: "Publish artifacts"
+      if: ${{ inputs.uploadArtifacts }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.logName }}
+        path: artifacts
+        retention-days: 10
+
+      # Upload Flxbl logs
+    - name: "Publish logs"
+      if: ${{ inputs.publishLogs }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: "${{ inputs.logName }}"
+        path: .sfpowerscripts
+        if-no-files-found: ignore
+        retention-days: 1
