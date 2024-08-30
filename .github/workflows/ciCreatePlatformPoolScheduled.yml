@@ -17,5 +17,4 @@ jobs:
       devPoolConfigPath: "config/sf-platform-pool-def.json"
       clearPool: ${{ github.event.schedule == '15 2 * * *' }}
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}

@@ -23,8 +23,6 @@ on:
         default: false
         type: boolean
     secrets:
-      GITHUB_TOKEN:
-        required: true
       SF_DEVHUB_URL:
         required: true
 
