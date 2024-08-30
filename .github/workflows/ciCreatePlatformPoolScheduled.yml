@@ -7,7 +7,7 @@ on:
   schedule:
     - cron: "15 06-15 * 4-10 1-5" #Sommertid:  At minute 15 past every hour from 6 through 15 on every day-of-week from Monday through Friday in every month from April through October.
     - cron: "15 07-16 * 1-3,11,12 1-5" #Vintertid: At minute 15 past every hour from 7 through 16 on every day-of-week from Monday through Friday in every month from January through March, November, and December.
-    - cron: "15 2 * * *" # At 02:15.
+    - cron: "15 1 * * 1-5" # At 01:15 from Monday through Friday.
 jobs:
   createPool:
     uses: navikt/sf-platform/.github/workflows/ciCreatePlatformPool.yml@main
@@ -15,6 +15,6 @@ jobs:
       gitRef: "main"
       ciPoolConfigPath: "config/sf-ci-platform-pool-def.json"
       devPoolConfigPath: "config/sf-platform-pool-def.json"
-      clearPool: ${{ github.event.schedule == '15 2 * * *' }}
+      clearPools: ${{ github.event.schedule == '15 1 * * 1-5' }}
     secrets:
       SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
