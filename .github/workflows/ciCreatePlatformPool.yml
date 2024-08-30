@@ -62,11 +62,14 @@ jobs:
       contents: read
       packages: read
     steps:
-      - run: echo "POOL_TAG=$(jq --raw-output '.tag' ${{ matrix.poolConfigPath }})" >> $GITHUB_ENV
+      - name: Get pool tag
+        run: |
+          pooltag=$(jq --raw-output '.tag' ${{ matrix.poolConfigPath }})
+          echo "POOL_TAG=$pooltag" >> $GITHUB_ENV
 
       - name: Print Vaules
         run: |
-          echo Pool Tag: $POOL_TAG
+          echo Pool Tag: "$POOL_TAG"
           echo Pool Type: ${{ matrix.poolType }}
           echo Pool Config Path: ${{ matrix.poolConfigPath }}
           echo Pool Delete Job Type: ${{ matrix.deleteJobType }}
