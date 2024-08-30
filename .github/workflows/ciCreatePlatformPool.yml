@@ -62,6 +62,11 @@ jobs:
       contents: read
       packages: read
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.gitRef }}
+          fetch-depth: 0
+
       - name: Get pool tag
         run: |
           pooltag=$(jq --raw-output '.tag' ${{ matrix.poolConfigPath }})
@@ -74,11 +79,6 @@ jobs:
           echo Pool Config Path: ${{ matrix.poolConfigPath }}
           echo Pool Delete Job Type: ${{ matrix.deleteJobType }}
           echo Clear unused scratch orgs: ${{ inputs.clearPools }}
-
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.gitRef }}
-          fetch-depth: 0
 
       - name: "Authenticate Dev Hub"
         uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@dxAtScale
