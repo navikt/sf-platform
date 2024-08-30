@@ -1,6 +1,4 @@
 name: "Replenish platform pools"
-env:
-  poolTag: ""
 on:
   workflow_call:
     inputs:
@@ -60,20 +58,17 @@ jobs:
           - poolType: "DEV"
             poolConfigPath: ${{ inputs.devPoolConfigPath }}
             deleteJobType: unassigned
-    env:
-      poolTag: ""
     permissions:
       contents: read
       packages: read
     steps:
-      - run: echo "poolTag=$(jq --raw-output '.tag' ${{ matrix.poolConfigPath }})" >> $GITHUB_ENV
+      - run: echo "POOL_TAG=$(jq --raw-output '.tag' ${{ matrix.poolConfigPath }})" >> $GITHUB_ENV
 
       - name: Print Vaules
         run: |
-          echo Pool Tag: ${{ env.poolTag }}
+          echo Pool Tag: $POOL_TAG
           echo Pool Type: ${{ matrix.poolType }}
           echo Pool Config Path: ${{ matrix.poolConfigPath }}
-          echo Pool Delete Job Type: ${{ matrix.deleteJobType }}
           echo Pool Delete Job Type: ${{ matrix.deleteJobType }}
           echo Clear unused scratch orgs: ${{ inputs.clearPools }}
 
@@ -94,7 +89,7 @@ jobs:
         uses: navikt/sf-platform/.github/actions/ciDeletePool@main
         with:
           devhub: "devhub"
-          poolTag: ${{ env.poolTag }}
+          poolTag: ${{ env.POOL_TAG }}
           deleteJobType: ${{ matrix.deleteJobType }}
 
       - name: "Create Pool"
