@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - "src/**"
-      - "!src/**/.md"
+      - "!src/**/*.md"
   workflow_dispatch:
   workflow_call:
     secrets:
@@ -13,8 +13,6 @@ on:
 jobs:
   validate:
     uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
-    secrets:
-      SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL  }}
 
   quickBuild:
     name: "Quickbuild"
@@ -27,6 +25,8 @@ jobs:
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@master
         with:
@@ -34,24 +34,4 @@ jobs:
           alias: devhub
           setDefaultDevhubUsername: true
 
-      - name: "Quickbuild package"
-        id: quickbuildPackage
-        run: |
-          sfp quickbuild --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch ${GITHUB_REF#refs/heads/}
-
-      - name: "Publish artifacts"
-        if: ${{ success() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: quickbuild-artifacts
-          path: artifacts
-
-        # Upload Flxbl logs
-      - name: "Publish logs"
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: "logs"
-          path: .sfpowerscripts
-          if-no-files-found: ignore
-          retention-days: 1
+      - uses: navikt/sf-platform/.github/actions/ciQuickBuild@main

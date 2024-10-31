@@ -9,10 +9,7 @@
     {
       "path": "src/platform-data-model",
       "package": "platform-data-model",
-      "versionName": "ver 0.1",
-      "versionNumber": "0.1.0.NEXT",
-      "default": false,
-      "versionDescription": "Package containing the core platform datamodel."
+      "versionNumber": "0.1.0.NEXT"
     },
     {
       "path": "src/platform-admin",
@@ -28,6 +25,7 @@
       "default": false,
       "versionDescription": "Package containing the core platform utilities.",
       "definitionFile": "config/project-scratch-def.json"
+
     }
   ],
   "packageAliases": {

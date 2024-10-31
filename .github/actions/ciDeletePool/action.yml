@@ -1,0 +1,62 @@
+name: "Delete Scratch Pool"
+description: "Delete scratch pools"
+inputs:
+  devhub:
+    description: "Devhub alias or username"
+    required: true
+  deleteJobType:
+    description: "Gyldige verdier: allscratchorgs, inprogressonly, orphans, unassigned"
+    required: true
+  poolTag:
+    description: "Taggen til poolet som skal slettes"
+    required: false
+runs:
+  using: composite
+  steps:
+    - name: "Delete Pool"
+      continue-on-error: true
+      shell: bash
+      run: |
+        poolTag="${{ inputs.poolTag }}"
+        deleteJobType="${{ inputs.deleteJobType }}"
+        command="sfp pool delete --targetdevhubusername ${{ inputs.devhub }}"
+        message="Trying to delete "
+
+        if [ -z "$poolTag" ]; then
+          echo "No tag provided"
+        else
+          echo "Run delete jobs on the pool $poolTag"
+          command+=" --tag $poolTag"
+        fi
+
+        case "$deleteJobType" in
+          'allscratchorgs')
+            if [[ -z "$poolTag" || "$poolTag" == "dev" ]]; then
+              echo "::error title=Cannot delete all scratch orgs::Cannot delete all scratch orgs in dev pool through action. This must be done manually"
+              exit 1
+            fi
+
+            message+="all scratch orgs."
+            command+=" --allscratchorgs"
+            ;;
+
+          'inprogressonly')
+            message+="in progress scratch orgs."
+            command+=" --inprogressonly"
+            ;;
+
+          'orphans')
+            message+="orphaned scratch orgs."
+            command+=" --orphans"
+            ;;
+
+          'unassigned')
+            echo "unnassigned scratch orgs."
+            ;;
+
+          *)
+            echo "::error title=Missing input::deleteJobType did not match any of the legal input values. deleteJobType => $deleteJobType"
+            exit 1
+        esac
+        echo $command
+        eval $command

@@ -11,9 +11,6 @@ on:
         description: "Which git ref to use"
         required: false
         type: string
-    secrets:
-      SF_DEVHUB_URL:
-        required: true
   workflow_dispatch:
     inputs:
       validateEntireRepo:
@@ -41,48 +38,40 @@ jobs:
         run: |
           npm ci
 
-      - name: "Verify prettier"
+      - name: "Set variables"
+        id: paths
         run: |
           if [ ${{ inputs.validateEntireRepo }} ]; then
-            npx prettier . --check
+            prettierPathsToValidate='.'
+            eslintPathsToValidate='.'
+            sfCodeAnalyzerPathToValidate='src'
           else
-            #Find diff
-            mapfile -t diffed_files_to_lint < <(git diff --name-only --diff-filter=d HEAD~ -- \*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml})
-            npx prettier "${diffed_files_to_lint[@]}" --check
+            mapfile -t prettier_diffed_files_to_lint < <(git diff --name-only --diff-filter=d HEAD~ -- \*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml})
+            mapfile -t eslint_diffed_files_to_lint < <(git diff --name-only --diff-filter=d HEAD~ -- \*.js})
+            mapfile -t codeAnalyzer_diffed_sf_files < <(git diff --name-only --diff-filter=d HEAD~ -- src\**\*.{cls,cmp,component,css,html,js,json,page,trigger,xml})
+            codeAnalyzer_json=$(jq -c -n '$ARGS.positional' --args "${codeAnalyzer_diffed_sf_files[@]}")
+            
+            prettierPathsToValidate ="${prettier_diffed_files_to_lint[@]}"
+            eslintPathsToValidate="${eslint_diffed_files_to_lint[@]}"
+            sfCodeAnalyzerPathToValidate=$codeAnalyzer_json
+            
           fi
+            
+            echo "prettierPathsToValidate=$prettierPathsToValidate" >> $GITHUB_OUTPUT
+            echo "eslintPathsToValidate=$eslintPathsToValidate" >> $GITHUB_OUTPUT
+            echo "sfCodeAnalyzerPathToValidate=$sfCodeAnalyzerPathToValidate" >> $GITHUB_OUTPUT
 
-      - name: "Run eslint"
-        run: |
-          if [ ${{ inputs.validateEntireRepo }} ]; then
-            npx eslint --no-error-on-unmatched-pattern .
-          else
-            mapfile -t diffed_files_to_lint < <(git diff --diff-filter=d --name-only HEAD~ -- \*.js)
-            npx eslint --no-error-on-unmatched-pattern "${diffed_files_to_lint[@]}"
-          fi
-
-      # Install SF CLI
-      - uses: navikt/crm-workflows-base/.github/actions/installSF@master
-
-      - name: "Get diff sf file names"
-        id: getDiff
-        if: ${{ inputs.validateEntireRepo }} == false
-        run: |
-          mapfile -t diffedSfFiles < <(git diff --name-only --diff-filter=d HEAD~ -- src\**\*.{cls,cmp,component,css,html,js,json,page,trigger,xml})
-          json=$(jq -c -n '$ARGS.positional' --args "${diffedSfFiles[@]}")
-          echo "diffedSfFiles=$json" >> $GITHUB_OUTPUT
-
-      - name: Run Salesforce Code Analyzer
-        id: run-code-analyzer
-        uses: forcedotcom/run-code-analyzer@v1
-        if: steps.getDiff.outputs.diffedSfFiles != '[]' || inputs.validateEntireRepo
+      - name: Prettier Check
+        uses: navikt/sf-platform/.github/actions/prettierCheck@main
         with:
-          run-command: run
-          run-arguments: --normalize-severity --outfile results.html --target ${{ inputs.validateEntireRepo == true && 'src' || fromJson( steps.getDiff.outputs.diffedSfFiles) }}
-          results-artifact-name: salesforce-code-analyzer-results
+          pathToValidate: ${{ steps.paths.outputs.prettierPathsToValidate }}
 
-      - name: Check the Salesforce Code Analyzer outputs to determine whether to fail
-        if: |
-          steps.run-code-analyzer.outputs.exit-code > 0 ||
-          steps.run-code-analyzer.outputs.num-sev1-violations > 0 ||
-          steps.run-code-analyzer.outputs.num-violations > 10
-        run: exit 1
+      - name: Eslint check
+        uses: navikt/sf-platform/.github/actions/eslintCheck@main
+        with:
+          pathToValidate: ${{ steps.paths.outputs.eslintPathsToValidate }}
+
+      - name: Salesforce Code Analyzer
+        uses: navikt/sf-platform/.github/actions/runSalesforceCodeAnalyzer@main
+        with:
+          pathToValidate: ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }}
