@@ -1,0 +1,37 @@
+name: "Quick build"
+on:
+  push:
+    paths:
+      - "src/**"
+      - "!src/**/*.md"
+  workflow_dispatch:
+  workflow_call:
+    secrets:
+      SF_DEVHUB_URL:
+        required: true
+
+jobs:
+  validate:
+    uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
+
+  quickBuild:
+    name: "Quickbuild"
+    needs: validate
+    runs-on: ubuntu-latest
+    container: ghcr.io/flxbl-io/sfp:latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@master
+        with:
+          auth-url: ${{ secrets.SF_DEVHUB_URL }}
+          alias: devhub
+          setDefaultDevhubUsername: true
+
+      - uses: navikt/sf-platform/.github/actions/ciQuickBuild@main

@@ -1,0 +1,109 @@
+name: "Replenish platform pools"
+on:
+  workflow_call:
+    inputs:
+      gitRef:
+        description: "Commit Id from where the pools should be created"
+        required: false
+        default: "main"
+        type: string
+      ciPoolConfigPath:
+        description: "Ci Pool Config Path"
+        required: true
+        type: string
+      devPoolConfigPath:
+        description: "Dev Pool Config Path"
+        required: true
+        type: string
+      clearPools:
+        description: "If checked, clear unused scratches in the pools"
+        required: true
+        default: false
+        type: boolean
+    secrets:
+      SF_DEVHUB_URL:
+        required: true
+
+  workflow_dispatch:
+    inputs:
+      gitRef:
+        description: "Commit Id from where the pools should be created"
+        required: false
+        default: "main"
+      ciPoolConfigPath:
+        description: "Ci Pool Config Path"
+        required: true
+        default: "config/sf-ci-platform-pool-def.json"
+      devPoolConfigPath:
+        description: "Dev Pool Config Path"
+        required: true
+        default: "config/sf-platform-pool-def.json"
+      clearPools:
+        description: "If checked, clear unused scratches in the pools"
+        required: true
+        default: "false"
+
+jobs:
+  createPool:
+    name: "Replenish Pool"
+    runs-on: ubuntu-latest
+    container: ghcr.io/flxbl-io/sfp:latest
+    timeout-minutes: 720 #Set to Maximum Time out
+    strategy:
+      matrix:
+        include:
+          - poolType: "CI"
+            poolConfigPath: ${{ inputs.ciPoolConfigPath }}
+            deleteJobType: allscratchorgs
+          - poolType: "DEV"
+            poolConfigPath: ${{ inputs.devPoolConfigPath }}
+            deleteJobType: unassigned
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.gitRef }}
+          fetch-depth: 0
+
+      - name: Get pool tag
+        run: |
+          pooltag=$(jq --raw-output '.tag' ${{ matrix.poolConfigPath }})
+          echo "POOL_TAG=$pooltag" >> $GITHUB_ENV
+
+      - name: Print Vaules
+        run: |
+          echo Pool Tag: "$POOL_TAG"
+          echo Pool Type: ${{ matrix.poolType }}
+          echo Pool Config Path: ${{ matrix.poolConfigPath }}
+          echo Pool Delete Job Type: ${{ matrix.deleteJobType }}
+          echo Clear unused scratch orgs: ${{ inputs.clearPools }}
+
+      - name: "Authenticate Dev Hub"
+        uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@dxAtScale
+        with:
+          auth-url: ${{ secrets.SF_DEVHUB_URL }}
+          alias: devhub
+
+      - name: "Clear pool"
+        id: clearPool
+        if: ${{ github.event.schedule == '15 2 * * *' }}
+        uses: navikt/sf-platform/.github/actions/ciDeletePool@main
+        with:
+          devhub: "devhub"
+          poolTag: ${{ env.POOL_TAG }}
+          deleteJobType: ${{ matrix.deleteJobType }}
+
+      - name: "Create Pool"
+        uses: navikt/sf-platform/.github/actions/ciCreatePool@main
+        with:
+          devhub: "devhub"
+          poolConfigPath: ${{ matrix.poolConfigPath }}
+          nodeToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Delete orphans"
+        uses: navikt/sf-platform/.github/actions/ciDeletePool@main
+        with:
+          devhub: "devhub"
+          deleteJobType: orphans

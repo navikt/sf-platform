@@ -35,7 +35,7 @@
   },
   "lint-staged": {
     "**/{aura,lwc}/**/*.js": [
-      "eslint --no-error-on-unmatched-pattern --fix"
+      "eslint --no-error-on-unmatched-pattern"
     ],
     "**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}": [
       "prettier --write --ignore-path .gitignore --ignore-path .prettierignore"

@@ -1,0 +1,35 @@
+name: "Build"
+on:
+  workflow_call:
+    secrets:
+      SF_DEVHUB_URL:
+        required: true
+  workflow_run:
+    workflows: ["ciQuickBuild"]
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    container: ghcr.io/flxbl-io/sfp:latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@master
+        with:
+          auth-url: ${{ secrets.SF_DEVHUB_URL }}
+          alias: devhub
+          setDefaultDevhubUsername: true
+
+      - uses: navikt/sf-platform/.github/actions/ciBuildAndPublishArtifact@main
+        with:
+          nodeToken: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,17 @@
+name: "Quick Build"
+description: "Build and publish an artifact to github npm registery"
+runs:
+  using: composite
+  steps:
+    - name: "Quickbuild package"
+      id: quickbuildPackage
+      shell: bash
+      run: |
+        sfp quickbuild --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch ${GITHUB_REF#refs/heads/}
+
+    - uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@main
+      with:
+        artifactName: "quick-build-artifacts"
+        uploadArtifacts: true
+        logName: "quick-build-logs"
+        publishLogs: true
