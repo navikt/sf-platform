@@ -34,4 +34,11 @@ runs:
     - name: validate
       shell: bash
       run: |
-        sfp validate --pools ${{ inputs.pools }} --targetdevhubusername ${{ inputs.devhub }} --basebranch ${{ inputs.baseBranch }} --deletescratchorg ${{ inputs.deleteScratch }} --coveragepercent ${{ inputs.coveragePercent }} --mode ${{ inputs.mode }} --logsgroupsymbol "::group::,::endgroup::"
+        command="sfp validate --pools ${{ inputs.pools }} --targetdevhubusername ${{ inputs.devhub }} --basebranch ${{ inputs.baseBranch }} --coveragepercent ${{ inputs.coveragePercent }} --mode ${{ inputs.mode }} --logsgroupsymbol "::group::,::endgroup::""
+
+        if [ ${{ inputs.deleteScratch }} ];
+        then
+          command+=" --deletescratchorg"
+        fi
+
+        eval $command

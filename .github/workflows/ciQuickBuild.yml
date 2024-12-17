@@ -15,6 +15,7 @@ jobs:
     uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
 
   validatePool:
+    needs: validateCode
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:latest
     permissions:
@@ -34,7 +35,7 @@ jobs:
 
   quickBuild:
     name: "Quickbuild"
-    needs: validateCode
+    needs: validatePool
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     permissions:
