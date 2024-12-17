@@ -14,7 +14,7 @@ jobs:
   build:
     name: "Build"
     runs-on: ubuntu-latest
-    container: ghcr.io/flxbl-io/sfp:latest
+    container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     permissions:
       contents: write
       packages: write
@@ -30,6 +30,19 @@ jobs:
           alias: devhub
           setDefaultDevhubUsername: true
 
+      - uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@master
+        with:
+          auth-url: ${{ secrets.SF_DEV_URL }}
+          alias: dev
+
       - uses: navikt/sf-platform/.github/actions/ciBuildAndPublishArtifact@main
         with:
           nodeToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: navikt/sf-platform/.github/actions/createReleaseDefinition@main
+        with:
+          branchToCommitTo: main
+          gitRef: main
+          pathToConfigFile: config/releaseConfig.yml
+          releaseName:
+          directory: releases

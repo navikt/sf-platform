@@ -47,7 +47,7 @@ jobs:
   createPool:
     name: "Replenish Pool"
     runs-on: ubuntu-latest
-    container: ghcr.io/flxbl-io/sfp:latest
+    container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     timeout-minutes: 720 #Set to Maximum Time out
     strategy:
       matrix:
