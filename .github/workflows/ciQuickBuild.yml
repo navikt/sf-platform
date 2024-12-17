@@ -34,7 +34,7 @@ jobs:
 
   quickBuild:
     name: "Quickbuild"
-    needs: validate
+    needs: validateCode
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:latest
     permissions:
