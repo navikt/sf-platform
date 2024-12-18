@@ -20,7 +20,8 @@ inputs:
     required: false
   mode:
     description: One of these individual|fastfeedback|thorough|ff-release-config|thorough-release-config
-    required: true
+    default: "thorough"
+    required: false
   releaseConfig:
     description: (Required if the release modes are ff-relese-config or thorough-release-config), Path to the config file which determines which impacted domains need to be validated
     required: false

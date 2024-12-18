@@ -31,7 +31,6 @@ jobs:
         with:
           devhub: "devhub"
           pools: "ci"
-          mode: "fastfeedback"
 
   quickBuild:
     name: "Quickbuild"
