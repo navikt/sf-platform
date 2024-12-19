@@ -60,8 +60,10 @@ jobs:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: devhub
 
-      - id: checkLimits
+      - name: "Check scratch org limits"
+        id: checkLimits
         run: |
+          printf 'get org limits...\n' >&2
           sf org list limits --target-org devhub --json >> limits.json
 
           remainingDailyScratchOrgs=$(jq '.result[] | select(.name=="DailyScratchOrgs").remaining' limits.json)
@@ -71,21 +73,21 @@ jobs:
 
           isThresholdPassed=false
 
-          # If to few remaining daily scratch orgs, exit
+          printf 'Check remaining daily scratch orgs\n' >&2
           if [ $remainingDailyScratchOrgs -lt ${{ vars.POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT }} ]
           then
               echo "::error title=Close to remaining Daily Scratch Org Limit::Remaining DailyScratchOrgs: $remainingDailyScratchOrgs"
-              $isThresholdPassed=true
+              isThresholdPassed=true
           fi
 
-          # If to few remaining active scratch orgs, exit
+          printf 'Check remaining active scratch orgs\n' >&2
           if [ $remainingActiveScratchOrgs -lt ${{ vars.POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT }} ]
           then
               echo "::error title=Close to remaining Active Scratch Orgs::Remaining ActiveScratchOrgs: $remainingActiveScratchOrgs"
-              $isThresholdPassed=true
+              isThresholdPassed=true
           fi
 
-          if [$isThresholdPassed]
+          if [ $isThresholdPassed ]
           then
             echo "isWithinThreshold=false" >> "$GITHUB_OUTPUT"
           fi
