@@ -3,7 +3,7 @@ description: "Check if SF CLI is installed and install if not"
 inputs:
   version:
     description: "Version for the SF CLI version"
-    default: ${{ vars.SF_CLI_VERSION }}
+    default: latest
     required: false
 runs:
   using: "composite"
