@@ -68,7 +68,9 @@ jobs:
           sf org list limits --target-org devhub --json >> limits.json
 
           remainingDailyScratchOrgs=$(jq '.result[] | select(.name=="DailyScratchOrgs").remaining' limits.json)
+          maxDailyScratchOrgs=$(jq '.result[] | select(.name=="DailyScratchOrgs").max' limits.json)
           remainingActiveScratchOrgs=$(jq '.result[] | select(.name=="ActiveScratchOrgs").remaining' limits.json)
+          maxActiveScratchOrgs=$(jq '.result[] | select(.name=="ActiveScratchOrgs").max' limits.json)
 
           rm limits.json
 
@@ -77,14 +79,14 @@ jobs:
           printf 'Check remaining daily scratch orgs\n' >&2
           if [ $remainingDailyScratchOrgs -lt ${{ vars.POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT }} ]
           then
-              echo "::error title=Close to remaining Daily Scratch Org Limit::Remaining DailyScratchOrgs: $remainingDailyScratchOrgs"
+              echo "::warning title=To few remaining daily scratch orgs::Max daily scatch orgs: $maxDailyScratchOrgs. Remaining daily scratch orgs: $remainingDailyScratchOrgs. Threshold: ${{ vars.POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT }}."
               echo "canReplenishPool=" >> "$GITHUB_OUTPUT"
           fi
 
           printf 'Check remaining active scratch orgs\n' >&2
           if [ $remainingActiveScratchOrgs -lt ${{ vars.POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT }} ]
           then
-              echo "::error title=Close to remaining Active Scratch Orgs::Remaining ActiveScratchOrgs: $remainingActiveScratchOrgs"
+              echo "::warning title=To many active Scratch Orgs::Max active scratch orgs: $maxActiveScratchOrgs. Remaining scratch orgs: $remainingActiveScratchOrgs. Threshold: ${{ vars.POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT }}."
               echo "canReplenishPool=" >> "$GITHUB_OUTPUT"
           fi
 
