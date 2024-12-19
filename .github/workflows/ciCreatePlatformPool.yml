@@ -109,13 +109,16 @@ jobs:
     permissions:
       contents: read
       packages: read
+    env:
+      POOL_TAG: ""
+
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.gitRef }}
           fetch-depth: 0
 
-      - name: Get pool tag
+      - name: Set pool tag
         run: |
           pooltag=$(jq --raw-output '.tag' ${{ matrix.poolConfigPath }})
           echo "POOL_TAG=$pooltag" >> $GITHUB_ENV
