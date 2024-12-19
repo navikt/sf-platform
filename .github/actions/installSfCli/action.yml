@@ -3,33 +3,22 @@ description: "Check if SF CLI is installed and install if not"
 inputs:
   version:
     description: "Version for the SF CLI version"
-    default: latest
+    default: "latest"
     required: false
 runs:
   using: "composite"
   steps:
-    - name: Check if SF CLI is installed
-      id: checkInstallationStatus
-      shell: bash
-      run: |
-        needToInstallSfCli=false
-
-        package='@salesforce/cli'
-
-        if [ `npm list --global | grep -c $package` -eq 0 ]; then
-          echo $package is not installed
-          needToInstallSfCli=true
-        else
-          echo Installed SF CLI version: $(sf --version)
-        fi
-
     # Install SF CLI
     - name: Install SF CLI|
-      if: ${{ steps.checkInstallationStatus.outputs.needToInstallSfCli }}
       run: |
-        npm install --global @salesforce/cli@${{ inputs.version }}
+        printf 'Checking sf version...\n' >&2
+        if ! sf --versionj
+        then
+          printf 'sf not found, installing...\n' >&2
+          npm install --global @salesforce/cli@${{ inputs.version }}
+          SFDX_DISABLE_DNS_CHECK=true
+        fi
 
         echo sf version: $(sf --version)
 
-        SFDX_DISABLE_DNS_CHECK=true
       shell: bash
