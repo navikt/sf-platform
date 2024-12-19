@@ -44,8 +44,54 @@ on:
         default: "false"
 
 jobs:
+  checkScratchLimitsThreshold:
+    name: "Check Scratch limits threshold"
+    runs-on: ubuntu-latest
+    outputs:
+      isWithinThreshold: ${{ steps.checkLimits.outputs.isWithinThreshold }}
+    steps:
+      - uses: navikt/sf-platform/.github/actions/installSfCli@main
+
+      - name: "Authenticate Dev Hub"
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@main
+        with:
+          auth-url: ${{ secrets.SF_DEVHUB_URL }}
+          alias: devhub
+
+      - id: checkLimits
+        run: |
+          sf org list limits --target-org devhub --json >> limits.json
+
+          remainingDailyScratchOrgs=$(jq '.result[] | select(.name=="DailyScratchOrgs").remaining' limits.json)
+          remainingActiveScratchOrgs=$(jq '.result[] | select(.name=="ActiveScratchOrgs").remaining' limits.json)
+
+          rm limits.json
+
+          isThresholdPassed=false
+
+          # If to few remaining daily scratch orgs, exit
+          if [ $remainingDailyScratchOrgs -lt ${{ vars.POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT }} ]
+          then
+              echo "::error title=Close to remaining Daily Scratch Org Limit::Remaining DailyScratchOrgs: $remainingDailyScratchOrgs"
+              $isThresholdPassed=true
+          fi
+
+          # If to few remaining active scratch orgs, exit
+          if [ $remainingActiveScratchOrgs -lt ${{ vars.POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT }} ]
+          then
+              echo "::error title=Close to remaining Active Scratch Orgs::Remaining ActiveScratchOrgs: $remainingActiveScratchOrgs"
+              $isThresholdPassed=true
+          fi
+
+          if [$isThresholdPassed]
+          then
+            echo "isWithinThreshold=false" >> "$GITHUB_OUTPUT"
+          fi
+
   createPool:
     name: "Replenish Pool"
+    needs: checkScratchLimitsThreshold
+    if: ${{ needs.checkScratchLimitsThreshold.outputs.isWithinThreshold }}
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     timeout-minutes: 720 #Set to Maximum Time out
@@ -81,7 +127,7 @@ jobs:
           echo Clear unused scratch orgs: ${{ inputs.clearPools }}
 
       - name: "Authenticate Dev Hub"
-        uses: navikt/crm-workflows-base/.github/actions/authenticateOrg@dxAtScale
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@dxAtScale
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: devhub

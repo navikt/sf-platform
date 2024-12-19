@@ -13,31 +13,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: "Check Scratch Limits"
-      shell: bash
-      run: |
-
-        sf org list limits --target-org ${{ inputs.devhub }} --json >> limits.json
-
-        remainingDailyScratchOrgs=$(jq '.result[] | select(.name=="DailyScratchOrgs").remaining' limits.json)
-        remainingActiveScratchOrgs=$(jq '.result[] | select(.name=="ActiveScratchOrgs").remaining' limits.json)
-
-        rm limits.json
-
-        # If to few remaining daily scratch orgs, exit
-        if [ $remainingDailyScratchOrgs -lt 15 ]
-        then
-            echo "::error title=Close to remaining Daily Scratch Org Limit::Remaining DailyScratchOrgs: $remainingDailyScratchOrgs"
-            exit 1
-        fi
-
-        # If to few remaining active scratch orgs, exit
-        if [ $remainingActiveScratchOrgs -lt 10 ]
-        then
-            echo "::error title=Close to remaining Active Scratch Orgs::Remaining ActiveScratchOrgs: $remainingActiveScratchOrgs"
-            exit 1
-        fi
-
     # Authenticate to npm
     - uses: actions/setup-node@v4
       with:
