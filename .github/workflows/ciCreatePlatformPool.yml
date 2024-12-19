@@ -48,7 +48,7 @@ jobs:
     name: "Check Scratch limits threshold"
     runs-on: ubuntu-latest
     outputs:
-      isWithinThreshold: ${{ steps.checkLimits.outputs.isWithinThreshold }}
+      canReplenishPool: ${{ steps.checkLimits.outputs.canReplenishPool }}
     steps:
       - uses: navikt/sf-platform/.github/actions/installSfCli@main
         with:
@@ -71,31 +71,26 @@ jobs:
 
           rm limits.json
 
-          isThresholdPassed=false
+          echo "canReplenishPool=true" >> "$GITHUB_OUTPUT"
 
           printf 'Check remaining daily scratch orgs\n' >&2
           if [ $remainingDailyScratchOrgs -lt ${{ vars.POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT }} ]
           then
               echo "::error title=Close to remaining Daily Scratch Org Limit::Remaining DailyScratchOrgs: $remainingDailyScratchOrgs"
-              isThresholdPassed=true
+              echo "canReplenishPool=" >> "$GITHUB_OUTPUT"
           fi
 
           printf 'Check remaining active scratch orgs\n' >&2
           if [ $remainingActiveScratchOrgs -lt ${{ vars.POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT }} ]
           then
               echo "::error title=Close to remaining Active Scratch Orgs::Remaining ActiveScratchOrgs: $remainingActiveScratchOrgs"
-              isThresholdPassed=true
-          fi
-
-          if [ $isThresholdPassed ]
-          then
-            echo "isWithinThreshold=false" >> "$GITHUB_OUTPUT"
+              echo "canReplenishPool=" >> "$GITHUB_OUTPUT"
           fi
 
   createPool:
     name: "Replenish Pool"
     needs: checkScratchLimitsThreshold
-    if: ${{ needs.checkScratchLimitsThreshold.outputs.isWithinThreshold }}
+    if: needs.checkScratchLimitsThreshold.outputs.canReplenishPool
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     timeout-minutes: 720 #Set to Maximum Time out
