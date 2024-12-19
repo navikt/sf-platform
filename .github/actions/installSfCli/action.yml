@@ -12,7 +12,7 @@ runs:
     - name: Install SF CLI|
       run: |
         printf 'Checking sf version...\n' >&2
-        if ! sf --versionj
+        if ! sf --version
         then
           printf 'sf not found, installing...\n' >&2
           npm install --global @salesforce/cli@${{ inputs.version }}
