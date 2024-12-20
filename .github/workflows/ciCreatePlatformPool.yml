@@ -106,7 +106,8 @@ jobs:
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     timeout-minutes: 720 #Set to Maximum Time out
     strategy:
-      matrix: ${{ fromJson(needs.prepareMatrix.outputs.matrixJson) }}
+      matrix:
+        pool: ${{ fromJson(needs.prepareMatrix.outputs.matrixJson) }}
     permissions:
       contents: read
       packages: read
@@ -121,15 +122,15 @@ jobs:
 
       - name: Set pool tag
         run: |
-          pooltag=$(jq --raw-output '.tag' ${{ matrix.poolConfigPath }})
+          pooltag=$(jq --raw-output '.tag' ${{ matrix.pool.poolConfigPath }})
           echo "POOL_TAG=$pooltag" >> $GITHUB_ENV
 
       - name: Print Vaules
         run: |
           echo Pool Tag: "$POOL_TAG"
-          echo Pool Type: ${{ matrix.poolType }}
-          echo Pool Config Path: ${{ matrix.poolConfigPath }}
-          echo Pool Delete Job Type: ${{ matrix.deleteJobType }}
+          echo Pool Type: ${{ matrix.pool.poolType }}
+          echo Pool Config Path: ${{ matrix.pool.poolConfigPath }}
+          echo Pool Delete Job Type: ${{ matrix.pool.deleteJobType }}
           echo Clear unused scratch orgs: ${{ inputs.clearPools }}
 
       - name: "Authenticate Dev Hub"
