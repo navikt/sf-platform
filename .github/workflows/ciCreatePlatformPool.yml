@@ -9,7 +9,8 @@ on:
         type: string
       poolMatrixDefPath:
         description: "Path to the file describing the pools to create"
-        required: true
+        required: false
+        default: "config/poolMatrixdef.json"
         type: string
       clearPools:
         description: "If checked, clear unused scratches in the pools"
