@@ -86,17 +86,17 @@ jobs:
   prepareMatrix:
     runs-on: ubuntu-latest
     outputs:
-      matrixJson: ${{ steps.loadFile.outputs.matrixJson }}
+      matrixJson: ${{ steps.getMatrix.outputs.matrixJson }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.gitRef }}
 
-      - id: loadFile
+      - id: getMatrix
         run: |
-          content=$(cat ${{ inputs.poolMatrixDefPath }})
-          echo $content
-          echo "matrixJson=\"$content\"" >> "$GITHUB_OUTPUT"
+          # Read JSON file and format it into a string where all special characters are escaped
+          content=$(jq --raw-input --slurp '.' ${{ inputs.poolMatrixDefPath }})  
+          echo "matrixJson=$content" >> "$GITHUB_OUTPUT"
 
   createPool:
     name: "Replenish Pool"
