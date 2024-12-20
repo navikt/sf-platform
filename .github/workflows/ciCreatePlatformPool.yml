@@ -107,7 +107,7 @@ jobs:
     timeout-minutes: 720 #Set to Maximum Time out
     strategy:
       matrix:
-        pool: ${{ fromJson(needs.prepareMatrix.outputs.matrixJson) }}
+        pool: ${{ fromJson(needs.prepareMatrix.outputs.matrixJson).pools }}
     permissions:
       contents: read
       packages: read
@@ -128,7 +128,6 @@ jobs:
       - name: Print Vaules
         run: |
           echo Pool Tag: "$POOL_TAG"
-          echo Pool Type: ${{ matrix.pool.poolType }}
           echo Pool Config Path: ${{ matrix.pool.poolConfigPath }}
           echo Pool Delete Job Type: ${{ matrix.pool.deleteJobType }}
           echo Clear unused scratch orgs: ${{ inputs.clearPools }}
@@ -146,13 +145,13 @@ jobs:
         with:
           devhub: "devhub"
           poolTag: ${{ env.POOL_TAG }}
-          deleteJobType: ${{ matrix.deleteJobType }}
+          deleteJobType: ${{ matrix.pool.deleteJobType }}
 
       - name: "Create Pool"
         uses: navikt/sf-platform/.github/actions/ciCreatePool@main
         with:
           devhub: "devhub"
-          poolConfigPath: ${{ matrix.poolConfigPath }}
+          poolConfigPath: ${{ matrix.pool.poolConfigPath }}
           nodeToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Delete orphans"
