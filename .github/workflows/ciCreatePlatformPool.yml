@@ -94,8 +94,7 @@ jobs:
 
       - id: getMatrix
         run: |
-          # Read JSON file and format it into a string where all special characters are escaped
-          content=$(jq '.' ${{ inputs.poolMatrixDefPath }})  
+          content=$(jq --compact-output '.' ${{ inputs.poolMatrixDefPath }})  
           echo "matrixJson=$content" >> "$GITHUB_OUTPUT"
 
       - name: Debug matrixJson
