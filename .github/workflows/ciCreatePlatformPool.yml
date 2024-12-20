@@ -88,6 +88,10 @@ jobs:
     outputs:
       matrixJson: ${{ steps.loadFile.outputs.matrixJson }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.gitRef }}
+
       - id: loadFile
         run: |
           content=$(cat ${{ inputs.poolMatrixDefPath }})
