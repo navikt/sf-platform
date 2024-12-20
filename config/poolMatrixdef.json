@@ -5,7 +5,7 @@
       "deleteJobType": "allscratchorgs"
     },
     {
-      "poolConfigPath": "config/sf-dev-platform-pool-def.json",
+      "poolConfigPath": "config/sf-platform-pool-def.json",
       "deleteJobType": "unassigned"
     }
   ]
