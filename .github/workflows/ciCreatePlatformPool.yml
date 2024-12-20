@@ -7,12 +7,8 @@ on:
         required: false
         default: "main"
         type: string
-      ciPoolConfigPath:
-        description: "Ci Pool Config Path"
-        required: true
-        type: string
-      devPoolConfigPath:
-        description: "Dev Pool Config Path"
+      poolMatrixDefPath:
+        description: "Path to the file describing the pools to create"
         required: true
         type: string
       clearPools:
@@ -30,14 +26,10 @@ on:
         description: "Commit Id from where the pools should be created"
         required: false
         default: "main"
-      ciPoolConfigPath:
-        description: "Ci Pool Config Path"
+      poolMatrixDefPath:
+        description: "Path to the file describing the pools to create"
         required: true
-        default: "config/sf-ci-platform-pool-def.json"
-      devPoolConfigPath:
-        description: "Dev Pool Config Path"
-        required: true
-        default: "config/sf-platform-pool-def.json"
+        default: "config/poolMatrixdef.json"
       clearPools:
         description: "If checked, clear unused scratches in the pools"
         required: true
@@ -45,7 +37,7 @@ on:
 
 jobs:
   checkScratchLimitsThreshold:
-    name: "Check Scratch limits threshold"
+    name: "Check Scratch limits"
     runs-on: ubuntu-latest
     outputs:
       canReplenishPool: ${{ steps.checkLimits.outputs.canReplenishPool }}
@@ -90,22 +82,25 @@ jobs:
               echo "canReplenishPool=" >> "$GITHUB_OUTPUT"
           fi
 
+  prepareMatrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrixJson: ${{ steps.loadFile.outputs.matrixJson }}
+    steps:
+      - id: loadFile
+        run: |
+          content='cat ${{ inputs.poolMatrixDefPath }}'
+          echo "matrixJson=$content" >> "$GITHUB_OUTPUT"
+
   createPool:
     name: "Replenish Pool"
-    needs: checkScratchLimitsThreshold
+    needs: [prepareMatrix, checkScratchLimitsThreshold]
     if: needs.checkScratchLimitsThreshold.outputs.canReplenishPool
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     timeout-minutes: 720 #Set to Maximum Time out
     strategy:
-      matrix:
-        include:
-          - poolType: "CI"
-            poolConfigPath: ${{ inputs.ciPoolConfigPath }}
-            deleteJobType: allscratchorgs
-          - poolType: "DEV"
-            poolConfigPath: ${{ inputs.devPoolConfigPath }}
-            deleteJobType: unassigned
+      matrix: ${{ fromJson(needs.prepareMatrix.outputs.matrixJson) }}
     permissions:
       contents: read
       packages: read
