@@ -90,7 +90,7 @@ jobs:
     steps:
       - id: loadFile
         run: |
-          content='cat ${{ inputs.poolMatrixDefPath }}'
+          content=$(cat ${{ inputs.poolMatrixDefPath }})
           echo "matrixJson=$content" >> "$GITHUB_OUTPUT"
 
   createPool:
