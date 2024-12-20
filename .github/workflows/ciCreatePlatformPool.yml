@@ -95,6 +95,7 @@ jobs:
       - id: loadFile
         run: |
           content=$(cat ${{ inputs.poolMatrixDefPath }})
+          echo $content
           echo "matrixJson=$content" >> "$GITHUB_OUTPUT"
 
   createPool:
