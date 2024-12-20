@@ -96,7 +96,7 @@ jobs:
         run: |
           content=$(cat ${{ inputs.poolMatrixDefPath }})
           echo $content
-          echo "matrixJson=$content" >> "$GITHUB_OUTPUT"
+          echo "matrixJson=\"$content\"" >> "$GITHUB_OUTPUT"
 
   createPool:
     name: "Replenish Pool"
