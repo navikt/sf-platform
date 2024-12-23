@@ -1,0 +1,42 @@
+name: "MAIN - Build and Publish"
+on:
+  workflow_run:
+    workflows: ["ciStaticCodeValidation"]
+    branches:
+      - "main"
+jobs:
+  buildAndPublish:
+    runs-on: ubuntu-latest
+    container: ghcr.io/flxbl-io/sfp:latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: navikt/sf-platform/.github/actions/authenticateNode@main
+
+      - uses: navikt/sf-platform/.github/actions/authenticateOrg@main
+        with:
+          auth-url: ${{ secrets.SF_DEVHUB_URL }}
+          alias: "devhub"
+          setDefaultDevhubUsername: "true"
+
+      - uses: navikt/sf-platform/.github/actions/ciValidate@main
+        with:
+          devhub: "devhub"
+          pools: "ci"
+
+      - uses: navikt/sf-platform/.github/actions/ciQuickBuild@main
+
+      - uses: navikt/sf-platform/.github/actions/build@main
+
+      - uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@main
+        with:
+          artifactName: "build-artifacts"
+          uploadArtifacts: true
+          logName: "build-logs"
+          publishLogs: true

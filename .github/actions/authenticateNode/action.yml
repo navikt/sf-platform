@@ -1,0 +1,9 @@
+name: "Authenticate Node"
+description: "Suthenticate with github node npm"
+runs:
+  using: "composite"
+  steps:
+    - name: "Authenticate to npm"
+      uses: actions/setup-node@v4
+      with:
+        registry-url: "https://npm.pkg.github.com"
