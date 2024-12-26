@@ -1,11 +1,14 @@
 name: "MAIN - Build and Publish"
 on:
   workflow_run:
-    workflows: ["ciStaticCodeValidation"]
+    workflows: ["Run static code validation"]
+    types:
+      - completed
     branches:
-      - "main"
+      - main
 jobs:
   buildAndPublish:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:latest
     permissions:
