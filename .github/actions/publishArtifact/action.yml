@@ -1,0 +1,16 @@
+name: "Publish artifact"
+description: "Publish an artifact to GitHub npm registery"
+inputs:
+  nodeToken:
+    description: "A Github PAT"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: "Publish"
+      shell: bash
+      run: |
+        sfp publish --artifactdir artifacts --npm --scope @${{ github.repository_owner }}  --gittag --pushgittag
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.nodeToken }}
