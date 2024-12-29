@@ -21,6 +21,17 @@ runs:
     # Authenticate org
     - name: Authenticate org
       run: |
+        RED='\033[0;31m'
+        YELLOW='\033[0;33m'
+        GREEN='\033[0;32m'
+        BOLD='\033[1m'
+        RESET='\033[0m'
+
+        echo -e "${YELLOW}${BOLD}------------------------------------------------------------------------------------------${RESET}"
+        echo -e "${YELLOW}\t\t\t\tAuthenticate org 🔒${RESET}"
+        echo -e "${YELLOW}${BOLD}------------------------------------------------------------------------------------------${RESET}"
+
+
         echo ${{ inputs.auth-URL }} > ./SFDX_URL.txt
 
         command="sf org login sfdx-url --sfdx-url-file ./SFDX_URL.txt --alias ${{ inputs.alias }}"
@@ -44,7 +55,10 @@ runs:
           echo "::error title=Failed to authenticate::$(jq .message authResult.json)"
           rm -f ./SFDX_URL.txt
           rm -f ./loginResult.json
+        else
+          echo -e "${GREEN}${BOLD}Authenticate org successfull.${RESET}"
         fi
+        echo -e "${YELLOW}${BOLD}------------------------------------------------------------------------------------------${RESET}"
 
         rm -f ./SFDX_URL.txt
         rm -f ./loginResult.json
