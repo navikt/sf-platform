@@ -28,9 +28,8 @@ runs:
         RESET='\033[0m'
 
         echo -e "${YELLOW}${BOLD}------------------------------------------------------------------------------------------${RESET}"
-        echo -e "${YELLOW}\t\t\t\tAuthenticate org 🔒${RESET}"
+        echo -e "${YELLOW}${BOLD}Authenticate org 🔒${RESET}"
         echo -e "${YELLOW}${BOLD}------------------------------------------------------------------------------------------${RESET}"
-
 
         echo ${{ inputs.auth-URL }} > ./SFDX_URL.txt
 
@@ -58,6 +57,7 @@ runs:
         else
           echo -e "${GREEN}${BOLD}Authenticate org successfull.${RESET}"
         fi
+
         echo -e "${YELLOW}${BOLD}------------------------------------------------------------------------------------------${RESET}"
 
         rm -f ./SFDX_URL.txt
