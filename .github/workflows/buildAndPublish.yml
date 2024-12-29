@@ -19,30 +19,37 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: navikt/sf-platform/.github/actions/authenticateNode@main
+      - name: Authenticate node
+        uses: navikt/sf-platform/.github/actions/authenticateNode@main
         if: ${{ github.ref_name == 'refs/heads/main' }}
 
-      - uses: navikt/sf-platform/.github/actions/authenticateOrg@main
+      - name: Authenticate DevHub
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@main
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: "devhub"
           setDefaultDevhubUsername: "true"
 
-      - uses: navikt/sf-platform/.github/actions/ciValidate@main
+      - name: Validate against CI Pool
+        uses: navikt/sf-platform/.github/actions/ciValidate@main
         with:
           devhub: "devhub"
           pools: "ci"
 
-      - uses: navikt/sf-platform/.github/actions/ciQuickBuild@main
+      - name: Quick build
+        uses: navikt/sf-platform/.github/actions/ciQuickBuild@main
 
-      - uses: navikt/sf-platform/.github/actions/build@main
+      - name: Build
+        uses: navikt/sf-platform/.github/actions/build@main
 
-      # - uses: navikt/sf-platform/.github/actions/publishArtifact@main
+      # - name: Publish artifacts
+      #   uses: navikt/sf-platform/.github/actions/publishArtifact@main
       #   if: ${{ github.ref_name == 'refs/heads/main' }}
       #   with:
       #     nodeToken: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@main
+      - name: Upload artifacts and logs
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@main
         if: always()
         with:
           artifactName: "build-artifacts"
