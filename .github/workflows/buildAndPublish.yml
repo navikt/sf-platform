@@ -34,7 +34,7 @@ jobs:
         uses: navikt/sf-platform/.github/actions/ciValidate@main
         with:
           devhub: "devhub"
-          pools: "ci"
+          pools: "ciPlatform"
 
       - name: Quick build
         uses: navikt/sf-platform/.github/actions/ciQuickBuild@main
