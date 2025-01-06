@@ -49,7 +49,7 @@ runs:
 
         "${command[@]}" > loginResult.json
 
-        if [ "$(jq .status loginResult.json)" == 1 ];
+        if [ "$(jq .status loginResult.json)" = 1 ];
         then
           echo "::error title=Failed to authenticate::$(jq .message authResult.json)"
           rm -f ./SFDX_URL.txt
