@@ -21,15 +21,15 @@ runs:
     # Authenticate org
     - name: Authenticate org
       run: |
-        RED='\033[0;31m'
-        YELLOW='\033[0;33m'
-        GREEN='\033[0;32m'
-        BOLD='\033[1m'
-        RESET='\033[0m'
+        printf -v red '\033[0;31m'
+        printf -v yellow '\033[0;33m'
+        printf -v green '\033[0;32m'
+        printf -v bold '\033[1m'
+        printf -v reset '\033[0m'
 
-        echo -e "${YELLOW}${BOLD}------------------------------------------------------------------------------------------${RESET}"
-        echo -e "${YELLOW}${BOLD}Authenticate org 🔒${RESET}"
-        echo -e "${YELLOW}${BOLD}------------------------------------------------------------------------------------------${RESET}"
+        echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+        echo "${yellow}${bold}Authenticate org 🔒${reset}"
+        echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
         echo ${{ inputs.auth-URL }} > ./SFDX_URL.txt
 
@@ -55,10 +55,10 @@ runs:
           rm -f ./SFDX_URL.txt
           rm -f ./loginResult.json
         else
-          echo -e "${GREEN}${BOLD}Authenticate org successfull.${RESET}"
+          echo "${green}${bold}Authenticate org successfull.${reset}"
         fi
 
-        echo -e "${YELLOW}${BOLD}------------------------------------------------------------------------------------------${RESET}"
+        echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
         rm -f ./SFDX_URL.txt
         rm -f ./loginResult.json
