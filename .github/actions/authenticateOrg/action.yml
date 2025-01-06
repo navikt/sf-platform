@@ -55,7 +55,7 @@ runs:
           rm -f ./SFDX_URL.txt
           rm -f ./loginResult.json
         else
-          echo "${green}${bold}Authenticate org successfull.${reset}"
+          echo "${green}${bold}Authenticate org successful.${reset}"
         fi
 
         echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
