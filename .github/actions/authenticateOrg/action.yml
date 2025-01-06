@@ -33,21 +33,21 @@ runs:
 
         echo ${{ inputs.auth-URL }} > ./SFDX_URL.txt
 
-        command="sf org login sfdx-url --sfdx-url-file ./SFDX_URL.txt --alias ${{ inputs.alias }}"
+        command=(sf org login sfdx-url --sfdx-url-file ./SFDX_URL.txt --alias ${{ inputs.alias }})
 
         if [ ${{ inputs.setDefaultUsername }} ];
         then
-          command+=" --set-default"
+          command+=(--set-default)
         fi
 
         if [ ${{ inputs.setDefaultDevhubUsername }} ];
         then
-          command+=" --set-default-dev-hub"
+          command+=(--set-default-dev-hub)
         fi
 
-        command+=" --json > loginResult.json"
+        command+=(--json)
 
-        eval $command
+        "${command[@]}" > loginResult.json
 
         if [ "$(jq .status loginResult.json)" == 1 ];
         then
