@@ -67,23 +67,26 @@ jobs:
             eslintPathsToValidate="${eslint_diffed_files_to_lint[@]}"
             sfCodeAnalyzerPathToValidate=$codeAnalyzer_json
           fi
-            
+
           echo "prettierPathsToValidate=$prettierPathsToValidate" >> $GITHUB_OUTPUT
           echo "eslintPathsToValidate=$eslintPathsToValidate" >> $GITHUB_OUTPUT
           echo "sfCodeAnalyzerPathToValidate=$sfCodeAnalyzerPathToValidate" >> $GITHUB_OUTPUT
 
       - name: Prettier Check
+        if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
         uses: navikt/sf-platform/.github/actions/prettierCheck@main
         with:
           pathToValidate: ${{ steps.paths.outputs.prettierPathsToValidate }}
 
       - name: Eslint check
+        if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
         uses: navikt/sf-platform/.github/actions/eslintCheck@main
         with:
           pathToValidate: ${{ steps.paths.outputs.eslintPathsToValidate }}
 
       - name: Run Salesforce Code Analyzer
         id: run-code-analyzer
+        if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
         uses: forcedotcom/run-code-analyzer@v1
         with:
           run-command: run
@@ -91,9 +94,6 @@ jobs:
           results-artifact-name: salesforce-code-analyzer-results
 
       - name: Check the Salesforce Code Analyzer outputs to determine whether to fail
+        if: ${{ !cancelled() && steps.paths.outcome == 'success' && ( steps.run-code-analyzer.outputs.exit-code > 0 || steps.run-code-analyzer.outputs.num-sev1-violations > 0 || steps.run-code-analyzer.outputs.num-violations > 10 ) }}
         shell: bash
-        if: |
-          steps.run-code-analyzer.outputs.exit-code > 0 ||
-          steps.run-code-analyzer.outputs.num-sev1-violations > 0 ||
-          steps.run-code-analyzer.outputs.num-violations > 10
         run: exit 1
