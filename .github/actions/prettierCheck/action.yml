@@ -11,5 +11,5 @@ runs:
       shell: bash
       run: |
         echo "::group::Run Prettier Check"
-        npx prettier --check --ignore-path .gitignore --ignore-path .prettierignore ${{ inputs.pathToValidate }}
+        npx prettier --check --ignore-path .gitignore --ignore-path .prettierignore --no-error-on-unmatched-pattern ${{ inputs.pathToValidate }}
         echo "::endgroup::"
