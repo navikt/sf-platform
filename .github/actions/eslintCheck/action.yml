@@ -7,12 +7,9 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Print inputs
-      shell: bash
-      run: |
-        echo "Path to validate: ${{ inputs.pathToValidate }}"
-
     - name: Eslint Check
       shell: bash
       run: |
+        echo "::group::Run Prettier Check"
         npx eslint --no-error-on-unmatched-pattern ${{ inputs.pathToValidate }}
+        echo "::endgroup::"
