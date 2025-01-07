@@ -53,7 +53,7 @@ jobs:
       - name: "Set variables"
         id: paths
         run: |
-          prettierPathsToValidate='\"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"'
+          prettierPathsToValidate='**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}'
           eslintPathsToValidate='**/{aura,lwc}/**/*.js'
           sfCodeAnalyzerPathToValidate='src'
 
