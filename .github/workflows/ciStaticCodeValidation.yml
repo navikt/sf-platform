@@ -28,6 +28,15 @@ jobs:
       run:
         shell: "bash"
     steps:
+      - name: "Install SF CLI"
+        uses: navikt/sf-platform/.github/actions/installSfCli@main
+        with:
+          version: ${{ vars.SF_CLI_VERSION }}
+
+      - name: "Install Salesforce Code Analyzer"
+        run: |
+          sf plugins install code-analyzer@${{ vars.SF_SCANNER_VERSION }}
+
       - name: "Checkout"
         uses: actions/checkout@v4
         with:
@@ -71,7 +80,18 @@ jobs:
         with:
           pathToValidate: ${{ steps.paths.outputs.eslintPathsToValidate }}
 
-      - name: Salesforce Code Analyzer
-        uses: navikt/sf-platform/.github/actions/runSalesforceCodeAnalyzer@main
+      - name: Run Salesforce Code Analyzer
+        id: run-code-analyzer
+        uses: forcedotcom/run-code-analyzer@v1
         with:
-          pathToValidate: ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }}
+          run-command: run
+          run-arguments: --normalize-severity --outfile results.html --target ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }}
+          results-artifact-name: salesforce-code-analyzer-results
+
+      - name: Check the Salesforce Code Analyzer outputs to determine whether to fail
+        shell: bash
+        if: |
+          steps.run-code-analyzer.outputs.exit-code > 0 ||
+          steps.run-code-analyzer.outputs.num-sev1-violations > 0 ||
+          steps.run-code-analyzer.outputs.num-violations > 10
+        run: exit 1
