@@ -35,7 +35,10 @@ jobs:
 
       - name: "Install Salesforce Code Analyzer"
         run: |
+          echo "::group::Install Salesforce Code Analyzer Plugin"
           sf plugins install code-analyzer@${{ vars.SF_SCANNER_VERSION }}
+          sf plugins --core
+          echo "::endgroup::"
 
       - name: "Checkout"
         uses: actions/checkout@v4
@@ -50,11 +53,11 @@ jobs:
       - name: "Set variables"
         id: paths
         run: |
-          if [ ${{ inputs.validateEntireRepo }} ]; then
-            prettierPathsToValidate='.'
-            eslintPathsToValidate='.'
-            sfCodeAnalyzerPathToValidate='src'
-          else
+          prettierPathsToValidate='\"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"'
+          eslintPathsToValidate='**/{aura,lwc}/**/*.js'
+          sfCodeAnalyzerPathToValidate='src'
+
+          if [ ! ${{ inputs.validateEntireRepo }} ]; then
             mapfile -t prettier_diffed_files_to_lint < <(git diff --name-only --diff-filter=d HEAD~ -- \*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml})
             mapfile -t eslint_diffed_files_to_lint < <(git diff --name-only --diff-filter=d HEAD~ -- \*.js})
             mapfile -t codeAnalyzer_diffed_sf_files < <(git diff --name-only --diff-filter=d HEAD~ -- src\**\*.{cls,cmp,component,css,html,js,json,page,trigger,xml})
@@ -63,12 +66,11 @@ jobs:
             prettierPathsToValidate ="${prettier_diffed_files_to_lint[@]}"
             eslintPathsToValidate="${eslint_diffed_files_to_lint[@]}"
             sfCodeAnalyzerPathToValidate=$codeAnalyzer_json
-            
           fi
             
-            echo "prettierPathsToValidate=$prettierPathsToValidate" >> $GITHUB_OUTPUT
-            echo "eslintPathsToValidate=$eslintPathsToValidate" >> $GITHUB_OUTPUT
-            echo "sfCodeAnalyzerPathToValidate=$sfCodeAnalyzerPathToValidate" >> $GITHUB_OUTPUT
+          echo "prettierPathsToValidate=$prettierPathsToValidate" >> $GITHUB_OUTPUT
+          echo "eslintPathsToValidate=$eslintPathsToValidate" >> $GITHUB_OUTPUT
+          echo "sfCodeAnalyzerPathToValidate=$sfCodeAnalyzerPathToValidate" >> $GITHUB_OUTPUT
 
       - name: Prettier Check
         uses: navikt/sf-platform/.github/actions/prettierCheck@main
