@@ -1,6 +1,7 @@
 name: "Build and Publish"
 on:
   workflow_call:
+  workflow_dispatch:
   workflow_run:
     workflows: ["Run static code validation"]
     types:
@@ -8,7 +9,23 @@ on:
 jobs:
   buildAndPublish:
     name: Build and Publish
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{
+      github.event_name == 'workflow_call' ||
+      github.event_name == 'workflow_dispatch' ||
+      (
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      (
+      contains(github.event.workflow_run.head_commit.modified, 'src/') ||
+      contains(github.event.workflow_run.head_commit.added, 'src/')
+      ) &&
+      !(
+      github.event.workflow_run.head_commit.modified == '["*.md"]' ||
+      github.event.workflow_run.head_commit.added == '["*.md"]'
+      )
+      )
+      }}
+
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     permissions:
