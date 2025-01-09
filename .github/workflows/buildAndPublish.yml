@@ -6,9 +6,15 @@ on:
     workflows: ["Run static code validation"]
     types:
       - completed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   buildAndPublish:
     name: Build and Publish
+    # Always run on workflow call and workflow dispatch
+    # Only run on workflow_run if there has been a change in the src folder,
+    # excluding markdown files
     if: ${{
       github.event_name == 'workflow_call' ||
       github.event_name == 'workflow_dispatch' ||
