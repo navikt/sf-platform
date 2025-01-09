@@ -72,11 +72,11 @@ jobs:
       - name: Build
         uses: navikt/sf-platform/.github/actions/build@main
 
-      # - name: Publish artifacts
-      #   uses: navikt/sf-platform/.github/actions/publishArtifact@main
-      #   if: ${{ github.ref_name == 'refs/heads/main' }}
-      #   with:
-      #     nodeToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish artifacts
+        uses: navikt/sf-platform/.github/actions/publishArtifact@main
+        if: ${{ github.ref_name == 'refs/heads/main' }}
+        with:
+          nodeToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifacts and logs
         uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@main
