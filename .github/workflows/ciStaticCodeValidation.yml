@@ -10,6 +10,7 @@ on:
         type: boolean
       gitRef:
         description: "Which git ref to use"
+        default: ${{ github.ref }}
         required: false
         type: string
   workflow_dispatch:
@@ -19,9 +20,14 @@ on:
         default: true
         required: false
         type: boolean
+      gitRef:
+        description: "Which git ref to use"
+        default: ${{ github.ref }}
+        required: false
+        type: string
 jobs:
   validate:
-    name: Validate Build
+    name: Static code validation
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -64,7 +70,7 @@ jobs:
             mapfile -t codeAnalyzer_diffed_sf_files < <(git diff --name-only --diff-filter=d HEAD~ -- src\**\*.{cls,cmp,component,css,html,js,json,page,trigger,xml})
             codeAnalyzer_json=$(jq -c -n '$ARGS.positional' --args "${codeAnalyzer_diffed_sf_files[@]}")
             
-            prettierPathsToValidate ="${prettier_diffed_files_to_lint[@]}"
+            prettierPathsToValidate="${prettier_diffed_files_to_lint[@]}"
             eslintPathsToValidate="${eslint_diffed_files_to_lint[@]}"
             sfCodeAnalyzerPathToValidate=$codeAnalyzer_json
           fi
