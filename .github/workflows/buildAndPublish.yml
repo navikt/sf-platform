@@ -92,7 +92,7 @@ jobs:
           gitRef: ${{ github.ref }}
           pathToConfigFile: config/releaseConfig.yml
           releaseName: ${{ steps.generate_name.outputs.releaseName }}
-          dire!ctory: "relese-definition"
+          directory: "relese-definition"
 
       - name: Upload artifacts and logs
         uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@main
