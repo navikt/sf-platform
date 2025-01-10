@@ -1,0 +1,10 @@
+---
+​releaseName: sf-platform
+pool: ciPlatform
+releasedefinitionProperties:
+  skipIfAlreadyInstalled: true
+  changelog:
+    workItemFilters:
+      - PTCRM-[0-9]
+    workItemUrl: https://jira.adeo.no/browse
+    showAllArtifacts: false

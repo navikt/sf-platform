@@ -78,6 +78,22 @@ jobs:
         with:
           nodeToken: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate Release Name
+        if: ${{ github.ref_name == 'refs/heads/main' }}
+        id: generate_name
+        run: |
+          echo "releaseName=sf-platform_$(date +%s%3N)" >> $GITHUB_OUTPUT
+
+      - name: Generate Release Definition
+        if: ${{ github.ref_name == 'refs/heads/main' }}
+        uses: navikt/sf-platform/.github/actions/generateReleaseDefinition@main
+        with:
+          branchToCommitTo: ${{ github.ref }}
+          gitRef: ${{ github.ref }}
+          pathToConfigFile: config/releaseConfig.yml
+          releaseName: ${{ steps.generate_name.outputs.releaseName }}
+          dire!ctory: "relese-definition"
+
       - name: Upload artifacts and logs
         uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@main
         if: always()
