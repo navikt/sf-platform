@@ -20,11 +20,6 @@ on:
         default: true
         required: false
         type: boolean
-      gitRef:
-        description: "Which git ref to use"
-        default: ${{ github.ref }}
-        required: false
-        type: string
 jobs:
   validate:
     name: Static code validation
@@ -35,6 +30,15 @@ jobs:
       run:
         shell: "bash"
     steps:
+      - name: "Set common defaults"
+        run: |
+          echo "GIT_REF=${{ github.event.inputs.gitRef || github.ref }}" >> $GITHUB_ENV
+          echo "VALIDATE_ENTIRE_REPO=${{ github.event.inputs.validateEntireRepo }}" >> $GITHUB_ENV
+
+          if [ "${{ github.event_name }}" == "push" ]; then
+            echo "VALIDATE_ENTIRE_REPO=false" >> $GITHUB_ENV
+          fi
+
       - name: "Install SF CLI"
         uses: navikt/sf-platform/.github/actions/installSfCli@main
         with:
