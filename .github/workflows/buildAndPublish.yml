@@ -10,8 +10,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  buildAndPublish:
-    name: Build and Publish
+  checkChanges:
+    name: Check changes
     # Always run on workflow call and workflow dispatch
     # Only run on workflow_run if there has been a change in the src folder,
     # excluding markdown files
@@ -23,7 +23,65 @@ jobs:
       github.event.workflow_run.conclusion == 'success'
       )
       }}
+    runs-on: ubuntu-latest
+    outputs:
+      continueWorkflow: ${{ steps.checkChanges.outputs.continueWorkflow }}
+    permissions:
+      contents: read
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
+      - name: "Check for changes in src folder"
+        id: checkChanges
+        run: |
+          printf -v red '\033[0;31m'
+          printf -v yellow '\033[0;33m'
+          printf -v green '\033[0;32m'
+          printf -v bold '\033[1m'
+          printf -v reset '\033[0m'
+          printf -v newLine '\n'
+
+          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+          echo "${yellow}${bold}Check for changes in source code${reset}"
+          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+
+          echo "${yellow}Checking if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}"
+
+          changes=$(git diff HEAD^ HEAD --ignore-all-space --name-only -- src/)
+          nonMarkdownChanges=""
+          continueWorkflow=true
+
+          if [ -n "$changes" ]; then
+            echo "${yellow}${bold}Changes:${reset}"
+            echo "$changes"
+            nonMarkdownChanges=$(echo $changes  | grep -v '\.md$')
+
+            if [ -n "$nonMarkdownChanges" ]; then
+              echo "${newLine}"
+              echo "${green}${bold}There have been changes to non-Markdown files! Start building 🏗️${reset}"
+            else
+              echo "${newLine}"
+              echo "${yellow}No changes to non-Markdown files detected. Cancelling the workflow${reset}"
+              continueWorkflow=false
+            fi
+          else
+            echo "${newLine}"
+            echo "${yellow}No changes to files in src folder. Cancelling the workflow${reset}"
+            continueWorkflow=false
+          fi
+
+          echo "continueWorkflow=$continueWorkflow" >> "$GITHUB_OUTPUT"
+
+          echo "${newLine}"
+          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+
+  buildAndPublish:
+    name: Build and Publish
+    needs: checkChanges
+    if: ${{ needs.checkChanges.outputs.continueWorkflow == 'true' }}
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     permissions:
