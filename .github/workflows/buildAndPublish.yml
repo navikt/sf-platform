@@ -35,6 +35,40 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: "Check for changes in src folder"
+        run: |
+          echo "::group::Check for changes in source code"
+          echo "Checking if there has been changes to source code by running git diff on the src folder excluding markdown files"
+
+          if changes=$(git diff HEAD^ HEAD --ignore-all-space --name-only -- src/ | grep -v '\.md$' 2>&1); then
+            if [ -n "$changes" ]; then
+              echo "There have been changes to non-Markdown files!"
+            else
+              echo "No changes to non-Markdown files detected. Cancelling the workflow"
+              
+              # Use GitHub context variables directly
+              REPO="${{ github.repository }}"
+              RUN_ID="${{ github.run_id }}"
+
+              # API call to cancel the workflow
+              curl -X POST \
+                -H "Accept: application/vnd.github.v3+json" \
+                -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                "https://api.github.com/repos/$REPO/actions/runs/$RUN_ID/cancel"
+
+              # Wait for cancellation to be processed
+              sleep 5
+
+              echo "Cancellation request sent. Note that cancellation might not be immediate."
+              exit 0  # Explicitly exit with success to avoid running further steps if not needed
+            fi
+          else
+            # If git diff fails for any reason, this block will handle the error
+            echo "::error title=Error executing git diff::$changes"
+            exit 1
+          fi
+          echo "::endgroup::"
+
       - name: "Set Git Config"
         run: |
           git config --global user.email "<>"
