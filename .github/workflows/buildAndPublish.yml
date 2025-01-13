@@ -35,6 +35,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: "Set Git Config"
+        run: |
+          git config --global user.email "<>"
+          git config --global user.name "GitHub Action"
+          git config --system --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: "Check for changes in src folder"
         run: |
           echo "::group::Check for changes in source code"
@@ -68,12 +74,6 @@ jobs:
             exit 1
           fi
           echo "::endgroup::"
-
-      - name: "Set Git Config"
-        run: |
-          git config --global user.email "<>"
-          git config --global user.name "GitHub Action"
-          git config --system --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Authenticate node
         uses: navikt/sf-platform/.github/actions/authenticateNode@main
