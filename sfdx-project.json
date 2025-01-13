@@ -14,17 +14,13 @@
     {
       "path": "src/platform-admin",
       "package": "platform-admin",
-      "versionNumber": "0.0.0.NEXT",
-      "definitionFile": "config/project-scratch-def.json"
+      "versionNumber": "0.0.0.NEXT"
     },
     {
-      "path": "src/platform-utility",
-      "package": "platform-utility",
-      "versionName": "ver 0.1",
-      "versionNumber": "0.1.0.NEXT",
-      "default": false,
-      "versionDescription": "Package containing the core platform utilities.",
-      "definitionFile": "config/project-scratch-def.json"
+      "path": "src/platform-utility/CustomMetadataDAO",
+      "package": "custom-metadata-dao",
+      "versionNumber": "0.0.0.NEXT",
+      "default": false
     }
   ],
   "packageAliases": {
