@@ -36,18 +36,18 @@ public class CustomMetadataDAOTest {
      */
     @IsTest
     static void testGetMetadata() {
-        // List<SObject> customMetadataRecords;
-        // System.Test.startTest();
-        // customMetadataRecords = new CustomMetadataDAO()
-        //     .getCustomMetadataRecords(
-        //         'SELECT MasterLabel FROM API_Base_Configuration__mdt'
-        //     );
-        // System.Test.stopTest();
-        // System.assertEquals(
-        //     [SELECT MasterLabel FROM API_Base_Configuration__mdt].size(),
-        //     customMetadataRecords.size(),
-        //     'Size should match'
-        // );
+        List<SObject> customMetadataRecords;
+        System.Test.startTest();
+        customMetadataRecords = new CustomMetadataDAO()
+            .getCustomMetadataRecords(
+                'SELECT MasterLabel FROM Custom_Meta_DAO_test__mdt'
+            );
+        System.Test.stopTest();
+        System.assertEquals(
+            [SELECT MasterLabel FROM Custom_Meta_DAO_test__mdt].size(),
+            customMetadataRecords.size(),
+            'Size should match'
+        );
     }
 
     /**
