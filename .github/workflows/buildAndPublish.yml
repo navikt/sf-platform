@@ -46,7 +46,7 @@ jobs:
           echo "::group::Check for changes in source code"
           echo "Checking if there has been changes to source code by running git diff on the src folder excluding markdown files"
 
-          changes=$(git diff HEAD^ HEAD --ignore-all-space --name-only -- src/ | grep -v '\.md$'
+          changes=$(git diff HEAD^ HEAD --ignore-all-space --name-only -- src/ | grep -v '\.md$')
 
           if [ -n "$changes" ]; then
             echo "There have been changes to non-Markdown files!"
