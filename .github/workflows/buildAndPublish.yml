@@ -43,42 +43,62 @@ jobs:
 
       - name: "Check for changes in src folder"
         run: |
+          printf -v red '\033[0;31m'
+          printf -v yellow '\033[0;33m'
+          printf -v green '\033[0;32m'
+          printf -v bold '\033[1m'
+          printf -v reset '\033[0m'
+
           echo "::group::Check for changes in source code"
-          echo "Checking if there has been changes to source code by running git diff on the src folder excluding markdown files"
+          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+          echo "${yellow}${bold}Check for changes in source code${reset}"
+          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+          echo ""
+          echo "${yellow}Checking if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}"
 
           changes=$(git diff HEAD^ HEAD --ignore-all-space --name-only -- src/)
+          nonMarkdownChanges=""
+          cancelWorkflow=false
 
           if [ -n "$changes" ]; then
-            echo "There have been changes!"
-            changes=$(echo $changes  | grep -v '\.md$')
-
-            if [ -n "$changes" ]; then
-              echo "There have been changes to non-Markdown files!"
-            else
-              echo "Only change to markdown!"
-
-              echo "No changes to non-Markdown files detected. Cancelling the workflow"
-              
-              # Use GitHub context variables directly
-              REPO="${{ github.repository }}"
-              RUN_ID="${{ github.run_id }}"
-
-              # API call to cancel the workflow
-              curl -X POST \
-                -H "Accept: application/vnd.github.v3+json" \
-                -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                "https://api.github.com/repos/$REPO/actions/runs/$RUN_ID/cancel"
-
-              # Wait for cancellation to be processed
-              sleep 5
-
-              echo "Cancellation request sent. Note that cancellation might not be immediate."
-              exit 0  # Explicitly exit with success to avoid running further steps if not needed
-            fi
+            echo "${yellow}${bold}Changes:${reset}"
+            echo "$changes"
+            nonMarkdownChanges=$(echo $changes  | grep -v '\.md$')
           else
-            echo "No Changes"
+            echo "${yellow}No changes to files in src folder. Cancelling the workflow${reset}"
+            cancelWorkflow=true
           fi
 
+          if [ -n "$nonMarkdownChanges" ]; then
+            echo ""
+            echo "${green}${bold}There have been changes to non-Markdown files! Start building 🏗️${reset}"
+          else
+            echo ""
+            echo "${yellow}${bold}No changes to non-Markdown files detected. Cancelling the workflow${reset}"
+            cancelWorkflow=true
+          fi
+
+          if [ "$cancelWorkflow" = true]; then
+            # Use GitHub context variables directly
+            REPO="${{ github.repository }}"
+            RUN_ID="${{ github.run_id }}"
+
+            # API call to cancel the workflow
+            curl -X POST \
+              -H "Accept: application/vnd.github.v3+json" \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/$REPO/actions/runs/$RUN_ID/cancel"
+
+            # Wait for cancellation to be processed
+            sleep 5
+
+            echo ""
+            echo "Cancellation request sent. Note that cancellation might not be immediate."
+            exit 0  # Explicitly exit with success to avoid running further steps if not needed
+          fi
+
+          echo ""
+          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
           echo "::endgroup::"
 
       - name: Authenticate node
