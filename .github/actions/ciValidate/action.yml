@@ -37,7 +37,7 @@ runs:
     - name: validate
       shell: bash
       run: |
-        command="sfp validate pools --pools ${{ inputs.pools }} --targetdevhubusername ${{ inputs.devhub }} --coveragepercent ${{ inputs.coveragePercent }} --mode ${{ inputs.mode }} --logsgroupsymbol "::group::,::endgroup::""
+        command="sfp validate pool --pools ${{ inputs.pools }} --targetdevhubusername ${{ inputs.devhub }} --coveragepercent ${{ inputs.coveragePercent }} --mode ${{ inputs.mode }} --logsgroupsymbol "::group::,::endgroup::""
 
         if [ "${{ inputs.ref }}" ]; then
           command+=" --ref ${{ inputs.ref }}"
