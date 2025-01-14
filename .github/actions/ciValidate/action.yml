@@ -10,6 +10,9 @@ inputs:
   ref:
     description: The head ref of the branch that is proposed to be merged
     required: false
+  baseRef:
+    description: The sha/ref to the base commit against which this ref will be merged into
+    required: false
   deleteScratch:
     description: Delete scratch org after validation
     required: false
@@ -38,6 +41,10 @@ runs:
 
         if [ "${{ inputs.ref }}" ]; then
           command+=" --ref ${{ inputs.ref }}"
+        fi
+
+        if [ "${{ inputs.baseRef }}" ]; then
+          command+=" --baseRef ${{ inputs.baseRef }}"
         fi
 
         if [ "${{ inputs.deleteScratch }}" ];
