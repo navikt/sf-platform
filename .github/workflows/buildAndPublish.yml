@@ -51,10 +51,10 @@ jobs:
           echo "${newLine}"
           echo "${yellow}Checking if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}"
 
-          GIT_REF=${{ github.ref }}
-
           if [ "$GITHUB_EVENT_NAME" == "workflow_run" ]; then
-            GIT_REF=${{ github.event.workflow_run.head_branch }}
+            GIT_REF="${{ github.event.workflow_run.head_branch }}"
+          else
+            GIT_REF="${GITHUB_REF#refs/heads/}" # Strip refs/heads/ from github.ref
           fi
 
           changes=$(git diff "$GIT_REF"^ "$GIT_REF" --ignore-all-space --name-only -- src/)
