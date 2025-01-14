@@ -50,7 +50,7 @@ jobs:
           echo "${newLine}"
           echo "${yellow}Checking if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}"
 
-          changes=$(git diff HEAD^ HEAD --ignore-all-space --name-only -- src/)
+          changes=$(git diff ${{ github.ref }}^ ${{ github.ref }} --ignore-all-space --name-only -- src/)
           nonMarkdownChanges=""
           continueWorkflow=true
 
