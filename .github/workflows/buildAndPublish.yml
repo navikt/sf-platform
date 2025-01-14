@@ -54,10 +54,12 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" == "workflow_run" ]; then
             GIT_REF="${{ github.event.workflow_run.head_branch }}"
           else
-            GIT_REF="${GITHUB_REF#refs/heads/}" # Strip refs/heads/ from github.ref
+            GIT_REF="${{ github.ref_name }}"
           fi
 
-          changes=$(git diff "$GIT_REF"^ "$GIT_REF" --ignore-all-space --name-only -- src/)
+          echo "Using GIT_REF: $GIT_REF"
+
+          changes=$(git diff "$GIT_REF^" "$GIT_REF" --ignore-all-space --name-only -- src/)
           nonMarkdownChanges=""
           continueWorkflow=true
 
