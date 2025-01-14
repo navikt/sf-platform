@@ -41,7 +41,7 @@ public class CustomMetadataDAOTest {
      * @description Simple test for the getMetadata method.
      */
     @IsTest
-    static void testGetMetadata() {
+    private static void testGetMetadata() {
         List<SObject> customMetadataRecords;
         String query =
             'SELECT MasterLabel ' +
