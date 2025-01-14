@@ -25,8 +25,7 @@
  *     name = nameCMList[0];
  * }
  */
-@SuppressWarnings('PMD.ApexSharingViolations')
-public class CustomMetadataDAO {
+public inherited sharing class CustomMetadataDAO {
     /**
      * @description Is used to set the Custom Metadata Records in Unit Tests.
      *
@@ -62,9 +61,11 @@ public class CustomMetadataDAO {
             LoggingLevel.DEBUG,
             'customMetadataRecordsMap: ' + customMetadataRecordsMap
         );
+
         if (!customMetadataRecordsMap.containsKey(query)) {
             customMetadataRecordsMap.put(query, Database.query(query));
         }
+
         return customMetadataRecordsMap.get(query);
     }
 }
