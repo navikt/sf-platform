@@ -15,7 +15,7 @@
  * @example
  * List<CustomMetadata__mdt> nameCMList = (List<CustomMetadata__mdt>) new CustomMetadataDAO()
  *     .getCustomMetadataRecords(
- *         'SELECT MasterLable, CustomField__c ' +
+ *         'SELECT MasterLabel, CustomField__c ' +
  *         'FROM CustomMetadata__mdt ' +
  *         'WHERE DeveloperName = \'Name\''
  *     );
