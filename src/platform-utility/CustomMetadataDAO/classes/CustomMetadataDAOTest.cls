@@ -6,6 +6,10 @@
  *
  * @author Kenneth Soerensen (kenneth.sorensen@nav.com), NAV
  * @since 0.1.0, August 2024
+ *
+ * @author Tor Håkon Sigurdsen, Nav
+ * @since 2025-01-14 - Made tests independent from Custom Metadata types in the orgs
+ *
  * @group Custom Metadata DAO
  * @see CustomMetadataDAO
  * @see [Get 100% Code Coverage for Salesforce Custom Metadata Based Decisions](https://www.avenga.com/magazine/salesforce-custom-metadata/)
