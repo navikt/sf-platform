@@ -15,18 +15,20 @@
  * @see [Get 100% Code Coverage for Salesforce Custom Metadata Based Decisions](https://www.avenga.com/magazine/salesforce-custom-metadata/)
  * @example
  * CustomMetadataDAOTest.setMetadata(
- *     'SELECT MasterLable, CustomField__c ' +
- *     'FROM CustomMetadata__mdt ' +
- *     'WHERE DeveloperName = \'Name\'',
- *     (List<CustomMetadata__mdt>) JSON.deserialize('[{"CustomField__c":"Value"}]', List<CustomMetadata__mdt>.class)
+ *   'SELECT MasterLabel ' +
+ *   'FROM CustomMetadata__mdt ' +
+ *   'WHERE DeveloperName = \'Name\'',
+ *   (List<CustomMetadata__mdt>) JSON.deserialize(
+ *     '[{"attributes": {"type": "CustomMetadata__mdt"},"MasterLabel":"Value"}]',
+ *     List<CustomMetadata__mdt>.class)
  * );
  *
  * List<CustomMetadata__mdt> nameCMList = (List<CustomMetadata__mdt>) new CustomMetadataDAO()
- *     .getCustomMetadataRecords(
- *         'SELECT MasterLable, CustomField__c ' +
- *         'FROM CustomMetadata__mdt ' +
- *         'WHERE DeveloperName = \'Name\''
- *     );
+ *   .getCustomMetadataRecords(
+ *       'SELECT MasterLable, CustomField__c ' +
+ *       'FROM CustomMetadata__mdt ' +
+ *       'WHERE DeveloperName = \'Name\''
+ *   );
  *
  * CustomMetadata__mdt name;
  * if (nameCMList.size() > 0) {
@@ -75,18 +77,20 @@ public class CustomMetadataDAOTest {
      * @param records Set Custom Metadata Records for the tests.
      * @example
      * CustomMetadataDAOTest.setMetadata(
-     *     'SELECT MasterLable, CustomField__c ' +
-     *     'FROM CustomMetadata__mdt ' +
-     *     'WHERE DeveloperName = \'Name\'',
-     *     (List<CustomMetadata__mdt>) JSON.deserialize('[{"CustomField__c":"Value"}]', List<CustomMetadata__mdt>.class)
+     *   'SELECT MasterLabel ' +
+     *   'FROM CustomMetadata__mdt ' +
+     *   'WHERE DeveloperName = \'Name\'',
+     *   (List<CustomMetadata__mdt>) JSON.deserialize(
+     *     '[{"attributes": {"type": "CustomMetadata__mdt"},"MasterLabel":"Value"}]',
+     *   List<CustomMetadata__mdt>.class)
      * );
      *
      * List<CustomMetadata__mdt> nameCMList = (List<CustomMetadata__mdt>) new CustomMetadataDAO()
-     *     .getCustomMetadataRecords(
-     *         'SELECT MasterLable, CustomField__c ' +
-     *         'FROM CustomMetadata__mdt ' +
-     *         'WHERE DeveloperName = \'Name\''
-     *     );
+     *   .getCustomMetadataRecords(
+     *       'SELECT MasterLabel ' +
+     *       'FROM CustomMetadata__mdt ' +
+     *       'WHERE DeveloperName = \'Name\''
+     *   );
      *
      * CustomMetadata__mdt name;
      * if (nameCMList.size() > 0) {
