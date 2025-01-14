@@ -61,7 +61,7 @@ public class CustomMetadataDAOTest {
         customMetadataRecords = new CustomMetadataDAO()
             .getCustomMetadataRecords(query);
         System.Test.stopTest();
-        System.assertEquals(
+        System.Assert.areEqual(
             1,
             customMetadataRecords.size(),
             'Size should match'
