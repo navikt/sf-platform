@@ -148,11 +148,11 @@ jobs:
         if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main') || github.ref_name == 'main' }}
         uses: navikt/sf-platform/.github/actions/generateReleaseDefinition@main
         with:
-          branchToCommitTo: ${{ github.ref }}
-          gitRef: ${{ github.ref }}
+          branchToCommitTo: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch || github.ref_name }}
+          gitRef: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
           pathToConfigFile: config/releaseConfig.yml
           releaseName: ${{ steps.generate_name.outputs.releaseName }}
-          directory: "relese-definition"
+          directory: "release-definition"
 
       - name: Upload artifacts and logs
         uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@main
