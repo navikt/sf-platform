@@ -48,7 +48,7 @@ jobs:
           echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
           echo "${yellow}${bold}Check for changes in source code${reset}"
           echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
-          echo "${newLine}"
+
           echo "${yellow}Checking if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}"
 
           if [ "$GITHUB_EVENT_NAME" == "workflow_run" ]; then
@@ -65,7 +65,6 @@ jobs:
 
           echo "${yellow}${bold}Changes:${reset}"
           echo "$changes"
-          echo "${newLine}"
 
           if [ -n "$changes" ]; then
             nonMarkdownChanges=$(echo $changes  | grep -v '\.md$')
@@ -84,7 +83,6 @@ jobs:
 
           echo "continueWorkflow=$continueWorkflow" >> "$GITHUB_OUTPUT"
 
-          echo "${newLine}"
           echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
   buildAndPublish:
@@ -101,7 +99,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch || github.ref }}
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch || github.ref_name }}
 
       - name: "Set Git Config"
         run: |
@@ -111,7 +109,7 @@ jobs:
 
       - name: Authenticate node
         uses: navikt/sf-platform/.github/actions/authenticateNode@main
-        if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' || github.ref_name == 'main' }}
+        if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main') || github.ref_name }}
 
       - name: Authenticate DevHub
         uses: navikt/sf-platform/.github/actions/authenticateOrg@main
@@ -125,6 +123,8 @@ jobs:
         with:
           devhub: "devhub"
           pools: "ciPlatform"
+          ref: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request') && github.event.workflow_run.head_sha || '' }}
+          baseRef: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request') && github.event.workflow_run.pull_requests.base.sha || '' }}
 
       - name: Quick build
         uses: navikt/sf-platform/.github/actions/ciQuickBuild@main
@@ -134,18 +134,18 @@ jobs:
 
       - name: Publish artifacts
         uses: navikt/sf-platform/.github/actions/publishArtifact@main
-        if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' || github.ref_name == 'main' }}
+        if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main') || github.ref_name == 'main' }}
         with:
           nodeToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Release Name
-        if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' || github.ref_name == 'main' }}
+        if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main') || github.ref_name == 'main' }}
         id: generate_name
         run: |
           echo "releaseName=sf-platform_$(date +%s%3N)" >> $GITHUB_OUTPUT
 
       - name: Generate Release Definition
-        if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' || github.ref_name == 'main' }}
+        if: ${{ (github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main') || github.ref_name == 'main' }}
         uses: navikt/sf-platform/.github/actions/generateReleaseDefinition@main
         with:
           branchToCommitTo: ${{ github.ref }}
