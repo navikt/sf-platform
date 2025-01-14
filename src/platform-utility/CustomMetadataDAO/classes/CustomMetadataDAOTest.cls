@@ -37,14 +37,26 @@ public class CustomMetadataDAOTest {
     @IsTest
     static void testGetMetadata() {
         List<SObject> customMetadataRecords;
+        String query =
+            'SELECT MasterLabel ' +
+            'FROM CustomMetadata__mdt ' +
+            'WHERE DeveloperName = \'Name\'';
+
+        // We set the type to Account in order to not be dependent on any Custom Metadata types
+        CustomMetadataDAOTest.setMetadata(
+            query,
+            (List<SObject>) JSON.deserialize(
+                '[{"attributes": {"type": "Account"},"MasterLabel":"Label"}]',
+                List<SObject>.class
+            )
+        );
+
         System.Test.startTest();
         customMetadataRecords = new CustomMetadataDAO()
-            .getCustomMetadataRecords(
-                'SELECT MasterLabel FROM Custom_Meta_DAO_test__mdt'
-            );
+            .getCustomMetadataRecords(query);
         System.Test.stopTest();
         System.assertEquals(
-            [SELECT MasterLabel FROM Custom_Meta_DAO_test__mdt].size(),
+            1,
             customMetadataRecords.size(),
             'Size should match'
         );
