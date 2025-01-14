@@ -7,10 +7,9 @@ inputs:
   pools:
     description: Name of pools to use
     required: true
-  baseBranch:
-    description: The pull request base branch
+  ref:
+    description: The head ref of the branch that is proposed to be merged
     required: false
-    default: "main"
   deleteScratch:
     description: Delete scratch org after validation
     required: false
@@ -35,9 +34,13 @@ runs:
     - name: validate
       shell: bash
       run: |
-        command="sfp validate --pools ${{ inputs.pools }} --targetdevhubusername ${{ inputs.devhub }} --basebranch ${{ inputs.baseBranch }} --coveragepercent ${{ inputs.coveragePercent }} --mode ${{ inputs.mode }} --logsgroupsymbol "::group::,::endgroup::""
+        command="sfp validate pools --pools ${{ inputs.pools }} --targetdevhubusername ${{ inputs.devhub }} --coveragepercent ${{ inputs.coveragePercent }} --mode ${{ inputs.mode }} --logsgroupsymbol "::group::,::endgroup::""
 
-        if [ ${{ inputs.deleteScratch }} ];
+        if [ "${{ inputs.ref }}" ]; then
+          command+=" --ref ${{ inputs.ref }}"
+        fi
+
+        if [ "${{ inputs.deleteScratch }}" ];
         then
           command+=" --deletescratchorg"
         fi
