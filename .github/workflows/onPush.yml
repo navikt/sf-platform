@@ -4,9 +4,6 @@ on:
 jobs:
   staticCodeValidation:
     uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
-    with:
-      # As we're not working with legacy we want to have everything in ship shape
-      validateEntireRepo: "true"
   buildAndPublish:
     needs: staticCodeValidation
     uses: navikt/sf-platform/.github/workflows/buildAndPublish.yml@main
