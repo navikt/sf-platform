@@ -1,6 +1,6 @@
 name: "Run static code validation"
 on:
-  push:
+  # push:
   workflow_call:
     inputs:
       validateEntireRepo:
@@ -35,9 +35,9 @@ jobs:
           echo "GIT_REF=${{ github.event.inputs.gitRef || github.ref }}" >> $GITHUB_ENV
           echo "VALIDATE_ENTIRE_REPO=${{ github.event.inputs.validateEntireRepo }}" >> $GITHUB_ENV
 
-          if [ "${{ github.event_name }}" == "push" ]; then
-            echo "VALIDATE_ENTIRE_REPO=false" >> $GITHUB_ENV
-          fi
+          # if [ "${{ github.event_name }}" == "push" ]; then
+          #   echo "VALIDATE_ENTIRE_REPO=false" >> $GITHUB_ENV
+          # fi
 
       - name: "Install SF CLI"
         uses: navikt/sf-platform/.github/actions/installSfCli@main
