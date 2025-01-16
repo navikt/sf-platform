@@ -1,6 +1,9 @@
 name: "Build and Publish"
 on:
   workflow_call:
+    secrets:
+      SF_DEVHUB_URL:
+        required: true
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
