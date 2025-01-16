@@ -35,7 +35,7 @@
  *     name = nameCMList[0];
  * }
  */
-@IsTest
+@IsTest(IsParallel=true)
 public class CustomMetadataDAOTest {
     /**
      * @description Simple test for the getMetadata method.
