@@ -3,10 +3,12 @@ on:
   push:
 jobs:
   staticCodeValidation:
+    name: Validation jobs
     uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
     permissions:
       contents: read
   buildAndPublish:
+    name: Build Jobs
     needs: staticCodeValidation
     uses: navikt/sf-platform/.github/workflows/buildAndPublish.yml@main
     permissions:
