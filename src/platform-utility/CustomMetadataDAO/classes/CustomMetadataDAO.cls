@@ -41,7 +41,7 @@ public inherited sharing class CustomMetadataDAO {
      * @author Kenneth Soerensen (kenneth.sorensen@nav.com), NAV
      * @since 0.1.0, August 2024
      * @param query The SOQL query string to fetch the Custom Metadata Records.
-     * @returns Return a list of Custom Metadata Records as `List<SObject>`
+     * @return Return a list of Custom Metadata Records as `List<SObject>`
      * @example
      * List<CustomMetadata__mdt> nameCMList = (List<CustomMetadata__mdt>) new CustomMetadataDAO()
      *     .getCustomMetadataRecords(
@@ -56,12 +56,6 @@ public inherited sharing class CustomMetadataDAO {
      * }
      */
     public List<SObject> getCustomMetadataRecords(String query) {
-        System.debug(LoggingLevel.DEBUG, 'query: ' + query);
-        System.debug(
-            LoggingLevel.DEBUG,
-            'customMetadataRecordsMap: ' + customMetadataRecordsMap
-        );
-
         if (!customMetadataRecordsMap.containsKey(query)) {
             customMetadataRecordsMap.put(query, Database.query(query));
         }
