@@ -1,0 +1,18 @@
+name: On PULL REQUEST
+on:
+  pull_request:
+jobs:
+  staticCodeValidation:
+    name: Validation jobs
+    uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
+    permissions:
+      contents: read
+  buildAndPublish:
+    name: Build Jobs
+    needs: staticCodeValidation
+    uses: navikt/sf-platform/.github/workflows/buildAndPublish.yml@main
+    permissions:
+      contents: write
+      packages: write
+    secrets:
+      SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
