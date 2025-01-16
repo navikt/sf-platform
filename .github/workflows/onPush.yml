@@ -4,6 +4,11 @@ on:
 jobs:
   staticCodeValidation:
     uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
+    permissions:
+      contents: read
   buildAndPublish:
     needs: staticCodeValidation
     uses: navikt/sf-platform/.github/workflows/buildAndPublish.yml@main
+    permissions:
+      contents: write
+      packages: write
