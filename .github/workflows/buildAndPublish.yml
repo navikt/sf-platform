@@ -4,8 +4,6 @@ on:
     secrets:
       SF_DEVHUB_URL:
         required: true
-      GITHUB_TOKEN:
-        required: true
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
