@@ -19,7 +19,7 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: "Check for changes in src folder"
         id: checkChanges
@@ -37,7 +37,12 @@ jobs:
 
           echo "${yellow}Checking if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}"
 
-          changes=$(git diff "${{ github.ref_name }}^" "${{ github.ref_name }}" --ignore-all-space --name-only -- src/)
+          if [ ${{ github.event_name == 'pull_request' }} ]; then
+            changes=$(git diff ${{ github.event.pull_request.base.ref }}..${{ github.sha }} --ignore-all-space --name-only -- src/)
+          else
+            changes=$(git diff "${{ github.ref_name }}^" "${{ github.ref_name }}" --ignore-all-space --name-only -- src/)
+          fi
+
           nonMarkdownChanges=""
           continueWorkflow=true
 
