@@ -1,6 +1,5 @@
 name: "Run static code validation"
 on:
-  # push:
   workflow_call:
     inputs:
       validateEntireRepo:

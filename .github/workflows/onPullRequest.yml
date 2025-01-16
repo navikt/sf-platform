@@ -1,6 +1,9 @@
 name: On PULL REQUEST
 on:
   pull_request:
+concurrency:
+  group: ci-${{ github.ref_name }}
+  cancel-in-progress: true
 jobs:
   staticCodeValidation:
     name: Validation jobs
