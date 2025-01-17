@@ -36,7 +36,7 @@ jobs:
           nonMarkdownChanges=""
 
           echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
-          echo "${yellow}${bold}Check changes since last commit in src folder{reset}"
+          echo "${yellow}${bold}Check changes since last commit in src folder${reset}"
           echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
           if [ ${{ github.event_name == 'pull_request' }} ]; then
@@ -77,10 +77,11 @@ jobs:
               continueWorkflow=false
             fi
 
-            echo "continueWorkflow=$continueWorkflow" >> "$GITHUB_OUTPUT"
-
+            
             echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
           fi
+
+          echo "continueWorkflow=$continueWorkflow" >> "$GITHUB_OUTPUT"
 
   buildAndPublish:
     name: Build and Publish
