@@ -39,7 +39,8 @@ jobs:
           if [ ${{ github.event_name == 'pull_request' }} ]; then
             changes=$(git diff "${{ github.event.pull_request.base.sha }}".."${{ github.event.pull_request.head.sha }}" --ignore-all-space --name-only -- src/)
           else
-            changes=$(git diff "${{ github.ref_name }}^" "${{ github.ref_name }}" --ignore-all-space --name-only -- src/)
+            # Fetch the parent commit SHA dynamically, ensuring we're always looking at the immediate predecessor.
+            changes=$(git diff $(git rev-parse "${{ github.ref_name }}^") "${{ github.ref_name }}" --ignore-all-space --name-only -- src/)
           fi
 
           nonMarkdownChanges=""
