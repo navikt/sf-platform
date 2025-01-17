@@ -40,16 +40,17 @@ jobs:
   checkScratchLimitsThreshold:
     name: "Check Scratch limits"
     runs-on: ubuntu-latest
+    permissions: {}
     outputs:
       canReplenishPool: ${{ steps.checkLimits.outputs.canReplenishPool }}
     steps:
       - name: Setup SF CLI
-        uses: navikt/sf-platform/.github/actions/installSfCli@main
+        uses: navikt/sf-platform/.github/actions/installSfCli@3e80bc0e6e09776d883eb954dc9474206b8299e7
         with:
           version: ${{ vars.SF_CLI_VERSION }}
 
       - name: "Authenticate Dev Hub"
-        uses: navikt/sf-platform/.github/actions/authenticateOrg@main
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@360d9054a020b102ade748c3cc3a55a988fe0948
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: devhub
@@ -85,6 +86,8 @@ jobs:
 
   prepareMatrix:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       matrixJson: ${{ steps.getMatrix.outputs.matrixJson }}
     steps:
@@ -136,7 +139,7 @@ jobs:
           echo Clear unused scratch orgs: ${{ inputs.clearPools }}
 
       - name: "Authenticate Dev Hub"
-        uses: navikt/sf-platform/.github/actions/authenticateOrg@main
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@360d9054a020b102ade748c3cc3a55a988fe0948
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: devhub
@@ -144,21 +147,21 @@ jobs:
       - name: "Clear pool"
         id: clearPool
         if: ${{ github.event.schedule == '15 2 * * *' }}
-        uses: navikt/sf-platform/.github/actions/ciDeletePool@main
+        uses: navikt/sf-platform/.github/actions/ciDeletePool@986029214c5e40b554ac593d162c4fa37ffde568
         with:
           devhub: "devhub"
           poolTag: ${{ env.POOL_TAG }}
           deleteJobType: ${{ matrix.pool.deleteJobType }}
 
       - name: "Create Pool"
-        uses: navikt/sf-platform/.github/actions/ciCreatePool@main
+        uses: navikt/sf-platform/.github/actions/ciCreatePool@86317df13bb9d39b5e3cdd59b7347bab169144cd
         with:
           devhub: "devhub"
           poolConfigPath: ${{ matrix.pool.poolConfigPath }}
           nodeToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Delete orphans"
-        uses: navikt/sf-platform/.github/actions/ciDeletePool@main
+        uses: navikt/sf-platform/.github/actions/ciDeletePool@986029214c5e40b554ac593d162c4fa37ffde568
         with:
           devhub: "devhub"
           deleteJobType: orphans
