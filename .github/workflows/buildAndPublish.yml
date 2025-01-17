@@ -4,6 +4,7 @@ on:
     secrets:
       SF_DEVHUB_URL:
         required: true
+  workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
 jobs:
@@ -20,7 +21,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "Check for changes in src folder"
+      - name: "Check changes since last commit in src folder"
         id: checkChanges
         run: |
           printf -v red '\033[0;31m'
@@ -30,11 +31,13 @@ jobs:
           printf -v reset '\033[0m'
           printf -v newLine '\n'
 
-          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
-          echo "${yellow}${bold}Check for changes in source code${reset}"
-          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+          continueWorkflow=true
+          changes=""
+          nonMarkdownChanges=""
 
-          echo "${yellow}Checking if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}"
+          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+          echo "${yellow}${bold}Check changes since last commit in src folder{reset}"
+          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
           if [ ${{ github.event_name == 'pull_request' }} ]; then
             changes=$(git diff "${{ github.event.pull_request.base.sha }}".."${{ github.event.pull_request.head.sha }}" --ignore-all-space --name-only -- src/)
@@ -43,30 +46,41 @@ jobs:
             changes=$(git diff $(git rev-parse "${{ github.ref_name }}^") "${{ github.ref_name }}" --ignore-all-space --name-only -- src/)
           fi
 
-          nonMarkdownChanges=""
-          continueWorkflow=true
-
-          echo "${yellow}${bold}Changes:${reset}"
+          echo "${yellow}${bold}Changes since last commit:${reset}"
           echo "$changes"
+          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+          echo "${newLine}"
 
-          if [ -n "$changes" ]; then
-            nonMarkdownChanges=$(echo $changes  | grep -v '\.md$')
+          if [ ${{ github.event_name == 'workflow_dispatch' }} ]; then
+            echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+            echo "${yellow}${bold}Manual run. Start building 🏗️{reset}"
+            echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+          else
+            echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+            echo "${yellow}${bold}Check for changes in source code${reset}"
+            echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
-            if [ -n "$nonMarkdownChanges" ]; then
-              echo "${green}${bold}There have been changes to non-Markdown files! Start building 🏗️${reset}"
+            echo "${yellow}Checking if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}"
+
+            if [ -n "$changes" ]; then
+              nonMarkdownChanges=$(echo $changes  | grep -v '\.md$')
+
+              if [ -n "$nonMarkdownChanges" ]; then
+                echo "${green}${bold}There have been changes to non-Markdown files! Start building 🏗️${reset}"
+              else
+                echo "${yellow}No changes to non-Markdown files detected. Cancelling the workflow${reset}"
+                continueWorkflow=false
+              fi
+              
             else
-              echo "${yellow}No changes to non-Markdown files detected. Cancelling the workflow${reset}"
+              echo "${yellow}No changes to files in src folder. Cancelling the workflow${reset}"
               continueWorkflow=false
             fi
-            
-          else
-            echo "${yellow}No changes to files in src folder. Cancelling the workflow${reset}"
-            continueWorkflow=false
+
+            echo "continueWorkflow=$continueWorkflow" >> "$GITHUB_OUTPUT"
+
+            echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
           fi
-
-          echo "continueWorkflow=$continueWorkflow" >> "$GITHUB_OUTPUT"
-
-          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
   buildAndPublish:
     name: Build and Publish
@@ -108,9 +122,11 @@ jobs:
           baseRef: ${{ github.event_name == 'pull_request' && github.sha || '' }}
 
       - name: Quick build
+        if: ${{ github.ref_name != 'main' }}
         uses: navikt/sf-platform/.github/actions/ciQuickBuild@314943ae84fcb0285bde0791a1aa71a1b4ee91c3
 
       - name: Build
+        if: ${{ github.ref_name == 'main' }}
         uses: navikt/sf-platform/.github/actions/build@59bae8628c223a6ee3c88dc4cb1d31b3ee421d52
 
       - name: Publish artifacts
