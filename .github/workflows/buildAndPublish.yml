@@ -23,12 +23,13 @@ jobs:
 
       - name: "Check changes since last commit in src folder"
         id: checkChanges
+        env:
+          red: "\033[0;31m"
+          yellow: "\033[0;33m"
+          green: "\033[0;32m"
+          bold: "\033[1m"
+          reset: "\033[0m"
         run: |
-          printf -v red '\033[0;31m'
-          printf -v yellow '\033[0;33m'
-          printf -v green '\033[0;32m'
-          printf -v bold '\033[1m'
-          printf -v reset '\033[0m'
           printf -v newLine '\n'
 
           continueWorkflow=true
@@ -39,7 +40,7 @@ jobs:
           echo "${yellow}${bold}Check changes since last commit in src folder${reset}"
           echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
-          if [ ${{ github.event_name == 'pull_request' }} ]; then
+          if [ "${{ github.event_name }}" = "pull_request"]; then
             changes=$(git diff "${{ github.event.pull_request.base.sha }}".."${{ github.event.pull_request.head.sha }}" --ignore-all-space --name-only -- src/)
           else
             # Fetch the parent commit SHA dynamically, ensuring we're always looking at the immediate predecessor.
@@ -51,9 +52,9 @@ jobs:
           echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
           echo "${newLine}"
 
-          if [ ${{ github.event_name == 'workflow_dispatch' }} ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
-            echo "${yellow}${bold}Manual run. Start building 🏗️{reset}"
+            echo "${yellow}${bold}Manual run. Start building 🏗️${reset}"
             echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
           else
             echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
@@ -151,6 +152,12 @@ jobs:
           pathToConfigFile: config/releaseConfig.yml
           releaseName: ${{ steps.generate_name.outputs.releaseName }}
           directory: "release-definition"
+
+      - name: Commit release definition
+        if: ${{ github.ref_name == 'main' }}
+        uses: navikt/sf-platform/.github/actions/commitFiles@c2814cd8ee17a206aba4b10effb8f452c087278e
+        with:
+          files: "release-definition/${{ steps.generate_name.outputs.releaseName }}.yml"
 
       - name: Upload artifacts and logs
         if: always()
