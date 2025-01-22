@@ -39,7 +39,7 @@ jobs:
           echo "${yellow}${bold}Check changes since last commit in src folder${reset}"
           echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
-          if [ "${{ github.event_name }}" = "pull_request"]; then
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
             changes=$(git diff "${{ github.event.pull_request.base.sha }}".."${{ github.event.pull_request.head.sha }}" --ignore-all-space --name-only -- src/)
           else
             # Fetch the parent commit SHA dynamically, ensuring we're always looking at the immediate predecessor.
