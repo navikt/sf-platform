@@ -1,0 +1,42 @@
+name: "Commit files"
+description: "Commit files to the repository"
+inputs:
+  files:
+    description: "List of filename or path to the files to commit"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Commit
+      shell: bash
+      run: |
+        printf -v red '\033[0;31m'
+        printf -v yellow '\033[0;33m'
+        printf -v green '\033[0;32m'
+        printf -v bold '\033[1m'
+        printf -v reset '\033[0m'
+
+        echo "::group::Run Prettier Check"
+        if [ -n "$files" ]; then
+          cmd=("gh" "api" "graphql" 
+              -F "githubRepository=${{ github.repository }}" 
+              -F "branchName=${{ github.ref_name }}" 
+              -F "expectedHeadOid=$(git rev-parse HEAD)" 
+              -F "commitMessage=Commit from bot")
+
+          for file in $files; do
+            if [ -f "$file" ]; then
+              cmd+=(-F "files[][path]=$file" -F "files[][contents]=$(base64 -w0 "$file")")
+            else
+              echo "${red}File $file does not exist, skipping.${reset}"
+            fi
+          done
+
+          cmd+=(-F "query=@.github/api/createCommitOnBranch.gql")
+
+          echo "${green}${bold}Executing:${reset} ${yellow}${cmd[@]}${reset}"
+          "${cmd[@]}"
+        else
+          echo "No files to commit."
+        fi
+        echo "::endgroup::"
