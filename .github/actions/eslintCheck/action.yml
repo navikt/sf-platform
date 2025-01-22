@@ -10,6 +10,6 @@ runs:
     - name: Eslint Check
       shell: bash
       run: |
-        echo "::group::Run Prettier Check"
+        echo "::group::Run Eslint Check"
         npx eslint --no-error-on-unmatched-pattern ${{ inputs.pathToValidate }}
         echo "::endgroup::"
