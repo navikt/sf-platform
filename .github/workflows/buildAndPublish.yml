@@ -17,9 +17,10 @@ jobs:
       contents: read
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: "Check changes since last commit in src folder"
         id: checkChanges
@@ -39,11 +40,11 @@ jobs:
           echo "${yellow}${bold}Check changes since last commit in src folder${reset}"
           echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            changes=$(git diff "${{ github.event.pull_request.base.sha }}".."${{ github.event.pull_request.head.sha }}" --ignore-all-space --name-only -- src/)
+          if [ "${EVENT_NAME}" = "pull_request" ]; then
+            changes=$(git diff "${PR_BASE_SHA}".."${PR_HEAD_SHA}" --ignore-all-space --name-only -- src/)
           else
             # Fetch the parent commit SHA dynamically, ensuring we're always looking at the immediate predecessor.
-            changes=$(git diff $(git rev-parse "${{ github.ref_name }}^") "${{ github.ref_name }}" --ignore-all-space --name-only -- src/)
+            changes=$(git diff $(git rev-parse "${REF_NAME}^") "${REF_NAME}" --ignore-all-space --name-only -- src/)
           fi
 
           echo "${yellow}${bold}Changes since last commit:${reset}"
@@ -51,7 +52,7 @@ jobs:
           echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
           echo "${newLine}"
 
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
             echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
             echo "${yellow}${bold}Manual run. Start building 🏗️${reset}"
             echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
@@ -77,11 +78,15 @@ jobs:
               continueWorkflow=false
             fi
 
-            
             echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
           fi
 
           echo "continueWorkflow=$continueWorkflow" >> "$GITHUB_OUTPUT"
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          REF_NAME: ${{ github.ref_name }}
+          EVENT_NAME: ${{ github.event_name }}
 
   buildAndPublish:
     name: Build and Publish
@@ -94,14 +99,10 @@ jobs:
       packages: write
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
-
-      - name: "Set Git Config"
-        run: |
-          git config --global user.email "<>"
-          git config --global user.name "GitHub Action"
+          persist-credentials: false
 
       - name: Authenticate node
         if: ${{ github.ref_name == 'main' }}
