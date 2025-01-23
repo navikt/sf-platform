@@ -11,6 +11,10 @@ runs:
     - name: "Publish"
       shell: bash
       run: |
-        sfp publish --artifactdir artifacts --npm --scope @${{ github.repository_owner }}  --gittag --pushgittag
+        if [ -d "artifacts" ] && [ -n "$(ls -A artifacts)" ]; then
+          sfp publish --artifactdir artifacts --npm --scope @${{ github.repository_owner }}  --gittag --pushgittag
+        else
+          echo "No artifacts to publish"
+        fi
       env:
         NODE_AUTH_TOKEN: ${{ inputs.nodeToken }}
