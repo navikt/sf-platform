@@ -99,6 +99,8 @@ jobs:
         run: |
           content=$(jq --compact-output '.' "${POOL_MATRIX_DEF_PATH}")  
           echo "matrixJson=$content" >> "$GITHUB_OUTPUT"
+        env:
+          POOL_MATRIX_DEF_PATH: ${{ inputs.poolMatrixDefPath }}
 
   createPool:
     name: "Replenish Pool"
