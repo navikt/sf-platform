@@ -11,5 +11,7 @@ runs:
       shell: bash
       run: |
         echo "::group::Run Eslint Check"
-        npx eslint --no-error-on-unmatched-pattern ${{ inputs.pathToValidate }}
+        npx eslint --no-error-on-unmatched-pattern ${PATH_TO_VALIDATE}
         echo "::endgroup::"
+      env:
+        PATH_TO_VALIDATE: ${{ inputs.pathToValidate }}

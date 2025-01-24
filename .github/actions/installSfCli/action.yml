@@ -15,10 +15,11 @@ runs:
         if ! sf --version
         then
           printf 'sf not found, installing...\n' >&2
-          npm install --global @salesforce/cli@${{ inputs.version }}
+          npm install --global @salesforce/cli@${SF_VERSION}
           SFDX_DISABLE_DNS_CHECK=true
         fi
 
         echo sf version: $(sf --version)
-
       shell: bash
+      env:
+        SF_VERSION: ${{ inputs.version }}
