@@ -13,6 +13,7 @@ jobs:
     uses: navikt/sf-platform/.github/workflows/ciCreatePlatformPool.yml@main
     with:
       clearPools: ${{ github.event.schedule == '15 1 * * 1-5' }}
+      poolMatrixDefPath: "config/poolMatrixdef.json"
     secrets:
       SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
     permissions:

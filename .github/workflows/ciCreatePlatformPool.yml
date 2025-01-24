@@ -10,12 +10,10 @@ on:
       poolMatrixDefPath:
         description: "Path to the file describing the pools to create"
         required: true
-        default: "config/poolMatrixdef.json"
         type: string
       clearPools:
         description: "If checked, clear unused scratches in the pools"
         required: true
-        default: false
         type: boolean
     secrets:
       SF_DEVHUB_URL:
