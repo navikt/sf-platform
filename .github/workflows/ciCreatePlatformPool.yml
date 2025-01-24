@@ -153,14 +153,14 @@ jobs:
           deleteJobType: ${{ matrix.pool.deleteJobType }}
 
       - name: "Create Pool"
-        uses: navikt/sf-platform/.github/actions/ciCreatePool@86317df13bb9d39b5e3cdd59b7347bab169144cd
-        with:
-          devhub: "devhub"
-          poolConfigPath: ${{ matrix.pool.poolConfigPath }}
-          nodeToken: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sfp pool prepare --poolconfig "${{ matrix.pool.poolConfigPath }}" --targetdevhubusername devhub
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Delete orphans"
         uses: navikt/sf-platform/.github/actions/ciDeletePool@986029214c5e40b554ac593d162c4fa37ffde568
         with:
           devhub: "devhub"
           deleteJobType: orphans
+          isCiPool: ${{ matrix.pool.isCiPool }}
