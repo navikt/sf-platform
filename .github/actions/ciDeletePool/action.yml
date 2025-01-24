@@ -62,5 +62,5 @@ runs:
       env:
         POOL_TAG: ${{ inputs.poolTag }}
         DELETE_JOB_TYPE: ${{ inputs.deleteJobType }}
-        DEVHUB_ALIAS: ${{ inputs.devhub }
+        DEVHUB_ALIAS: ${{ inputs.devhub }}
         IS_CI_POOL: ${{ inputs.isCiPool }}
