@@ -47,20 +47,11 @@ jobs:
             changes=$(git diff $(git rev-parse "${REF_NAME}^") "${REF_NAME}" --ignore-all-space --name-only -- src/)
           fi
 
-          echo "${yellow}${bold}Changes since last commit:${reset}"
-          echo "$changes"
-          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
-          echo "${newLine}"
-
           if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
             echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
             echo "${yellow}${bold}Manual run. Start building 🏗️${reset}"
             echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
           else
-            echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
-            echo "${yellow}${bold}Check for changes in source code${reset}"
-            echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
-
             echo "${yellow}Checking if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}"
 
             if [ -n "$changes" ]; then
@@ -69,10 +60,10 @@ jobs:
               if [ -n "$nonMarkdownChanges" ]; then
                 echo "${green}${bold}There have been changes to non-Markdown files! Start building 🏗️${reset}"
               else
-                echo "${yellow}No changes to non-Markdown files detected. Cancelling the workflow${reset}"
+                echo "${yellow}No changes to non-Markdown files detected.${reset}"
+                echo "${yellow}Cancelling the workflow${reset}"
                 continueWorkflow=false
               fi
-              
             else
               echo "${yellow}No changes to files in src folder. Cancelling the workflow${reset}"
               continueWorkflow=false
