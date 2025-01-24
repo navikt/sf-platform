@@ -22,14 +22,13 @@ runs:
       run: |
         poolTag="${POOL_TAG}"
         deleteJobType="${DELETE_JOB_TYPE}"
-        command="sfp pool delete --targetdevhubusername ${DEVHUB_ALIAS}"
         command=("sfp" "pool" "delete" "--targetdevhubusername" "${DEVHUB_ALIAS}")
 
         if [ -z "$poolTag" ]; then
           echo "No tag provided"
         else
           echo "Run delete jobs on the pool $poolTag"
-          command+=" --tag $poolTag"
+          command+=("--tag $poolTag")
         fi
 
         case "$deleteJobType" in
