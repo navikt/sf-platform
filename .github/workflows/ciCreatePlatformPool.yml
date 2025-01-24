@@ -146,11 +146,12 @@ jobs:
       - name: "Clear pool"
         id: clearPool
         if: ${{ inputs.clearPools }}
-        uses: navikt/sf-platform/.github/actions/ciDeletePool@986029214c5e40b554ac593d162c4fa37ffde568
+        uses: navikt/sf-platform/.github/actions/ciDeletePool@2f16a8f80f4465609109463086b61aa46f03ffbc
         with:
           devhub: "devhub"
           poolTag: ${{ env.POOL_TAG }}
           deleteJobType: ${{ matrix.pool.deleteJobType }}
+          isCiPool: ${{ matrix.pool.isCiPool }}
 
       - name: "Create Pool"
         run: |
@@ -159,7 +160,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Delete orphans"
-        uses: navikt/sf-platform/.github/actions/ciDeletePool@986029214c5e40b554ac593d162c4fa37ffde568
+        uses: navikt/sf-platform/.github/actions/ciDeletePool@2f16a8f80f4465609109463086b61aa46f03ffbc
         with:
           devhub: "devhub"
           deleteJobType: orphans
