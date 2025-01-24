@@ -37,19 +37,30 @@ runs:
     - name: validate
       shell: bash
       run: |
-        command="sfp validate pool --pools ${{ inputs.pools }} --targetdevhubusername ${{ inputs.devhub }} --coveragepercent ${{ inputs.coveragePercent }} --mode ${{ inputs.mode }} --logsgroupsymbol "::group::,::endgroup::""
+        command="sfp validate pool --pools ${POOLS} --targetdevhubusername ${DEVHUB_ALIAS} --coveragepercent ${COVERAGE_PERCENT} --mode ${MODE} --logsgroupsymbol "::group::,::endgroup::""
+        command=("sfp" "validate" "pool" "--pools" "${POOLS}" "--targetdevhubusername" "${DEVHUB_ALIAS}" "--coveragepercent" "${COVERAGE_PERCENT}" "--mode" "${MODE}" "--logsgroupsymbol" "::group::,::endgroup::")
 
-        if [ "${{ inputs.ref }}" ]; then
-          command+=" --ref ${{ inputs.ref }}"
+
+        if [ "${REF}" ]; then
+          command+=( "--ref" "${REF}" )
         fi
 
-        if [ "${{ inputs.baseRef }}" ]; then
-          command+=" --baseRef ${{ inputs.baseRef }}"
+        if [ "${BASE_REF}" ]; then
+          command+=( "--baseRef" "${BASE_REF}" )
         fi
 
-        if [ "${{ inputs.deleteScratch }}" ];
+        if [ "${DELETE_SCRATCH}" == "true" ];
         then
-          command+=" --deletescratchorg"
+          command+=(" --deletescratchorg")
         fi
 
-        eval $command
+        echo "Executing command: ${command[*]}"
+        "${command[@]}"
+      env:
+        POOLS: ${{ inputs.pools }}
+        DEVHUB_ALIAS: ${{ inputs.devhub }}
+        COVERAGE_PERCENT: ${{ inputs.coveragePercent }}
+        MODE: ${{ inputs.mode }}
+        REF: ${{ inputs.ref }}
+        BASE_REF: ${{ inputs.baseRef }}
+        DELETE_SCRATCH: ${{ inputs.deleteScratch }}
