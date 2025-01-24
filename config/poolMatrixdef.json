@@ -2,11 +2,13 @@
   "pools": [
     {
       "poolConfigPath": "config/sf-ci-platform-pool-def.json",
-      "deleteJobType": "allscratchorgs"
+      "deleteJobType": "allscratchorgs",
+      "isCiPool": true
     },
     {
       "poolConfigPath": "config/sf-platform-pool-def.json",
-      "deleteJobType": "unassigned"
+      "deleteJobType": "unassigned",
+      "isCiPool": false
     }
   ]
 }
