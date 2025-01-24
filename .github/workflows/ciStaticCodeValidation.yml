@@ -29,15 +29,6 @@ jobs:
       run:
         shell: "bash"
     steps:
-      - name: "Set common defaults"
-        run: |
-          echo "GIT_REF=${{ github.event.inputs.gitRef || github.ref }}" >> $GITHUB_ENV
-          echo "VALIDATE_ENTIRE_REPO=${{ github.event.inputs.validateEntireRepo }}" >> $GITHUB_ENV
-
-          # if [ "${{ github.event_name }}" == "push" ]; then
-          #   echo "VALIDATE_ENTIRE_REPO=false" >> $GITHUB_ENV
-          # fi
-
       - name: "Install SF CLI"
         uses: navikt/sf-platform/.github/actions/installSfCli@3e80bc0e6e09776d883eb954dc9474206b8299e7
         with:
@@ -46,15 +37,18 @@ jobs:
       - name: "Install Salesforce Code Analyzer"
         run: |
           echo "::group::Install Salesforce Code Analyzer Plugin"
-          sf plugins install code-analyzer@${{ vars.SF_SCANNER_VERSION }}
+          sf plugins install code-analyzer@${SF_SCANNER_VERSION}
           sf plugins --core
           echo "::endgroup::"
+        env:
+          SF_SCANNER_VERSION: ${{ vars.SF_SCANNER_VERSION }}
 
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ inputs.gitRef }}
           fetch-depth: "0"
+          persist-credentials: false
 
       - name: "Install dev dependencies"
         run: |
@@ -67,20 +61,22 @@ jobs:
           eslintPathsToValidate='**/{aura,lwc}/**/*.js'
           sfCodeAnalyzerPathToValidate='src'
 
-          if [ ! ${{ inputs.validateEntireRepo }} ]; then
+          if [ "${VALIDATE_ENTIRE_REPO}" = "false" ]; then
             mapfile -t prettier_diffed_files_to_lint < <(git diff --name-only --diff-filter=d HEAD~ -- \*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml})
             mapfile -t eslint_diffed_files_to_lint < <(git diff --name-only --diff-filter=d HEAD~ -- \*.js)
-            mapfile -t codeAnalyzer_diffed_sf_files < <(git diff --name-only --diff-filter=d HEAD~ -- src\**\*.{cls,cmp,component,css,html,js,json,page,trigger,xml})
+            mapfile -t codeAnalyzer_diffed_sf_files < <(git diff --name-only --diff-filter=d HEAD~ -- src/**/*.{cls,cmp,component,css,html,js,json,page,trigger,xml})
             codeAnalyzer_json=$(jq -c -n '$ARGS.positional' --args "${codeAnalyzer_diffed_sf_files[@]}")
             
-            prettierPathsToValidate="${prettier_diffed_files_to_lint[@]}"
-            eslintPathsToValidate="${eslint_diffed_files_to_lint[@]}"
-            sfCodeAnalyzerPathToValidate=$codeAnalyzer_json
+            prettierPathsToValidate="$(printf "%s\n" "${prettier_diffed_files_to_lint[@]}")"
+            eslintPathsToValidate="$(printf '%s\n' "${eslint_diffed_files_to_lint[@]}")"
+            sfCodeAnalyzerPathToValidate="$codeAnalyzer_json"
           fi
 
           echo "prettierPathsToValidate=$prettierPathsToValidate" >> $GITHUB_OUTPUT
           echo "eslintPathsToValidate=$eslintPathsToValidate" >> $GITHUB_OUTPUT
           echo "sfCodeAnalyzerPathToValidate=$sfCodeAnalyzerPathToValidate" >> $GITHUB_OUTPUT
+        env:
+          VALIDATE_ENTIRE_REPO: ${{ inputs.validateEntireRepo != '' && inputs.validateEntireRepo || true }}
 
       - name: Prettier Check
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}

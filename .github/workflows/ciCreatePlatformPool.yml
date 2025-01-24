@@ -9,7 +9,7 @@ on:
         type: string
       poolMatrixDefPath:
         description: "Path to the file describing the pools to create"
-        required: false
+        required: true
         default: "config/poolMatrixdef.json"
         type: string
       clearPools:
@@ -34,7 +34,7 @@ on:
       clearPools:
         description: "If checked, clear unused scratches in the pools"
         required: true
-        default: "false"
+        default: false
 
 jobs:
   checkScratchLimitsThreshold:
@@ -71,18 +71,19 @@ jobs:
           echo "canReplenishPool=true" >> "$GITHUB_OUTPUT"
 
           printf 'Check remaining daily scratch orgs\n' >&2
-          if [ $remainingDailyScratchOrgs -lt ${{ vars.POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT }} ]
-          then
-              echo "::warning title=To few remaining daily scratch orgs::Max daily scatch orgs: $maxDailyScratchOrgs. Remaining daily scratch orgs: $remainingDailyScratchOrgs. Threshold: ${{ vars.POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT }}."
-              echo "canReplenishPool=" >> "$GITHUB_OUTPUT"
+          if [ $remainingDailyScratchOrgs -lt ${POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT} ]; then
+            echo "::warning title=To few remaining daily scratch orgs::Max daily scatch orgs: $maxDailyScratchOrgs. Remaining daily scratch orgs: $remainingDailyScratchOrgs. Threshold: ${POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT}."
+            echo "canReplenishPool=false" >> "$GITHUB_OUTPUT"
           fi
 
           printf 'Check remaining active scratch orgs\n' >&2
-          if [ $remainingActiveScratchOrgs -lt ${{ vars.POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT }} ]
-          then
-              echo "::warning title=To many active Scratch Orgs::Max active scratch orgs: $maxActiveScratchOrgs. Remaining scratch orgs: $remainingActiveScratchOrgs. Threshold: ${{ vars.POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT }}."
-              echo "canReplenishPool=" >> "$GITHUB_OUTPUT"
+          if [ $remainingActiveScratchOrgs -lt ${POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT} ]; then
+            echo "::warning title=To many active Scratch Orgs::Max active scratch orgs: $maxActiveScratchOrgs. Remaining scratch orgs: $remainingActiveScratchOrgs. Threshold: ${POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT}."
+            echo "canReplenishPool=false" >> "$GITHUB_OUTPUT"
           fi
+        env:
+          POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT: ${{ vars.POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT }}
+          POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT: ${{ vars.POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT }}
 
   prepareMatrix:
     runs-on: ubuntu-latest
@@ -91,18 +92,15 @@ jobs:
     outputs:
       matrixJson: ${{ steps.getMatrix.outputs.matrixJson }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ inputs.gitRef }}
+          persist-credentials: false
 
       - id: getMatrix
         run: |
-          content=$(jq --compact-output '.' ${{ inputs.poolMatrixDefPath }})  
+          content=$(jq --compact-output '.' "${POOL_MATRIX_DEF_PATH}")  
           echo "matrixJson=$content" >> "$GITHUB_OUTPUT"
-
-      - name: Debug matrixJson
-        run: |
-          echo "Matrix JSON: ${{ steps.getMatrix.outputs.matrixJson }}"
 
   createPool:
     name: "Replenish Pool"
@@ -121,10 +119,11 @@ jobs:
       POOL_TAG: ""
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ inputs.gitRef }}
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set pool tag
         run: |
@@ -136,7 +135,9 @@ jobs:
           echo Pool Tag: "$POOL_TAG"
           echo Pool Config Path: ${{ matrix.pool.poolConfigPath }}
           echo Pool Delete Job Type: ${{ matrix.pool.deleteJobType }}
-          echo Clear unused scratch orgs: ${{ inputs.clearPools }}
+          echo Clear unused scratch orgs: ${CLEAR_POOLS}
+        env:
+          CLEAR_POOLS: ${{ inputs.clearPools }}
 
       - name: "Authenticate Dev Hub"
         uses: navikt/sf-platform/.github/actions/authenticateOrg@360d9054a020b102ade748c3cc3a55a988fe0948
@@ -146,7 +147,7 @@ jobs:
 
       - name: "Clear pool"
         id: clearPool
-        if: ${{ github.event.schedule == '15 2 * * *' }}
+        if: ${{ inputs.clearPools }}
         uses: navikt/sf-platform/.github/actions/ciDeletePool@986029214c5e40b554ac593d162c4fa37ffde568
         with:
           devhub: "devhub"
