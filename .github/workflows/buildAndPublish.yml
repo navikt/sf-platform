@@ -97,17 +97,19 @@ jobs:
 
       - name: Authenticate node
         if: ${{ github.ref_name == 'main' }}
-        uses: navikt/sf-platform/.github/actions/authenticateNode@59bae8628c223a6ee3c88dc4cb1d31b3ee421d52
+        uses: actions/setup-node@v4
+        with:
+          registry-url: "https://npm.pkg.github.com"
 
       - name: Authenticate DevHub
-        uses: navikt/sf-platform/.github/actions/authenticateOrg@360d9054a020b102ade748c3cc3a55a988fe0948
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@f318a266c5a7add9c091f9d3480164fed8abfc08
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: "devhub"
           setDefaultDevhubUsername: "true"
 
       - name: Validate against CI Pool
-        uses: navikt/sf-platform/.github/actions/ciValidate@9e339574012949840b443307a97c88ad8808277d
+        uses: navikt/sf-platform/.github/actions/ciValidate@f318a266c5a7add9c091f9d3480164fed8abfc08
         with:
           devhub: "devhub"
           pools: "ciPlatform"
@@ -116,15 +118,16 @@ jobs:
 
       - name: Quick build
         if: ${{ github.ref_name != 'main' }}
-        uses: navikt/sf-platform/.github/actions/ciQuickBuild@314943ae84fcb0285bde0791a1aa71a1b4ee91c3
+        uses: navikt/sf-platform/.github/actions/ciQuickBuild@f318a266c5a7add9c091f9d3480164fed8abfc08
 
       - name: Build
         if: ${{ github.ref_name == 'main' }}
-        uses: navikt/sf-platform/.github/actions/build@59bae8628c223a6ee3c88dc4cb1d31b3ee421d52
+        run: |
+          sfp build --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch ${GITHUB_REF#refs/heads/}
 
       - name: Publish artifacts
         if: ${{ github.ref_name == 'main' }}
-        uses: navikt/sf-platform/.github/actions/publishArtifact@44a1c64a1a594d084ebb50d230d0af99da391eba
+        uses: navikt/sf-platform/.github/actions/publishArtifact@f318a266c5a7add9c091f9d3480164fed8abfc08
         with:
           nodeToken: ${{ secrets.GITHUB_TOKEN }}
 
@@ -136,23 +139,24 @@ jobs:
 
       - name: Generate Release Definition
         if: ${{ github.ref_name == 'main' }}
-        uses: navikt/sf-platform/.github/actions/generateReleaseDefinition@a3ba0175d4a42970925337dc860cfabfdbd0e2b7
-        with:
-          branchToCommitTo: ${{ github.ref_name }}
-          gitRef: ${{ github.sha }}
-          pathToConfigFile: config/releaseConfig.yml
-          releaseName: ${{ steps.generate_name.outputs.releaseName }}
-          directory: "release-definition"
+        run: |
+          sfp releasedefinition generate --gitref ${GIT_REF} --configfile ${PATH_TO_CONFIG_FILE} --releasename ${RELEASE_NAME} --directory ${DIRECTORY} --branchname ${BRANCH_NAME}
+        env:
+          GIT_REF: ${{ github.sha }}
+          PATH_TO_CONFIG_FILE: "config/releaseConfig.yml"
+          RELEASE_NAME: ${{ steps.generate_name.outputs.releaseName }}
+          DIRECTORY: "release-definition"
+          BRANCH_NAME: ${{ github.ref_name }}
 
       - name: Commit release definition
         if: ${{ github.ref_name == 'main' }}
-        uses: navikt/sf-platform/.github/actions/commitFiles@c2814cd8ee17a206aba4b10effb8f452c087278e
+        uses: navikt/sf-platform/.github/actions/commitFiles@f318a266c5a7add9c091f9d3480164fed8abfc08
         with:
           files: "release-definition/${{ steps.generate_name.outputs.releaseName }}.yml"
 
       - name: Upload artifacts and logs
         if: always()
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@e278fb12b46666dc8185a22544b962d55579039b
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@f318a266c5a7add9c091f9d3480164fed8abfc08
         with:
           artifactName: "build-artifacts"
           uploadArtifacts: true
