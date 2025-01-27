@@ -97,7 +97,9 @@ jobs:
 
       - name: Authenticate node
         if: ${{ github.ref_name == 'main' }}
-        uses: navikt/sf-platform/.github/actions/authenticateNode@f318a266c5a7add9c091f9d3480164fed8abfc08
+        uses: actions/setup-node@v4
+        with:
+          registry-url: "https://npm.pkg.github.com"
 
       - name: Authenticate DevHub
         uses: navikt/sf-platform/.github/actions/authenticateOrg@f318a266c5a7add9c091f9d3480164fed8abfc08
