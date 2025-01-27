@@ -120,7 +120,8 @@ jobs:
 
       - name: Build
         if: ${{ github.ref_name == 'main' }}
-        uses: navikt/sf-platform/.github/actions/build@f318a266c5a7add9c091f9d3480164fed8abfc08
+        run: |
+          sfp build --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch ${GITHUB_REF#refs/heads/}
 
       - name: Publish artifacts
         if: ${{ github.ref_name == 'main' }}
