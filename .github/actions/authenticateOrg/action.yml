@@ -8,11 +8,11 @@ inputs:
     description: "Alias for the authenticated org"
     required: true
   setDefaultUsername:
-    description: Set the authenticated org as the default username that all commands run against.
+    description: "Set the authenticated org as the default username that all commands run against."
     default: "false"
     required: false
   setDefaultDevhubUsername:
-    description: Set the authenticated org as the default dev hub org for scratch org creation
+    description: "Set the authenticated org as the default dev hub org for scratch org creation"
     default: "false"
     required: false
 runs:
@@ -31,35 +31,37 @@ runs:
         echo "${yellow}${bold}Authenticate org 🔒${reset}"
         echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
-        echo ${{ inputs.auth-URL }} > ./SFDX_URL.txt
+        command=(sf org login sfdx-url --sfdx-url-stdin --alias ${ALIAS})
 
-        command=(sf org login sfdx-url --sfdx-url-file ./SFDX_URL.txt --alias ${{ inputs.alias }})
-
-        if [ ${{ inputs.setDefaultUsername }} ];
+        if [ "${SET_DEFAULT_USERNAME}" == "true" ];
         then
           command+=(--set-default)
         fi
 
-        if [ ${{ inputs.setDefaultDevhubUsername }} ];
+        if [ "${SET_DEFAULT_DEVHUB_USERNAME}" == "true" ];
         then
           command+=(--set-default-dev-hub)
         fi
 
         command+=(--json)
 
-        "${command[@]}" > loginResult.json
+         echo "${AUTH_URL}" | "${command[@]}" > loginResult.json
 
-        if [ "$(jq .status loginResult.json)" = 1 ];
+        if [ "$(jq .status loginResult.json)" -eq 1 ];
         then
-          echo "::error title=Failed to authenticate::$(jq .message authResult.json)"
-          rm -f ./SFDX_URL.txt
+          echo "::error title=Failed to authenticate::$(jq .message loginResult.json)"
           rm -f ./loginResult.json
+          exit 1
         else
           echo "${green}${bold}Authenticate org successful.${reset}"
         fi
 
         echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
-        rm -f ./SFDX_URL.txt
         rm -f ./loginResult.json
       shell: bash
+      env:
+        AUTH_URL: ${{ inputs.auth-url }}
+        ALIAS: ${{ inputs.alias }}
+        SET_DEFAULT_USERNAME: ${{ inputs.setDefaultUsername }}
+        SET_DEFAULT_DEVHUB_USERNAME: ${{ inputs.setDefaultDevhubUsername }}
