@@ -17,14 +17,14 @@ runs:
         printf -v reset '\033[0m'
 
         echo "::group::Run Prettier Check"
-        if [ -n "$files" ]; then
+        if [ -n "$FILES" ]; then
           cmd=("gh" "api" "graphql" 
-              -F "githubRepository=${{ github.repository }}" 
-              -F "branchName=${{ github.ref_name }}" 
+              -F "githubRepository=${REPOSITORY}" 
+              -F "branchName=${REF_NAME}" 
               -F "expectedHeadOid=$(git rev-parse HEAD)" 
               -F "commitMessage=Commit from bot")
 
-          for file in $files; do
+          for file in $FILES; do
             if [ -f "$file" ]; then
               cmd+=(-F "files[][path]=$file" -F "files[][contents]=$(base64 -w0 "$file")")
             else
@@ -40,3 +40,7 @@ runs:
           echo "No files to commit."
         fi
         echo "::endgroup::"
+      env:
+        REPOSITORY: ${{ github.repository }}
+        REF_NAME: ${{ github.ref_name }}
+        FILES: ${{ inputs.files }}
