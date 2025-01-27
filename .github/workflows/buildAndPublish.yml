@@ -97,7 +97,9 @@ jobs:
 
       - name: Authenticate node
         if: ${{ github.ref_name == 'main' }}
-        uses: navikt/sf-platform/.github/actions/authenticateNode@f318a266c5a7add9c091f9d3480164fed8abfc08
+        uses: actions/setup-node@v4
+        with:
+          registry-url: "https://npm.pkg.github.com"
 
       - name: Authenticate DevHub
         uses: navikt/sf-platform/.github/actions/authenticateOrg@f318a266c5a7add9c091f9d3480164fed8abfc08
@@ -120,7 +122,8 @@ jobs:
 
       - name: Build
         if: ${{ github.ref_name == 'main' }}
-        uses: navikt/sf-platform/.github/actions/build@f318a266c5a7add9c091f9d3480164fed8abfc08
+        run: |
+          sfp build --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch ${GITHUB_REF#refs/heads/}
 
       - name: Publish artifacts
         if: ${{ github.ref_name == 'main' }}
@@ -136,13 +139,14 @@ jobs:
 
       - name: Generate Release Definition
         if: ${{ github.ref_name == 'main' }}
-        uses: navikt/sf-platform/.github/actions/generateReleaseDefinition@f318a266c5a7add9c091f9d3480164fed8abfc08
-        with:
-          branchToCommitTo: ${{ github.ref_name }}
-          gitRef: ${{ github.sha }}
-          pathToConfigFile: config/releaseConfig.yml
-          releaseName: ${{ steps.generate_name.outputs.releaseName }}
-          directory: "release-definition"
+        run: |
+          sfp releasedefinition generate --gitref ${GIT_REF} --configfile ${PATH_TO_CONFIG_FILE} --releasename ${RELEASE_NAME} --directory ${DIRECTORY} --branchname ${BRANCH_NAME}
+        env:
+          GIT_REF: ${{ github.sha }}
+          PATH_TO_CONFIG_FILE: "config/releaseConfig.yml"
+          RELEASE_NAME: ${{ steps.generate_name.outputs.releaseName }}
+          DIRECTORY: "release-definition"
+          BRANCH_NAME: ${{ github.ref_name }}
 
       - name: Commit release definition
         if: ${{ github.ref_name == 'main' }}
