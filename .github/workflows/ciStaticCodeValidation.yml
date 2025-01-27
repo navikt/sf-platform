@@ -93,7 +93,7 @@ jobs:
       - name: Run Salesforce Code Analyzer
         id: run-code-analyzer
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: forcedotcom/run-code-analyzer@13c0e7699093dc6294eefe19d1106eeda363c898
+        uses: forcedotcom/run-code-analyzer@bfae1fe9a8894aea78cf26d2463cc865fbf67b17
         with:
           run-command: run
           run-arguments: --normalize-severity --outfile results.html --target ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }}
