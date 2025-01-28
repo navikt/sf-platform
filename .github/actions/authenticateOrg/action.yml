@@ -31,29 +31,24 @@ runs:
         echo "${yellow}${bold}Authenticate org 🔒${reset}"
         echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
 
-        command=(sf org login sfdx-url --sfdx-url-stdin --alias ${ALIAS})
+        command=(sf org login sfdx-url --sfdx-url-stdin --json --alias ${ALIAS})
 
-        if [ "${SET_DEFAULT_USERNAME}" == "true" ];
-        then
-          command+=(--set-default)
+        if [ "${SET_DEFAULT_USERNAME}" == "true" ]; then
+            command+=(--set-default)
         fi
 
-        if [ "${SET_DEFAULT_DEVHUB_USERNAME}" == "true" ];
-        then
-          command+=(--set-default-dev-hub)
+        if [ "${SET_DEFAULT_DEVHUB_USERNAME}" == "true" ]; then
+            command+=(--set-default-dev-hub)
         fi
 
-        command+=(--json)
+        echo "${AUTH_URL}" | "${command[@]}" > loginResult.json
 
-         echo "${AUTH_URL}" | "${command[@]}" > loginResult.json
-
-        if [ "$(jq .status loginResult.json)" -eq 1 ];
-        then
-          echo "::error title=Failed to authenticate::$(jq .message loginResult.json)"
-          rm -f ./loginResult.json
-          exit 1
+        if [ "$(jq .status loginResult.json)" -eq 1 ]; then
+            echo "::error title=Failed to authenticate::$(jq .message loginResult.json)"
+            rm -f ./loginResult.json
+            exit 1
         else
-          echo "${green}${bold}Authenticate org successful.${reset}"
+            echo "${green}${bold}Authenticate org successful.${reset}"
         fi
 
         echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
