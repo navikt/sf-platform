@@ -17,19 +17,18 @@
     "lint-staged": "lint-staged"
   },
   "devDependencies": {
-    "@locker/eslint-config-locker": "^0.23.7",
-    "@lwc/eslint-plugin-lwc": "^1.9.0",
+    "@eslint/js": "^9.19.0",
+    "@lwc/eslint-plugin-lwc": "^3.0.0-beta.2",
     "@prettier/plugin-xml": "^3.4.1",
-    "@salesforce/eslint-config-lwc": "^3.6.0",
-    "@salesforce/eslint-plugin-aura": "^2.1.0",
-    "@salesforce/eslint-plugin-lightning": "^1.0.0",
+    "@salesforce/eslint-config-lwc": "^4.0.0-beta.5",
+    "@salesforce/eslint-plugin-lightning": "^2.0.0-beta.1",
     "@salesforce/sfdx-lwc-jest": "^7.0.1",
     "eslint": "^9.19.0",
-    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jest": "^28.9.0",
+    "eslint-plugin-jest": "^28.11.0",
+    "globals": "^15.14.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.11",
+    "lint-staged": "^15.4.3",
     "prettier": "^3.4.2",
     "prettier-plugin-apex": "^2.2.2"
   },
@@ -40,5 +39,8 @@
     "**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}": [
       "prettier --write --ignore-path .gitignore --ignore-path .prettierignore"
     ]
+  },
+  "dependencies": {
+    "@eslint/compat": "^1.2.5"
   }
 }
