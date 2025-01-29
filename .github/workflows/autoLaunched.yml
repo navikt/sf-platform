@@ -1,9 +1,10 @@
-name: On PULL REQUEST
+name: "[AUTO LAUNCHED]"
 on:
   pull_request:
+  push:
 concurrency:
   group: ci-${{ github.ref_name }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ !(github.event_name == 'push' && github.ref_name == 'main') }}
 jobs:
   staticCodeValidation:
     name: Validation jobs
