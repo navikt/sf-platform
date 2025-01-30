@@ -1,0 +1,74 @@
+name: "Validate package changes"
+on:
+  workflow_call:
+    secrets:
+      SF_DEVHUB_URL:
+        required: true
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+jobs:
+  checkChanges:
+    name: Check changes
+    runs-on: ubuntu-latest
+    outputs:
+      hasSrcChanges: ${{ steps.checkChanges.outputs.hasSrcChanges }}
+    permissions:
+      contents: read
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@8a76cf6726f88608113bd6cc313b4a6728ce476a
+        id: checkChanges
+
+  buildAndPublish:
+    name: Validate changes
+    needs: checkChanges
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.checkChanges.outputs.hasSrcChanges == 'true' }}
+    runs-on: ubuntu-latest
+    container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Authenticate DevHub
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@a0f22eb5d1c9d1ec5e345c04c96a786bd150042a
+        with:
+          auth-url: ${{ secrets.SF_DEVHUB_URL }}
+          alias: "devhub"
+          setDefaultDevhubUsername: "true"
+
+      - name: Validate against CI Pool
+        uses: navikt/sf-platform/.github/actions/ciValidate@79ad1077a810db336f3e39606a25a4a505d5012c
+        if: ${{ github.event_name == 'pull_request' }}
+        with:
+          devhub: "devhub"
+          pools: ${{ vars.DEFAULT_CI_POOL }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          baseRef: ${{ github.event.pull_request.base.sha }}
+
+      - name: Delete Stale Validation Org
+        if: ${{ failure() }}
+        run: sf org delete scratch -p
+
+      - name: Quick build
+        uses: navikt/sf-platform/.github/actions/ciQuickBuild@f318a266c5a7add9c091f9d3480164fed8abfc08
+
+      - name: Upload artifacts and logs
+        if: always()
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@f318a266c5a7add9c091f9d3480164fed8abfc08
+        with:
+          artifactName: "build-artifacts"
+          uploadArtifacts: true
+          logName: "build-logs"
+          publishLogs: true
