@@ -13,7 +13,7 @@ jobs:
   validatePackageChanges:
     name: Validate package changes
     needs: staticCodeValidation
-    if: ${{ github.ref_name == 'main' }}
+    if: ${{ github.ref_name != 'main' }}
     uses: navikt/sf-platform/.github/workflows/validatePackageChanges.yml@main
     permissions:
       contents: read
