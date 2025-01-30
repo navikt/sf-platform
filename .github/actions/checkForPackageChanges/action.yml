@@ -1,0 +1,59 @@
+name: "Check for changes to src folder"
+description: "Checks if there has been any changes to the scr folder"
+outputs:
+  hasSrcChanges:
+    description: "Boolean value indicating if there has been changes to the src folder"
+    value: ${{ steps.checkChanges.outputs.hasSrcChanges }}
+runs:
+  using: composite
+  steps:
+    - name: "Check for changes"
+      id: checkChanges
+      shell: bash
+      run: |
+        printf -v red '\033[0;31m'
+        printf -v yellow '\033[0;33m'
+        printf -v green '\033[0;32m'
+        printf -v bold '\033[1m'
+        printf -v reset '\033[0m'
+        printf -v newLine '\n'
+
+        hasSrcChanges=false
+        changes=""
+        nonMarkdownChanges=""
+
+        echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+        echo "${yellow}${bold}Check changes since last commit in src folder${reset}"
+        echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+
+        if [ "${EVENT_NAME}" = "pull_request" ]; then
+          changes=$(git diff "${PR_BASE_SHA}".."${PR_HEAD_SHA}" --ignore-all-space --name-only -- src/)
+        else
+          # Fetch the parent commit SHA dynamically, ensuring we're always looking at the immediate predecessor.
+          changes=$(git diff $(git rev-parse "${REF_NAME}^") "${REF_NAME}" --ignore-all-space --name-only -- src/)
+        fi
+
+
+        echo "${yellow}Checking if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}"
+
+        if [ -n "$changes" ]; then
+          nonMarkdownChanges=$(echo $changes  | grep -v '\.md$')
+
+          if [ -n "$nonMarkdownChanges" ]; then
+            echo "${green}${bold}There have been changes to non-Markdown files!${reset}"
+            hasSrcChanges=true
+          else
+            echo "${yellow}No changes to non-Markdown files detected.${reset}"
+          fi
+        else
+          echo "${yellow}No changes to files in src folder.${reset}"
+        fi
+
+        echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+
+        echo "hasSrcChanges=$hasSrcChanges" >> "$GITHUB_OUTPUT"
+      env:
+        PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        REF_NAME: ${{ github.ref_name }}
+        EVENT_NAME: ${{ github.event_name }}
