@@ -24,6 +24,7 @@
  * if (nameCMList.size() > 0) {
  *     name = nameCMList[0];
  * }
+ * system.debug('Name: ' + name.MasterLabel);
  */
 public inherited sharing class CustomMetadataDAO {
     /**
