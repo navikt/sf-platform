@@ -12,7 +12,7 @@ jobs:
     name: Check changes
     runs-on: ubuntu-latest
     outputs:
-      continueWorkflow: ${{ steps.checkChanges.outputs.continueWorkflow }}
+      hasSrcChanges: ${{ steps.checkChanges.outputs.hasSrcChanges }}
     permissions:
       contents: read
     steps:
@@ -22,67 +22,13 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: "Check changes since last commit in src folder"
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@8a76cf6726f88608113bd6cc313b4a6728ce476a
         id: checkChanges
-        run: |
-          printf -v red '\033[0;31m'
-          printf -v yellow '\033[0;33m'
-          printf -v green '\033[0;32m'
-          printf -v bold '\033[1m'
-          printf -v reset '\033[0m'
-          printf -v newLine '\n'
-
-          continueWorkflow=true
-          changes=""
-          nonMarkdownChanges=""
-
-          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
-          echo "${yellow}${bold}Check changes since last commit in src folder${reset}"
-          echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
-
-          if [ "${EVENT_NAME}" = "pull_request" ]; then
-            changes=$(git diff "${PR_BASE_SHA}".."${PR_HEAD_SHA}" --ignore-all-space --name-only -- src/)
-          else
-            # Fetch the parent commit SHA dynamically, ensuring we're always looking at the immediate predecessor.
-            changes=$(git diff $(git rev-parse "${REF_NAME}^") "${REF_NAME}" --ignore-all-space --name-only -- src/)
-          fi
-
-          if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
-            echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
-            echo "${yellow}${bold}Manual run. Start building 🏗️${reset}"
-            echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
-          else
-            echo "${yellow}Checking if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}"
-
-            if [ -n "$changes" ]; then
-              nonMarkdownChanges=$(echo $changes  | grep -v '\.md$')
-
-              if [ -n "$nonMarkdownChanges" ]; then
-                echo "${green}${bold}There have been changes to non-Markdown files! Start building 🏗️${reset}"
-              else
-                echo "${yellow}No changes to non-Markdown files detected.${reset}"
-                echo "${yellow}Cancelling the workflow${reset}"
-                continueWorkflow=false
-              fi
-            else
-              echo "${yellow}No changes to files in src folder. Cancelling the workflow${reset}"
-              continueWorkflow=false
-            fi
-
-            echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
-          fi
-
-          echo "continueWorkflow=$continueWorkflow" >> "$GITHUB_OUTPUT"
-        env:
-          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          REF_NAME: ${{ github.ref_name }}
-          EVENT_NAME: ${{ github.event_name }}
 
   buildAndPublish:
     name: Build and Publish
     needs: checkChanges
-    if: ${{ needs.checkChanges.outputs.continueWorkflow == 'true' }}
+    if: ${{ needs.checkChanges.outputs.hasSrcChanges == 'true' && github.ref_name == 'main' }}
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     permissions:
@@ -96,7 +42,6 @@ jobs:
           persist-credentials: true
 
       - name: Authenticate node
-        if: ${{ github.ref_name == 'main' }}
         uses: actions/setup-node@v4
         with:
           registry-url: "https://npm.pkg.github.com"
@@ -108,41 +53,33 @@ jobs:
           alias: "devhub"
           setDefaultDevhubUsername: "true"
 
-      - name: Validate against CI Pool
-        uses: navikt/sf-platform/.github/actions/ciValidate@79ad1077a810db336f3e39606a25a4a505d5012c
-        with:
-          devhub: "devhub"
-          pools: ${{ vars.DEFAULT_CI_POOL }}
-          ref: ${{ github.event_name == 'pull_request' && github.sha || '' }}
-          baseRef: ${{ github.event_name == 'pull_request' && github.sha || '' }}
-
-      - name: Delete Stale Validation Org
-        if: ${{ failure() }}
-        run: sf org delete scratch -p
-
-      - name: Quick build
-        if: ${{ github.ref_name != 'main' }}
-        uses: navikt/sf-platform/.github/actions/ciQuickBuild@f318a266c5a7add9c091f9d3480164fed8abfc08
-
       - name: Build
-        if: ${{ github.ref_name == 'main' }}
         run: |
-          sfp build --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch ${GITHUB_REF#refs/heads/}
+          sfp build --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch main --releaseconfig config/releaseConfig.yml
+          if [ -d "artifacts" ] && [ -n "$(ls -A artifacts)" ]; then
+            echo "Artifacts found"
+          else
+            echo "No artifacts found"
+          fi
 
       - name: Publish artifacts
-        if: ${{ github.ref_name == 'main' }}
-        uses: navikt/sf-platform/.github/actions/publishArtifact@f318a266c5a7add9c091f9d3480164fed8abfc08
-        with:
-          nodeToken: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -d "artifacts" ] && [ -n "$(ls -A artifacts)" ]; then
+            sfp publish --artifactdir artifacts --npm --scope @${SCOPE} --devhubalias devhub --loglevel ${SFP_LOG_LEVEL} --gittag --pushgittag --logsgroupsymbol ::group::,::endgroup::
+          else
+            echo "No artifacts to publish"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
+          SCOPE: ${{ github.repository_owner }}
 
       - name: Generate Release Name
-        if: ${{ github.ref_name == 'main' }}
         id: generate_name
         run: |
           echo "releaseName=sf-platform_$(date +%s%3N)" >> $GITHUB_OUTPUT
 
       - name: Generate Release Definition
-        if: ${{ github.ref_name == 'main' }}
         run: |
           sfp releasedefinition generate --gitref ${GIT_REF} --configfile ${PATH_TO_CONFIG_FILE} --releasename ${RELEASE_NAME} --directory ${DIRECTORY} --branchname ${BRANCH_NAME}
         env:
@@ -153,7 +90,6 @@ jobs:
           BRANCH_NAME: ${{ github.ref_name }}
 
       - name: Commit release definition
-        if: ${{ github.ref_name == 'main' }}
         uses: navikt/sf-platform/.github/actions/commitFiles@f318a266c5a7add9c091f9d3480164fed8abfc08
         with:
           files: "release-definition/${{ steps.generate_name.outputs.releaseName }}.yml"

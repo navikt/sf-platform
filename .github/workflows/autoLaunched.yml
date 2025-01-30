@@ -4,16 +4,26 @@ on:
   push:
 concurrency:
   group: ci-${{ github.ref_name }}
-  cancel-in-progress: ${{ !(github.event_name == 'push' && github.ref_name == 'main') }}
 jobs:
   staticCodeValidation:
     name: Validation jobs
     uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
     permissions:
       contents: read
+  validatePackageChanges:
+    name: Validate package changes
+    needs: staticCodeValidation
+    if: ${{ github.ref_name != 'main' }}
+    uses: navikt/sf-platform/.github/workflows/validatePackageChanges.yml@main
+    permissions:
+      contents: read
+      packages: write
+    secrets:
+      SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
   buildAndPublish:
     name: Build Jobs
     needs: staticCodeValidation
+    if: ${{ github.ref_name == 'main' }}
     uses: navikt/sf-platform/.github/workflows/buildAndPublish.yml@main
     permissions:
       contents: write
