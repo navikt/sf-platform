@@ -37,7 +37,6 @@ runs:
     - name: validate
       shell: bash
       run: |
-        command="sfp validate pool --pools ${POOLS} --targetdevhubusername ${DEVHUB_ALIAS} --coveragepercent ${COVERAGE_PERCENT} --mode ${MODE} --logsgroupsymbol "::group::,::endgroup::""
         command=("sfp" "validate" "pool" "--pools" "${POOLS}" "--targetdevhubusername" "${DEVHUB_ALIAS}" "--coveragepercent" "${COVERAGE_PERCENT}" "--mode" "${MODE}" "--logsgroupsymbol" "::group::,::endgroup::")
 
 
@@ -51,7 +50,7 @@ runs:
 
         if [ "${DELETE_SCRATCH}" == "true" ];
         then
-          command+=(" --deletescratchorg")
+          command+=("--deletescratchorg")
         fi
 
         echo "Executing command: ${command[*]}"
