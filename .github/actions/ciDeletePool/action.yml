@@ -28,7 +28,7 @@ runs:
           echo "No tag provided"
         else
           echo "Run delete jobs on the pool $poolTag"
-          command+=("--tag $poolTag")
+          command+=("--tag" "$poolTag")
         fi
 
         case "$deleteJobType" in

@@ -109,12 +109,16 @@ jobs:
           setDefaultDevhubUsername: "true"
 
       - name: Validate against CI Pool
-        uses: navikt/sf-platform/.github/actions/ciValidate@f318a266c5a7add9c091f9d3480164fed8abfc08
+        uses: navikt/sf-platform/.github/actions/ciValidate@79ad1077a810db336f3e39606a25a4a505d5012c
         with:
           devhub: "devhub"
-          pools: "ciPlatform"
+          pools: ${{ vars.DEFAULT_CI_POOL }}
           ref: ${{ github.event_name == 'pull_request' && github.sha || '' }}
           baseRef: ${{ github.event_name == 'pull_request' && github.sha || '' }}
+
+      - name: Delete Stale Validation Org
+        if: ${{ failure() }}
+        run: sf org delete scratch -p
 
       - name: Quick build
         if: ${{ github.ref_name != 'main' }}
