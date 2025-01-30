@@ -25,7 +25,7 @@ jobs:
       - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@8a76cf6726f88608113bd6cc313b4a6728ce476a
         id: checkChanges
 
-  buildAndPublish:
+  validateChanges:
     name: Validate changes
     needs: checkChanges
     if: ${{ github.event_name == 'workflow_dispatch' || needs.checkChanges.outputs.hasSrcChanges == 'true' }}
@@ -63,12 +63,3 @@ jobs:
 
       - name: Quick build
         uses: navikt/sf-platform/.github/actions/ciQuickBuild@f318a266c5a7add9c091f9d3480164fed8abfc08
-
-      - name: Upload artifacts and logs
-        if: always()
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@f318a266c5a7add9c091f9d3480164fed8abfc08
-        with:
-          artifactName: "build-artifacts"
-          uploadArtifacts: true
-          logName: "build-logs"
-          publishLogs: true
