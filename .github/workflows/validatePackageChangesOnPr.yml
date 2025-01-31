@@ -1,5 +1,6 @@
-name: "Validate package changes"
+name: "[PR] Validate package changes"
 on:
+  pull_request:
   workflow_call:
     secrets:
       SF_DEVHUB_URL:
@@ -8,8 +9,15 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
 jobs:
+  staticCodeValidation:
+    name: Validation jobs
+    uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
+    permissions:
+      contents: read
+
   checkChanges:
     name: Check changes
+    needs: staticCodeValidation
     runs-on: ubuntu-latest
     outputs:
       hasSrcChanges: ${{ steps.checkChanges.outputs.hasSrcChanges }}
@@ -33,7 +41,6 @@ jobs:
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     permissions:
       contents: read
-      packages: write
     steps:
       - name: "Checkout"
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -49,17 +56,43 @@ jobs:
           setDefaultDevhubUsername: "true"
 
       - name: Validate against CI Pool
-        uses: navikt/sf-platform/.github/actions/ciValidate@79ad1077a810db336f3e39606a25a4a505d5012c
         if: ${{ github.event_name == 'pull_request' }}
-        with:
-          devhub: "devhub"
-          pools: ${{ vars.DEFAULT_CI_POOL }}
-          ref: ${{ github.event.pull_request.head.sha }}
-          baseRef: ${{ github.event.pull_request.base.sha }}
+        run: |
+          command=("sfp" "validate" "pool")
+          command+=("--pools" "${POOLS}")
+          command+=("--targetdevhubusername" "${DEVHUB_ALIAS}")
+          command+=("--mode" "${MODE}")
+          command+=("--logsgroupsymbol" "::group::,::endgroup::")
+          command+=("--loglevel" "${SFP_LOG_LEVEL}")
+
+          if [ "${COVERAGE_PERCENT}" ]; then
+            command+=("--coveragepercent" "${COVERAGE_PERCENT}")
+          fi
+
+          if [ "${REF}" ]; then
+            command+=( "--ref" "${REF}" )
+          fi
+
+          if [ "${BASE_REF}" ]; then
+            command+=( "--baseRef" "${BASE_REF}" )
+          fi
+
+          if [ "${DELETE_SCRATCH}" == "true" ]; then
+            command+=("--deletescratchorg")
+          fi
+
+          echo "Executing command: ${command[*]}"
+          "${command[@]}"
+        env:
+          POOLS: ${{ vars.DEFAULT_CI_POOL }}
+          DEVHUB_ALIAS: "devhub"
+          COVERAGE_PERCENT: ${{ vars.CODE_COVERAGE_PERCENTAGE }}
+          MODE: "thorough"
+          REF: ${{ github.event.pull_request.head.sha }}
+          BASE_REF: ${{ github.event.pull_request.base.sha }}
+          DELETE_SCRATCH: "true"
+          SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
 
       - name: Delete Stale Validation Org
         if: ${{ failure() }}
         run: sf org delete scratch -p
-
-      - name: Quick build
-        uses: navikt/sf-platform/.github/actions/ciQuickBuild@f318a266c5a7add9c091f9d3480164fed8abfc08
