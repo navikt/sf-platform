@@ -28,7 +28,7 @@ jobs:
   buildAndPublish:
     name: Build and Publish
     needs: checkChanges
-    if: ${{ needs.checkChanges.outputs.hasSrcChanges == 'true' && github.ref_name == 'main' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.checkChanges.outputs.hasSrcChanges == 'true' }}
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     permissions:
