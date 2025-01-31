@@ -1,0 +1,70 @@
+name: "[PUSH] Quickbuild"
+on:
+  push:
+    branches-ignore:
+      - main
+concurrency:
+  group: ci-${{ github.ref_name }}
+jobs:
+  staticCodeValidation:
+    name: Validation jobs
+    uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
+    permissions:
+      contents: read
+
+  checkChanges:
+    name: Check changes
+    needs: staticCodeValidation
+    runs-on: ubuntu-latest
+    outputs:
+      hasSrcChanges: ${{ steps.checkChanges.outputs.hasSrcChanges }}
+    permissions:
+      contents: read
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@8a76cf6726f88608113bd6cc313b4a6728ce476a
+        id: checkChanges
+
+  quickBuild:
+    name: Quickbuild
+    needs: checkChanges
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.checkChanges.outputs.hasSrcChanges == 'true' }}
+    runs-on: ubuntu-latest
+    container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Authenticate DevHub
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@a0f22eb5d1c9d1ec5e345c04c96a786bd150042a
+        with:
+          auth-url: ${{ secrets.SF_DEVHUB_URL }}
+          alias: "devhub"
+          setDefaultDevhubUsername: "true"
+
+      - name: "Quickbuild package"
+        id: quickbuildPackage
+        shell: bash
+        run: |
+          sfp quickbuild --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch ${GITHUB_REF#refs/heads/} --loglevel ${SFP_LOG_LEVEL}
+        env:
+          SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
+
+      - name: Upload artifacts and logs
+        if: always()
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@f318a266c5a7add9c091f9d3480164fed8abfc08
+        with:
+          artifactName: "build-artifacts"
+          uploadArtifacts: true
+          logName: "build-logs"
+          publishLogs: true
