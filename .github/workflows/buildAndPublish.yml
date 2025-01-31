@@ -55,12 +55,14 @@ jobs:
 
       - name: Build
         run: |
-          sfp build --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch main --releaseconfig config/releaseConfig.yml
+          sfp build --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch main --releaseconfig config/releaseConfig.yml --loglevel ${SFP_LOG_LEVEL}
           if [ -d "artifacts" ] && [ -n "$(ls -A artifacts)" ]; then
             echo "Artifacts found"
           else
             echo "No artifacts found"
           fi
+        env:
+          SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
 
       - name: Publish artifacts
         run: |
@@ -81,13 +83,14 @@ jobs:
 
       - name: Generate Release Definition
         run: |
-          sfp releasedefinition generate --gitref ${GIT_REF} --configfile ${PATH_TO_CONFIG_FILE} --releasename ${RELEASE_NAME} --directory ${DIRECTORY} --branchname ${BRANCH_NAME}
+          sfp releasedefinition generate --gitref ${GIT_REF} --configfile ${PATH_TO_CONFIG_FILE} --releasename ${RELEASE_NAME} --directory ${DIRECTORY} --branchname ${BRANCH_NAME} --loglevel ${SFP_LOG_LEVEL}
         env:
           GIT_REF: ${{ github.sha }}
           PATH_TO_CONFIG_FILE: "config/releaseConfig.yml"
           RELEASE_NAME: ${{ steps.generate_name.outputs.releaseName }}
           DIRECTORY: "release-definition"
           BRANCH_NAME: ${{ github.ref_name }}
+          SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
 
       - name: Commit release definition
         uses: navikt/sf-platform/.github/actions/commitFiles@f318a266c5a7add9c091f9d3480164fed8abfc08
