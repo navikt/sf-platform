@@ -4,6 +4,9 @@ inputs:
   nodeToken:
     description: "A Github PAT"
     required: true
+  devhub:
+    description: "The devhub alias"
+    required: true
 
 runs:
   using: composite
@@ -12,9 +15,12 @@ runs:
       shell: bash
       run: |
         if [ -d "artifacts" ] && [ -n "$(ls -A artifacts)" ]; then
-          sfp publish --artifactdir artifacts --npm --scope @${{ github.repository_owner }}  --gittag --pushgittag
+          sfp publish --artifactdir artifacts --npm --scope @${SCOPE} --devhubalias ${DEVHUB_ALIAS} --loglevel ${SFP_LOG_LEVEL} --gittag --pushgittag --logsgroupsymbol ::group::,::endgroup::
         else
           echo "No artifacts to publish"
         fi
       env:
         NODE_AUTH_TOKEN: ${{ inputs.nodeToken }}
+        DEVHUB_ALIAS: ${{ inputs.devhub }}
+        SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
+        SCOPE: ${{ github.repository_owner }}
