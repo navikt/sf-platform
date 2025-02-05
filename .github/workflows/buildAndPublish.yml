@@ -97,7 +97,6 @@ jobs:
             --gitref ${GIT_REF} \
             --configfile ${PATH_TO_CONFIG_FILE} \
             --releasename ${RELEASE_NAME} \
-            --directory ${DIRECTORY} \
             --branchname ${BRANCH_NAME} \
             --loglevel ${SFP_LOG_LEVEL} \
           | sed 's/\x1b\[[0-9;]*m//g' \
