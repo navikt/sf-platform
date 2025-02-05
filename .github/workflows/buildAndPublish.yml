@@ -91,21 +91,43 @@ jobs:
         run: |
           echo "releaseName=sf-platform_$(date +%s%3N)" >> $GITHUB_OUTPUT
 
-      - name: Generate Release Definition
+      - name: Generate release definition and change log
         run: |
-          sfp releasedefinition generate --gitref ${GIT_REF} --configfile ${PATH_TO_CONFIG_FILE} --releasename ${RELEASE_NAME} --directory ${DIRECTORY} --branchname ${BRANCH_NAME} --loglevel ${SFP_LOG_LEVEL}
+          sfp releasedefinition generate \
+            --gitref ${GIT_REF} \
+            --configfile ${PATH_TO_CONFIG_FILE} \
+            --releasename ${RELEASE_NAME} \
+            --directory ${DIRECTORY} \
+            --branchname ${BRANCH_NAME} \
+            --loglevel ${SFP_LOG_LEVEL} \
+          | sed 's/\x1b\[[0-9;]*m//g' \
+          | awk '/^release:/,0' > releases/${RELEASE_NAME}/${RELEASE_NAME}.yaml
+
+          path=$(sfp changelog generate --branchname main --releasename ${RELEASE_NAME} --workitemfilter PTCRM-[0-9] --nopush --directory changelog | grep -oP 'Copying the repository to \K[^ ]+' | head -1)
+
+          if [ -n "$path" ] && [ -d "$path/changelog" ]; then
+            mkdir -p releases/${RELEASE_NAME}
+            cp "$path/changelog"/* releases/${RELEASE_NAME}/
+          else
+              echo "Error: Path not set or directory does not exist"
+          fi
         env:
           GIT_REF: ${{ github.sha }}
           PATH_TO_CONFIG_FILE: "config/releaseConfig.yml"
           RELEASE_NAME: ${{ steps.generate_name.outputs.releaseName }}
-          DIRECTORY: "release-definition"
           BRANCH_NAME: ${{ github.ref_name }}
           SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
 
-      - name: Commit release definition
+      - name: Commit release files
         uses: navikt/sf-platform/.github/actions/commitFiles@f318a266c5a7add9c091f9d3480164fed8abfc08
         with:
-          files: "release-definition/${{ steps.generate_name.outputs.releaseName }}.yml"
+          files: "releases/${{ steps.generate_name.outputs.releaseName }}/${{ steps.generate_name.outputs.releaseName }}.yml releases/${{ steps.generate_name.outputs.releaseName }}/Release-Changelog.md"
+
+      - name: Create Github Release
+        run: |
+          gh release create ${RELEASE_NAME} releases/${RELEASE_NAME}/${RELEASE_NAME}.yaml --notes-file releases/${RELEASE_NAME}/Release-Changelog.md --title ${RELEASE_NAME}
+        env:
+          RELEASE_NAME: ${{ steps.generate_name.outputs.releaseName }}
 
       - name: Upload artifacts and logs
         if: always()
