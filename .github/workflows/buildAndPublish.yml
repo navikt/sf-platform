@@ -93,6 +93,9 @@ jobs:
 
       - name: Generate release definition and change log
         run: |
+          mkdir releases\${RELEASE_NAME} # Make sure we have a folder to put the release files in
+
+          # Generate release definition
           sfp releasedefinition generate \
             --gitref ${GIT_REF} \
             --configfile ${PATH_TO_CONFIG_FILE} \
@@ -102,6 +105,7 @@ jobs:
           | sed 's/\x1b\[[0-9;]*m//g' \
           | awk '/^release:/,0' > releases/${RELEASE_NAME}/${RELEASE_NAME}.yaml
 
+          # Generate changelog
           path=$(sfp changelog generate --branchname main --releasename ${RELEASE_NAME} --workitemfilter PTCRM-[0-9] --nopush --directory changelog | grep -oP 'Copying the repository to \K[^ ]+' | head -1)
 
           if [ -n "$path" ] && [ -d "$path/changelog" ]; then
