@@ -93,7 +93,7 @@ jobs:
 
       - name: Generate release definition and change log
         run: |
-          mkdir releases\${RELEASE_NAME} # Make sure we have a folder to put the release files in
+          mkdir --parents releases\${RELEASE_NAME} # Make sure we have a folder to put the release files in
 
           # Generate release definition
           sfp releasedefinition generate \
