@@ -102,6 +102,7 @@ jobs:
             --releasename ${RELEASE_NAME} \
             --branchname ${BRANCH_NAME} \
             --loglevel ${SFP_LOG_LEVEL} \
+            --nopush \
           | sed 's/\x1b\[[0-9;]*m//g' \
           | awk '/^release:/,0' > releases/${RELEASE_NAME}/${RELEASE_NAME}.yaml
 
