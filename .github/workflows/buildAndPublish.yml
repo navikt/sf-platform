@@ -110,15 +110,15 @@ jobs:
           | sed 's/\x1b\[[0-9;]*m//g' \
           | awk '/^release:/,0' > releases/${RELEASE_NAME}/${RELEASE_NAME}.yaml
 
-
           # Check if the file was created
           ls -la releases/${RELEASE_NAME}
 
           # Generate changelog
           path=$(sfp changelog generate --branchname main --releasename ${RELEASE_NAME} --workitemfilter PTCRM-[0-9] --nopush --directory changelog | grep -oP 'Copying the repository to \K[^ ]+' | head -1)
 
+          echo "PATH: $path"
+
           if [ -n "$path" ] && [ -d "$path/changelog" ]; then
-            mkdir -p releases/${RELEASE_NAME}
             cp "$path/changelog"/* releases/${RELEASE_NAME}/
           else
               echo "Error: Path not set or directory does not exist"
@@ -137,7 +137,23 @@ jobs:
 
       - name: Create Github Release
         run: |
-          gh release create ${RELEASE_NAME} releases/${RELEASE_NAME}/${RELEASE_NAME}.yaml --notes-file releases/${RELEASE_NAME}/Release-Changelog.md --title ${RELEASE_NAME}
+          UPLOAD_URL=$(curl -s -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{"tag_name":"'"${RELEASE_NAME}"'","name":"'"${RELEASE_NAME}"'","body":"'"$(cat releases/${RELEASE_NAME}/Release-Changelog.md)"'"}' \
+            https://api.github.com/repos/${{ github.repository }}/releases | jq -r '.upload_url' | sed 's/{?name,label}//')
+
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @releases/${RELEASE_NAME}/${RELEASE_NAME}.yaml \
+            "$UPLOAD_URL?name=${RELEASE_NAME}.yaml"
+
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @releases/${RELEASE_NAME}/Release-Changelog.md \
+            "$UPLOAD_URL?name=Release-Changelog.md"
         env:
           RELEASE_NAME: ${{ steps.generate_name.outputs.releaseName }}
 
