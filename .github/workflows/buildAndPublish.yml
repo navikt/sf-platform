@@ -110,19 +110,21 @@ jobs:
           | sed 's/\x1b\[[0-9;]*m//g' \
           | awk '/^release:/,0' > releases/${RELEASE_NAME}/${RELEASE_NAME}.yaml
 
-          # Check if the file was created
-          ls -la releases/${RELEASE_NAME}
-
           # Generate changelog
           path=$(sfp changelog generate --branchname main --releasename ${RELEASE_NAME} --workitemfilter PTCRM-[0-9] --nopush --directory changelog | grep -oP 'Copying the repository to \K[^ ]+' | head -1)
 
-          echo "PATH: $path"
+          # Check if the changelog files was created
+          echo "PATH to changelog: $path"
+          ls -la $path/changelog
 
           if [ -n "$path" ] && [ -d "$path/changelog" ]; then
             cp "$path/changelog"/* releases/${RELEASE_NAME}/
           else
               echo "Error: Path not set or directory does not exist"
           fi
+
+          # Check if the files was created
+          ls -la releases/${RELEASE_NAME}
         env:
           GIT_REF: ${{ github.sha }}
           PATH_TO_CONFIG_FILE: "config/releaseConfig.yml"
@@ -133,7 +135,9 @@ jobs:
       - name: Commit release files
         uses: navikt/sf-platform/.github/actions/commitFiles@f318a266c5a7add9c091f9d3480164fed8abfc08
         with:
-          files: "releases/${{ steps.generate_name.outputs.releaseName }}/${{ steps.generate_name.outputs.releaseName }}.yml releases/${{ steps.generate_name.outputs.releaseName }}/Release-Changelog.md"
+          files: |
+            "releases/${{ steps.generate_name.outputs.releaseName }}/${{ steps.generate_name.outputs.releaseName }}.yml"
+            "releases/${{ steps.generate_name.outputs.releaseName }}/Release-Changelog.md"
 
       - name: Create Github Release
         run: |
