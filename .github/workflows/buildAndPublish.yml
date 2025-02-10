@@ -113,18 +113,17 @@ jobs:
           # Generate changelog
           path=$(sfp changelog generate --branchname main --releasename ${RELEASE_NAME} --workitemfilter PTCRM-[0-9] --nopush --directory changelog | grep -oP 'Copying the repository to \K[^ ]+' | head -1)
 
-          # Check if the changelog files was created
-          echo "PATH to changelog: $path"
-          ls -la $path/changelog
-
           if [ -n "$path" ] && [ -d "$path/changelog" ]; then
             cp "$path/changelog"/* releases/${RELEASE_NAME}/
           else
-              echo "Error: Path not set or directory does not exist"
+              echo "Error: Path not set or directory does not exist. Tried looking for $path/changelog"
           fi
 
           # Check if the files was created
-          ls -la releases/${RELEASE_NAME}
+          echo: "Files created:"
+          ls -A1 releases/${RELEASE_NAME}
+
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
         env:
           GIT_REF: ${{ github.sha }}
           PATH_TO_CONFIG_FILE: "config/releaseConfig.yml"
@@ -138,6 +137,7 @@ jobs:
           files: |
             "releases/${{ steps.generate_name.outputs.releaseName }}/${{ steps.generate_name.outputs.releaseName }}.yml"
             "releases/${{ steps.generate_name.outputs.releaseName }}/Release-Changelog.md"
+          commitMessage: "Release files for ${{ steps.generate_name.outputs.releaseName }}"
 
       - name: Create Github Release
         run: |
