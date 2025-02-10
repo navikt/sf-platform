@@ -4,6 +4,10 @@ inputs:
   files:
     description: "List of filename or path to the files to commit"
     required: true
+  commitMessage:
+    description: "Commit message"
+    default: "Commit from bot"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -16,16 +20,17 @@ runs:
         printf -v bold '\033[1m'
         printf -v reset '\033[0m'
 
-        echo "::group::Run Prettier Check"
-        if [ -n "$FILES" ]; then
+        echo "::group::Commit files"
+        if [ ${#FILES[@]} -gt 0 ]; then
           cmd=("gh" "api" "graphql" 
               -F "githubRepository=${REPOSITORY}" 
               -F "branchName=${REF_NAME}" 
               -F "expectedHeadOid=$(git rev-parse HEAD)" 
-              -F "commitMessage=Commit from bot")
+              -F "commitMessage=${COMMIT_MESSAGE}")
 
-          for file in $FILES; do
+          for file in "${FILES[@]}"; do
             if [ -f "$file" ]; then
+              echo "${green}Adding file $file${reset}"
               cmd+=(-F "files[][path]=$file" -F "files[][contents]=$(base64 -w0 "$file")")
             else
               echo "${red}File $file does not exist, skipping.${reset}"
@@ -44,3 +49,4 @@ runs:
         REPOSITORY: ${{ github.repository }}
         REF_NAME: ${{ github.ref_name }}
         FILES: ${{ inputs.files }}
+        COMMIT_MESSAGE: ${{ inputs.commitMessage }}
