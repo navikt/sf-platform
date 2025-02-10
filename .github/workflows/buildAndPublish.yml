@@ -120,7 +120,7 @@ jobs:
           fi
 
           # Check if the files was created
-          echo: "Files created:"
+          echo "Files created:"
           ls -A1 releases/${RELEASE_NAME}
 
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
