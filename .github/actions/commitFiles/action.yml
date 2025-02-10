@@ -8,6 +8,9 @@ inputs:
     description: "Commit message"
     default: "Commit from bot"
     required: true
+  token:
+    description: "GitHub token"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -22,25 +25,51 @@ runs:
 
         echo "::group::Commit files"
         if [ ${#FILES[@]} -gt 0 ]; then
-          cmd=("gh" "api" "graphql" 
-              -F "githubRepository=${REPOSITORY}" 
-              -F "branchName=${REF_NAME}" 
-              -F "expectedHeadOid=$(git rev-parse HEAD)" 
-              -F "commitMessage=${COMMIT_MESSAGE}")
+          # Prepare the JSON payload
+          JSON_PAYLOAD=$(cat <<EOF
+          {
+            "query": "$(cat .github/api/createCommitOnBranch.gql)",
+            "variables": {
+              "githubRepository": "${REPOSITORY}",
+              "branchName": "${REF_NAME}",
+              "expectedHeadOid": "$(git rev-parse HEAD)",
+              "commitMessage": "${COMMIT_MESSAGE}",
+              "files": [
+          EOF
+          )
 
+          FILES_ARRAY=""
           for file in "${FILES[@]}"; do
             if [ -f "$file" ]; then
               echo "${green}Adding file $file${reset}"
-              cmd+=(-F "files[][path]=$file" -F "files[][contents]=$(base64 -w0 "$file")")
+              base64_content=$(base64 -w0 "$file")
+              FILES_ARRAY+="{\"path\": \"$file\", \"contents\": \"$base64_content\"},"
             else
               echo "${red}File $file does not exist, skipping.${reset}"
             fi
           done
 
-          cmd+=(-F "query=@.github/api/createCommitOnBranch.gql")
+          # Remove the last comma if there are files
+          if [ -n "$FILES_ARRAY" ]; then
+            FILES_ARRAY=${FILES_ARRAY::-1} # Remove trailing comma
+          fi
 
-          echo "${green}${bold}Executing:${reset} ${yellow}${cmd[@]}${reset}"
-          "${cmd[@]}"
+          JSON_PAYLOAD+=$(cat <<EOF
+            $FILES_ARRAY
+                ]
+              }
+            }
+            EOF
+          )
+
+          echo "${green}${bold}Executing GraphQL query via curl:${reset} ${yellow}curl -X POST -H 'Authorization: bearer ***' -H 'Content-Type: application/json' -d '$JSON_PAYLOAD' https://api.github.com/graphql${reset}"
+
+          # Actually execute the curl command
+          curl -X POST \
+            -H 'Authorization: bearer ${GH_TOKEN}' \
+            -H 'Content-Type: application/json' \
+            -d "$JSON_PAYLOAD" \
+            https://api.github.com/graphql
         else
           echo "No files to commit."
         fi
@@ -50,3 +79,4 @@ runs:
         REF_NAME: ${{ github.ref_name }}
         FILES: ${{ inputs.files }}
         COMMIT_MESSAGE: ${{ inputs.commitMessage }}
+        GH_TOKEN: ${{ inputs.token }}
