@@ -32,7 +32,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@8a76cf6726f88608113bd6cc313b4a6728ce476a
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@0492f69f72c9d66d98552ee9d62d85511efe21ec
         id: checkChanges
 
   buildAndPublish:
@@ -57,7 +57,7 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
 
       - name: Authenticate DevHub
-        uses: navikt/sf-platform/.github/actions/authenticateOrg@a0f22eb5d1c9d1ec5e345c04c96a786bd150042a
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@0492f69f72c9d66d98552ee9d62d85511efe21ec
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: "devhub"
@@ -132,7 +132,7 @@ jobs:
           SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
 
       - name: Commit release files
-        uses: navikt/sf-platform/.github/actions/commitFiles@983e348a2e3654659befedd4a63ae45572b73ead
+        uses: navikt/sf-platform/.github/actions/commitFiles@0492f69f72c9d66d98552ee9d62d85511efe21ec
         with:
           files: releases/${{ steps.generate_name.outputs.releaseName }}/${{ steps.generate_name.outputs.releaseName }}.yml, releases/${{ steps.generate_name.outputs.releaseName }}/Release-Changelog.md
           commitMessage: "Release files for ${{ steps.generate_name.outputs.releaseName }}"
@@ -162,7 +162,7 @@ jobs:
 
       - name: Upload artifacts and logs
         if: always()
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@f318a266c5a7add9c091f9d3480164fed8abfc08
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@0492f69f72c9d66d98552ee9d62d85511efe21ec
         with:
           artifactName: "build-artifacts"
           uploadArtifacts: true
