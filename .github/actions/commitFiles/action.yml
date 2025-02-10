@@ -2,7 +2,7 @@ name: "Commit files"
 description: "Commit files to the repository"
 inputs:
   files:
-    description: "List of filename or path to the files to commit"
+    description: "List of filenames with path to the files to commit, separated by a comma"
     required: true
   commitMessage:
     description: "Commit message"
@@ -23,6 +23,8 @@ runs:
         printf -v bold '\033[1m'
         printf -v reset '\033[0m'
 
+        IFS=',' read -ra FILES <<< "$FILES"
+
         echo "::group::Commit files"
         if [ ${#FILES[@]} -gt 0 ]; then
           # Prepare the JSON payload
@@ -40,7 +42,7 @@ runs:
 
           FILES_ARRAY=""
           for file in "${FILES[@]}"; do
-            if [ -f "$file" ]; then
+            if [ -f "$file" ] && [ -r "$file" ]; then
               echo "${green}Adding file $file${reset}"
               base64_content=$(base64 -w0 "$file")
               FILES_ARRAY+="{\"path\": \"$file\", \"contents\": \"$base64_content\"},"
@@ -55,21 +57,26 @@ runs:
           fi
 
           JSON_PAYLOAD+=$(cat <<EOF
-            $FILES_ARRAY
-                ]
-              }
+          $FILES_ARRAY
+              ]
             }
-            EOF
+          }
+          EOF
           )
 
           echo "${green}${bold}Executing GraphQL query via curl:${reset} ${yellow}curl -X POST -H 'Authorization: bearer ***' -H 'Content-Type: application/json' -d '$JSON_PAYLOAD' https://api.github.com/graphql${reset}"
 
           # Actually execute the curl command
-          curl -X POST \
+          if ! curl_output=$(curl -X POST \
             -H 'Authorization: bearer ${GH_TOKEN}' \
             -H 'Content-Type: application/json' \
             -d "$JSON_PAYLOAD" \
-            https://api.github.com/graphql
+            https://api.github.com/graphql 2>&1); then
+              echo "::error::Failed to commit changes. Curl output: $curl_output"
+              exit 1
+          fi
+
+          echo "GitHub API response: $curl_output"
         else
           echo "No files to commit."
         fi
