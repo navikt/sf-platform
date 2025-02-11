@@ -60,10 +60,14 @@ runs:
               FILES_ARRAY=$(echo "$FILES_ARRAY" | jq --arg path "$file" --arg content "$base64_content" '. + [{"path": $path, "contents": $content}]')
               echo "${green}Adding $file to commit.${reset}"
             else
-              echo "${red}File $file does not exist, skipping.${reset}"
               echo "::warning ::${red}File $file does not exist, skipping.${reset}"
             fi
           done
+
+          if [ ${#FILES_ARRAY[@]} -gt 0 ]; then
+            echo "::error::No files to commit."
+            exit 1
+          fi
 
           # Add the files array to the JSON payload
           JSON_PAYLOAD=$(echo "$JSON_PAYLOAD" | jq --argjson files "$FILES_ARRAY" '.variables.files |= $files')
