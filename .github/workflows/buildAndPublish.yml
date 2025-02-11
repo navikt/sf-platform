@@ -120,7 +120,7 @@ jobs:
           echo "$releaseDefinitionOutput"
 
           echo "$releaseDefinitionOutput" | sed 's/\x1b\[[0-9;]*m//g' \
-          | awk '/^release:/,0' > releases/${RELEASE_NAME}/${RELEASE_NAME}.yaml
+          | awk '/^release:/,0' > releases/${RELEASE_NAME}/${RELEASE_NAME}.yml
 
           echo "${yellow}Generating changelog...  ${reset}"
 
@@ -133,7 +133,7 @@ jobs:
             --nopush 2>&1)
 
           echo "$changelogOutput"
-          path=$(echo "$changelogOutput" | grep -oP 'Copying the repository to \K[^ ]+' \ | head -1)
+          path=$(echo "$changelogOutput" | grep -oP 'Copying the repository to \K[^ ]+' | head -1)
 
           # Copy changelog files to release directory
           if [ -n "$path" ] && [ -d "$path/changelog" ]; then
