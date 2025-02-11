@@ -92,36 +92,61 @@ jobs:
           echo "releaseName=sf-platform_$(date +%s%3N)" >> $GITHUB_OUTPUT
 
       - name: Generate release definition and change log
+        id: create_release_files
         run: |
+          printf -v red '\033[0;31m'
+          printf -v yellow '\033[0;33m'
+          printf -v green '\033[0;32m'
+          printf -v bold '\033[1m'
+          printf -v reset '\033[0m'
+
           # Debug: Print release name
-          echo "Release Name: ${RELEASE_NAME}"
+          echo "${yellow}${bold}Release Name:${reset} ${RELEASE_NAME}"
 
           # Create the directory for release files
           mkdir -p releases/${RELEASE_NAME}
 
+          echo "${yellow}Generate release definition...:${reset}"
+
           # Generate release definition and save to file
-          sfp releasedefinition generate \
+          releaseDefinitionOutput=$(sfp releasedefinition generate \
             --gitref ${GIT_REF} \
             --configfile ${PATH_TO_CONFIG_FILE} \
             --releasename ${RELEASE_NAME} \
             --branchname ${BRANCH_NAME} \
             --loglevel ${SFP_LOG_LEVEL} \
-            --nopush \
-          | sed 's/\x1b\[[0-9;]*m//g' \
+            --nopush)
+
+          echo "$releaseDefinitionOutput"
+
+          echo "$releaseDefinitionOutput" | sed 's/\x1b\[[0-9;]*m//g' \
           | awk '/^release:/,0' > releases/${RELEASE_NAME}/${RELEASE_NAME}.yaml
 
-          # Generate changelog
-          path=$(sfp changelog generate --branchname main --releasename ${RELEASE_NAME} --workitemfilter PTCRM-[0-9] --nopush --directory changelog | grep -oP 'Copying the repository to \K[^ ]+' | head -1)
+          echo "${yellow}Generate changelog...:${reset}"
 
+          # Generate changelog
+          changelogOutput=$(sfp changelog generate \
+          --branchname main \
+          --releasename ${RELEASE_NAME} \
+          --workitemfilter PTCRM-[0-9] \
+          --nopush \
+          --directory changelog)
+
+          echo "$changelogOutput"
+          path=$(echo "$changelogOutput" | grep -oP 'Copying the repository to \K[^ ]+' \ | head -1)
+
+          # Copy changelog files to release directory
           if [ -n "$path" ] && [ -d "$path/changelog" ]; then
             cp "$path/changelog"/* releases/${RELEASE_NAME}/
           else
-              echo "Error: Path not set or directory does not exist. Tried looking for $path/changelog"
+            echo "::warning::Path not set or directory does not exist. Tried looking for $path/changelog."
           fi
 
           # Check if the files was created
-          echo "Files created:"
+          echo "${yellow}${bold}Files created:${reset}"
           ls -A1 releases/${RELEASE_NAME}
+
+          echo "files=$(ls -m releases/${RELEASE_NAME}/*.{md,yml} | tr -d ' ')" >> $GITHUB_OUTPUT
 
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
         env:
@@ -134,7 +159,7 @@ jobs:
       - name: Commit release files
         uses: navikt/sf-platform/.github/actions/commitFiles@83a4e76e2c1953d5843ceec4b708ea236aaf812a
         with:
-          files: releases/${{ steps.generate_name.outputs.releaseName }}/${{ steps.generate_name.outputs.releaseName }}.yml, releases/${{ steps.generate_name.outputs.releaseName }}/Release-Changelog.md
+          files: ${{ steps.create_release_files.outputs.files }}
           commitMessage: "Release files for ${{ steps.generate_name.outputs.releaseName }}"
           token: ${{ secrets.GITHUB_TOKEN }}
 
