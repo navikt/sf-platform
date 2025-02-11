@@ -132,7 +132,7 @@ jobs:
           SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
 
       - name: Commit release files
-        uses: navikt/sf-platform/.github/actions/commitFiles@983e348a2e3654659befedd4a63ae45572b73ead
+        uses: navikt/sf-platform/.github/actions/commitFiles@83a4e76e2c1953d5843ceec4b708ea236aaf812a
         with:
           files: releases/${{ steps.generate_name.outputs.releaseName }}/${{ steps.generate_name.outputs.releaseName }}.yml, releases/${{ steps.generate_name.outputs.releaseName }}/Release-Changelog.md
           commitMessage: "Release files for ${{ steps.generate_name.outputs.releaseName }}"
