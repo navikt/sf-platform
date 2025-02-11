@@ -106,7 +106,7 @@ jobs:
           # Create the directory for release files
           mkdir -p releases/${RELEASE_NAME}
 
-          echo "${yellow}Generate release definition...:${reset}"
+          echo "${yellow}Generating release definition...${reset}"
 
           # Generate release definition and save to file
           releaseDefinitionOutput=$(sfp releasedefinition generate \
@@ -122,15 +122,15 @@ jobs:
           echo "$releaseDefinitionOutput" | sed 's/\x1b\[[0-9;]*m//g' \
           | awk '/^release:/,0' > releases/${RELEASE_NAME}/${RELEASE_NAME}.yaml
 
-          echo "${yellow}Generate changelog...:${reset}"
+          echo "${yellow}Generating changelog...  ${reset}"
 
           # Generate changelog
           changelogOutput=$(sfp changelog generate \
-          --branchname main \
-          --releasename ${RELEASE_NAME} \
-          --workitemfilter PTCRM-[0-9] \
-          --nopush \
-          --directory changelog)
+            --branchname main \
+            --releasename ${RELEASE_NAME} \
+            --workitemfilter PTCRM-[0-9] \
+            --directory changelog \
+            --nopush 2>&1)
 
           echo "$changelogOutput"
           path=$(echo "$changelogOutput" | grep -oP 'Copying the repository to \K[^ ]+' \ | head -1)
