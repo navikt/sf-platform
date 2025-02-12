@@ -142,7 +142,7 @@ jobs:
             echo "::warning::Path not set or directory does not exist. Tried looking for $path/changelog."
           fi
 
-          files=$(find config -maxdepth 1 -type f \( -name "*.md" -o -name "*.yml" \) -printf '%p,' | sed 's/,$//')
+          files=$(find releases/${RELEASE_NAME} -maxdepth 1 -type f \( -name "*.md" -o -name "*.yml" \) -printf '%p,' | sed 's/,$//')
 
           # Check if the files was created
           if [ -z "$files" ]; then
