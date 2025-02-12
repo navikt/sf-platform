@@ -72,15 +72,15 @@ runs:
           # Add the files array to the JSON payload
           JSON_PAYLOAD=$(echo "$JSON_PAYLOAD" | jq --argjson files "$FILES_ARRAY" '.variables.files |= $files')
 
-          echo "${green}${bold}Executing GraphQL query via curl:${reset} ${yellow}curl -X POST -H 'Authorization: bearer ***' -H 'Content-Type: application/json' -d '$JSON_PAYLOAD' https://api.github.com/graphql${reset}"
+          echo "${green}${bold}Executing GraphQL query via curl:${reset} ${yellow}curl --silent --show-error -X POST -H 'Authorization: bearer ***' -H 'Content-Type: application/json' -d '$JSON_PAYLOAD' https://api.github.com/graphql${reset}"
 
           # Actually execute the curl command
           if ! curl_output=$(curl --silent --show-error -X POST \
-            -H 'Authorization: bearer ${GH_TOKEN}' \
+            -H 'Authorization: token ${GITHUB_TOKEN}' \
             -H 'Content-Type: application/json' \
             -d "$JSON_PAYLOAD" \
             https://api.github.com/graphql 2>&1); then
-              echo "::error::Failed to commit changes. Curl output: $curl_output"
+              echo "::error title=Failed to commit changes.::Curl output: $curl_output"
               exit 1
           fi
 
@@ -94,4 +94,4 @@ runs:
         REF_NAME: ${{ github.ref_name }}
         FILES: ${{ inputs.files }}
         COMMIT_MESSAGE: ${{ inputs.commitMessage }}
-        GH_TOKEN: ${{ inputs.token }}
+        GITHUB_TOKEN: ${{ inputs.token }}
