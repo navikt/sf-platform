@@ -142,11 +142,17 @@ jobs:
             echo "::warning::Path not set or directory does not exist. Tried looking for $path/changelog."
           fi
 
-          # Check if the files was created
-          echo "${yellow}${bold}Files created:${reset}"
-          ls -A1 releases/${RELEASE_NAME}
+          files=$(find config -maxdepth 1 -type f \( -name "*.md" -o -name "*.yml" \) -printf '%p,' | sed 's/,$//')
 
-          echo "files=$(ls -m releases/${RELEASE_NAME}/*.{md,yml} | tr -d ' ')" >> $GITHUB_OUTPUT
+          # Check if the files was created
+          if [ -z "$files" ]; then
+            echo "::warning::No files found."
+          else
+            echo "${yellow}${bold}Files created:${reset}"
+            echo "$files"
+          fi
+
+          echo "files=$files" >> $GITHUB_OUTPUT
 
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
         env:
@@ -165,28 +171,35 @@ jobs:
 
       - name: Create Github Release
         run: |
+          printf -v red '\033[0;31m'
+          printf -v yellow '\033[0;33m'
+          printf -v green '\033[0;32m'
+          printf -v bold '\033[1m'
+          printf -v reset '\033[0m'
+
+          # Create the release and capture the upload URL
           UPLOAD_URL=$(curl -s -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -d '{"tag_name":"'"${RELEASE_NAME}"'","name":"'"${RELEASE_NAME}"'","body":"'"$(cat releases/${RELEASE_NAME}/Release-Changelog.md)"'"}' \
             https://api.github.com/repos/${{ github.repository }}/releases | jq -r '.upload_url' | sed 's/{?name,label}//')
 
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Content-Type: application/octet-stream" \
-            --data-binary @releases/${RELEASE_NAME}/${RELEASE_NAME}.yaml \
-            "$UPLOAD_URL?name=${RELEASE_NAME}.yaml"
-
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Content-Type: application/octet-stream" \
-            --data-binary @releases/${RELEASE_NAME}/Release-Changelog.md \
-            "$UPLOAD_URL?name=Release-Changelog.md"
+          # Loop through all files in the release directory and upload each
+          for file in releases/${RELEASE_NAME}/*; do
+            if [ -f "$file" ]; then
+              echo "${green}Uploading $file"
+              filename=$(basename "$file")
+              curl -X POST \
+                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                -H "Content-Type: application/octet-stream" \
+                --data-binary @"$file" \
+                "$UPLOAD_URL?name=$filename"
+            fi
+          done
         env:
           RELEASE_NAME: ${{ steps.generate_name.outputs.releaseName }}
 
       - name: Upload artifacts and logs
-        if: always()
         uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@f318a266c5a7add9c091f9d3480164fed8abfc08
         with:
           artifactName: "build-artifacts"
