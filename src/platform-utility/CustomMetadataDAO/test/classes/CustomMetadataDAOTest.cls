@@ -100,9 +100,4 @@ public class CustomMetadataDAOTest {
     public static void setMetadata(String query, List<SObject> records) {
         CustomMetadataDAO.customMetadataRecordsMap.put(query, records);
     }
-
-    @IsTest
-    private static void testNothing() {
-        Assert.areEqual('Nothing.', CustomMetadataDAO.nothing());
-    }
 }
