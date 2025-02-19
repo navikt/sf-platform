@@ -188,20 +188,20 @@ jobs:
           printf -v reset '\033[0m'
 
           echo "::group::Creating GitHub Release"
-          # Prepare the changelog body, handling missing or empty file
+          # Prepare the changelog body, preserving Markdown formatting
           changelog_file="releases/${RELEASE_NAME}/Release-Changelog.md"
           if [ -f "$changelog_file" ] && [ -s "$changelog_file" ]; then
-            body=$(sed 's/"/\\"/g' "$changelog_file" | tr -d '\n\r') # Escape quotes, remove newlines
+            body=$(jq -R -s '.' < "$changelog_file")
           else
             echo "::warning::Changelog file $changelog_file is missing or empty, using default body"
-            body="Release ${RELEASE_NAME}"
+            body=$(jq -R -s '.' <<< "Release ${RELEASE_NAME}")
           fi
 
           # Construct JSON payload
           json_payload=$(jq -n \
             --arg tag "$RELEASE_NAME" \
             --arg name "$RELEASE_NAME" \
-            --arg body "$body" \
+            --argjson body "$body" \
             '{tag_name: $tag, name: $name, body: $body}')
 
           # Debug: Output the JSON payload
@@ -215,11 +215,9 @@ jobs:
             -d "$json_payload" \
             https://api.github.com/repos/${{ github.repository }}/releases)
 
-          # Split response into body and status
           status=$(echo "$response" | tail -n1)
           body=$(echo "$response" | sed '$d')
 
-          # Debug: Output the raw response
           echo "HTTP Status: $status"
           echo "Response Body:"
           echo "$body"
@@ -230,7 +228,6 @@ jobs:
             exit 1
           fi
 
-          # Parse upload_url
           UPLOAD_URL=$(echo "$body" | jq -r '.upload_url | sub("{?name,label}"; "") // ""')
           if [ -z "$UPLOAD_URL" ]; then
             echo "${red}Failed to extract upload_url from response${reset}"
@@ -240,7 +237,6 @@ jobs:
           echo "Release created successfully. Upload URL: $UPLOAD_URL"
           echo "::endgroup::"
 
-          # (Remaining upload logic unchanged)
           echo "::group::Uploading Release Files"
           success_count=0
           failure_count=0
@@ -254,17 +250,22 @@ jobs:
               success=false
 
               while [ $attempt -lt $max_retries ] && [ "$success" = false ]; do
-                if curl -s -X POST \
+                upload_response=$(curl -s -w "\n%{http_code}" \
                   -H "Authorization: token ${NODE_AUTH_TOKEN}" \
                   -H "Content-Type: application/octet-stream" \
                   --data-binary @"$file" \
-                  "$UPLOAD_URL?name=$filename"; then
-                  echo "${green}Successfully uploaded $filename${reset}"
+                  "$UPLOAD_URL?name=$filename")
+                upload_status=$(echo "$upload_response" | tail -n1)
+                upload_body=$(echo "$upload_response" | sed '$d')
+
+                if [ "$upload_status" -eq 201 ]; then
+                  echo "${green}Successfully uploaded $filename (HTTP $upload_status)${reset}"
                   success=true
                   ((success_count++))
                 else
                   ((attempt++))
-                  echo "${red}Upload attempt $attempt failed for $filename${reset}"
+                  echo "${red}Upload attempt $attempt failed for $filename (HTTP $upload_status)${reset}"
+                  echo "Upload Response: $upload_body"
                   [ $attempt -lt $max_retries ] && sleep 2
                 fi
               done
