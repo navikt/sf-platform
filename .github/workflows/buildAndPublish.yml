@@ -228,7 +228,8 @@ jobs:
             exit 1
           fi
 
-          UPLOAD_URL=$(echo "$body" | jq -r '.upload_url | sub("{?name,label}"; "") // ""')
+          # Extract upload_url and remove any trailing template parameters
+          UPLOAD_URL=$(echo "$body" | jq -r '.upload_url | sub("\\{.*$"; "") // ""')
           if [ -z "$UPLOAD_URL" ]; then
             echo "${red}Failed to extract upload_url from response${reset}"
             echo "Parsed output: $(echo "$body" | jq '.')"
