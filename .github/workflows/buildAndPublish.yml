@@ -204,9 +204,6 @@ jobs:
             --argjson body "$body" \
             '{tag_name: $tag, name: $name, body: $body}')
 
-          echo "JSON Payload:"
-          echo "$json_payload"
-
           response=$(curl -s -w "\n%{http_code}" \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${NODE_AUTH_TOKEN}" \
@@ -215,10 +212,6 @@ jobs:
 
           status=$(echo "$response" | tail -n1)
           body=$(echo "$response" | sed '$d')
-
-          echo "HTTP Status: $status"
-          echo "Response Body:"
-          echo "$body"
 
           if [ "$status" -ne 201 ]; then
             echo "${red}Failed to create release (HTTP $status)${reset}"
@@ -229,7 +222,7 @@ jobs:
           UPLOAD_URL=$(echo "$body" | jq -r '.upload_url | sub("\\{.*$"; "") // ""')
           if [ -z "$UPLOAD_URL" ]; then
             echo "${red}Failed to extract upload_url from response${reset}"
-            echo "Parsed output: $(echo "$body" | jq '.')"
+            echo "Response: $body"
             exit 1
           fi
           echo "Release created successfully. Upload URL: $UPLOAD_URL"
@@ -240,9 +233,6 @@ jobs:
           failure_count=0
           max_retries=2
 
-          echo "Files to upload:"
-          ls -l releases/${RELEASE_NAME}/ || echo "No files found in releases/${RELEASE_NAME}/"
-
           for file in releases/${RELEASE_NAME}/*; do
             if [ -f "$file" ]; then
               filename=$(basename "$file")
@@ -251,7 +241,6 @@ jobs:
               success=false
 
               while [ $attempt -lt $max_retries ] && [ "$success" = false ]; do
-                echo "Attempt $((attempt + 1)) for $filename"
                 upload_response=$(curl -s -w "\n%{http_code}" \
                   -H "Authorization: token ${NODE_AUTH_TOKEN}" \
                   -H "Content-Type: application/octet-stream" \
@@ -261,12 +250,9 @@ jobs:
                 upload_status=$(echo "$upload_response" | tail -n1)
                 upload_body=$(echo "$upload_response" | sed '$d')
 
-                echo "curl exit code: $curl_exit_code"
-                echo "Upload status: $upload_status"
-                echo "Upload body: $upload_body"
-
                 if [ $curl_exit_code -ne 0 ]; then
                   echo "${red}curl command failed with exit code $curl_exit_code${reset}"
+                  echo "Upload Response: $upload_response"
                   ((attempt++))
                   [ $attempt -lt $max_retries ] && sleep 2
                 elif [ "$upload_status" -eq 201 ]; then
@@ -274,7 +260,8 @@ jobs:
                   success=true
                   ((success_count++))
                 else
-                  echo "${red}Upload attempt $attempt failed for $filename (HTTP $upload_status)${reset}"
+                  echo "${red}Upload attempt $((attempt + 1)) failed for $filename (HTTP $upload_status)${reset}"
+                  echo "Upload Response: $upload_body"
                   ((attempt++))
                   [ $attempt -lt $max_retries ] && sleep 2
                 fi
