@@ -180,9 +180,7 @@ jobs:
 
       - name: Create Github Release
         if: steps.build.outputs.artifactsFound == 'true'
-        shell: bash {0} # Use bash without -e to respect set +e
         run: |
-          set +e  # Disable exit-on-error to allow custom error handling
           printf -v red '\033[0;31m'
           printf -v yellow '\033[0;33m'
           printf -v green '\033[0;32m'
@@ -241,7 +239,7 @@ jobs:
               success=false
 
               while [ $attempt -lt $max_retries ] && [ "$success" = false ]; do
-                upload_response=$(curl -s -w "\n%{http_code}" \
+                upload_response=$(curl -w "\n%{http_code}" \
                   -H "Authorization: token ${NODE_AUTH_TOKEN}" \
                   -H "Content-Type: application/octet-stream" \
                   --data-binary @"$file" \
