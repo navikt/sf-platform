@@ -204,11 +204,9 @@ jobs:
             --argjson body "$body" \
             '{tag_name: $tag, name: $name, body: $body}')
 
-          # Debug: Output the JSON payload
           echo "JSON Payload:"
           echo "$json_payload"
 
-          # Send the API request
           response=$(curl -s -w "\n%{http_code}" \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${NODE_AUTH_TOKEN}" \
@@ -228,7 +226,6 @@ jobs:
             exit 1
           fi
 
-          # Extract upload_url and remove any trailing template parameters
           UPLOAD_URL=$(echo "$body" | jq -r '.upload_url | sub("\\{.*$"; "") // ""')
           if [ -z "$UPLOAD_URL" ]; then
             echo "${red}Failed to extract upload_url from response${reset}"
@@ -243,6 +240,10 @@ jobs:
           failure_count=0
           max_retries=2
 
+          # Debug: List files to upload
+          echo "Files to upload:"
+          ls -l releases/${RELEASE_NAME}/
+
           for file in releases/${RELEASE_NAME}/*; do
             if [ -f "$file" ]; then
               filename=$(basename "$file")
@@ -251,11 +252,12 @@ jobs:
               success=false
 
               while [ $attempt -lt $max_retries ] && [ "$success" = false ]; do
+                # Run curl with explicit error handling
                 upload_response=$(curl -s -w "\n%{http_code}" \
                   -H "Authorization: token ${NODE_AUTH_TOKEN}" \
                   -H "Content-Type: application/octet-stream" \
                   --data-binary @"$file" \
-                  "$UPLOAD_URL?name=$filename")
+                  "$UPLOAD_URL?name=$filename" || echo "curl failed with exit code $?"; echo "999")
                 upload_status=$(echo "$upload_response" | tail -n1)
                 upload_body=$(echo "$upload_response" | sed '$d')
 
@@ -275,6 +277,8 @@ jobs:
                 echo "::warning::Failed to upload $filename after $max_retries attempts"
                 ((failure_count++))
               fi
+            else
+              echo "Skipping $file - not a regular file"
             fi
           done
           echo "::endgroup::"
