@@ -188,18 +188,38 @@ jobs:
           printf -v reset '\033[0m'
 
           echo "::group::Creating GitHub Release"
-          # Capture response and HTTP status
+          # Prepare the changelog body, handling missing or empty file
+          changelog_file="releases/${RELEASE_NAME}/Release-Changelog.md"
+          if [ -f "$changelog_file" ] && [ -s "$changelog_file" ]; then
+            body=$(sed 's/"/\\"/g' "$changelog_file" | tr -d '\n\r') # Escape quotes, remove newlines
+          else
+            echo "::warning::Changelog file $changelog_file is missing or empty, using default body"
+            body="Release ${RELEASE_NAME}"
+          fi
+
+          # Construct JSON payload
+          json_payload=$(jq -n \
+            --arg tag "$RELEASE_NAME" \
+            --arg name "$RELEASE_NAME" \
+            --arg body "$body" \
+            '{tag_name: $tag, name: $name, body: $body}')
+
+          # Debug: Output the JSON payload
+          echo "JSON Payload:"
+          echo "$json_payload"
+
+          # Send the API request
           response=$(curl -s -w "\n%{http_code}" \
             -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -d "{\"tag_name\":\"${RELEASE_NAME}\",\"name\":\"${RELEASE_NAME}\",\"body\":\"$(sed 's/"/\\"/g' releases/${RELEASE_NAME}/Release-Changelog.md)\"}" \
+            -H "Authorization: token ${NODE_AUTH_TOKEN}" \
+            -d "$json_payload" \
             https://api.github.com/repos/${{ github.repository }}/releases)
 
           # Split response into body and status
           status=$(echo "$response" | tail -n1)
           body=$(echo "$response" | sed '$d')
 
-          # Debug: Output the raw response body and status
+          # Debug: Output the raw response
           echo "HTTP Status: $status"
           echo "Response Body:"
           echo "$body"
@@ -210,7 +230,7 @@ jobs:
             exit 1
           fi
 
-          # Parse upload_url with error handling
+          # Parse upload_url
           UPLOAD_URL=$(echo "$body" | jq -r '.upload_url | sub("{?name,label}"; "") // ""')
           if [ -z "$UPLOAD_URL" ]; then
             echo "${red}Failed to extract upload_url from response${reset}"
@@ -220,6 +240,7 @@ jobs:
           echo "Release created successfully. Upload URL: $UPLOAD_URL"
           echo "::endgroup::"
 
+          # (Remaining upload logic unchanged)
           echo "::group::Uploading Release Files"
           success_count=0
           failure_count=0
