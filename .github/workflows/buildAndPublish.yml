@@ -1,3 +1,7 @@
+# Workflow: Build and Publish
+# Purpose: Builds Salesforce packages, publishes artifacts, generates release files, and creates a GitHub release.
+# Triggers: Manual (workflow_dispatch) or push to main with source changes.
+# Notes: Skips publishing and release steps if no artifacts are generated during build.
 name: "Build and Publish"
 on:
   workflow_call:
@@ -40,10 +44,14 @@ jobs:
     needs: checkChanges
     if: ${{ github.event_name == 'workflow_dispatch' || needs.checkChanges.outputs.hasSrcChanges == 'true' }}
     runs-on: ubuntu-latest
-    container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
+    container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION || 'latest' }}
     permissions:
       contents: write
       packages: write
+    env:
+      SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL || 'INFO' }}
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SCOPE: ${{ github.repository_owner }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -64,34 +72,35 @@ jobs:
           setDefaultDevhubUsername: "true"
 
       - name: Build
+        id: build
         run: |
-          sfp build --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch main --releaseconfig config/releaseConfig.yml --loglevel ${SFP_LOG_LEVEL}
-          if [ -d "artifacts" ] && [ -n "$(ls -A artifacts)" ]; then
-            echo "Artifacts found"
+          if sfp build --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch main --releaseconfig config/releaseConfig.yml --loglevel ${SFP_LOG_LEVEL}; then
+            if [ -d "artifacts" ] && [ -n "$(ls -A artifacts)" ]; then
+              echo "Artifacts found"
+              echo "artifactsFound=true" >> $GITHUB_OUTPUT
+            else
+              echo "::warning::No artifacts found after running Build step."
+              echo "artifactsFound=false" >> $GITHUB_OUTPUT
+            fi
           else
-            echo "No artifacts found"
+            echo "::error::Build command failed"
+            echo "artifactsFound=false" >> $GITHUB_OUTPUT
+            exit 1  # Fail the job only on build error
           fi
-        env:
-          SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
 
       - name: Publish artifacts
+        if: steps.build.outputs.artifactsFound == 'true'
         run: |
-          if [ -d "artifacts" ] && [ -n "$(ls -A artifacts)" ]; then
-            sfp publish --artifactdir artifacts --npm --scope @${SCOPE} --devhubalias devhub --loglevel ${SFP_LOG_LEVEL} --gittag --pushgittag --logsgroupsymbol ::group::,::endgroup::
-          else
-            echo "No artifacts to publish"
-          fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
-          SCOPE: ${{ github.repository_owner }}
+          sfp publish --artifactdir artifacts --npm --scope @${SCOPE} --devhubalias devhub --loglevel ${SFP_LOG_LEVEL} --gittag --pushgittag --logsgroupsymbol ::group::,::endgroup::
 
       - name: Generate Release Name
+        if: steps.build.outputs.artifactsFound == 'true'
         id: generate_name
         run: |
           echo "releaseName=sf-platform_$(date +%s%3N)" >> $GITHUB_OUTPUT
 
       - name: Generate release definition and change log
+        if: steps.build.outputs.artifactsFound == 'true'
         id: create_release_files
         run: |
           printf -v red '\033[0;31m'
@@ -160,9 +169,9 @@ jobs:
           PATH_TO_CONFIG_FILE: "config/releaseConfig.yml"
           RELEASE_NAME: ${{ steps.generate_name.outputs.releaseName }}
           BRANCH_NAME: ${{ github.ref_name }}
-          SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
 
       - name: Commit release files
+        if: steps.build.outputs.artifactsFound == 'true'
         uses: navikt/sf-platform/.github/actions/commitFiles@9bdaa6b47c446ec455e197a69a313fe963f7f6ec
         with:
           files: ${{ steps.create_release_files.outputs.files }}
@@ -170,6 +179,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Github Release
+        if: steps.build.outputs.artifactsFound == 'true'
         run: |
           printf -v red '\033[0;31m'
           printf -v yellow '\033[0;33m'
@@ -178,28 +188,78 @@ jobs:
           printf -v reset '\033[0m'
 
           # Create the release and capture the upload URL
-          UPLOAD_URL=$(curl -s -X POST \
+          echo "::group::Creating GitHub Release"
+          response=$(curl -s -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -d '{"tag_name":"'"${RELEASE_NAME}"'","name":"'"${RELEASE_NAME}"'","body":"'"$(cat releases/${RELEASE_NAME}/Release-Changelog.md)"'"}' \
-            https://api.github.com/repos/${{ github.repository }}/releases | jq -r '.upload_url' | sed 's/{?name,label}//')
+            -d "{\"tag_name\":\"${RELEASE_NAME}\",\"name\":\"${RELEASE_NAME}\",\"body\":\"$(sed 's/"/\\"/g' releases/${RELEASE_NAME}/Release-Changelog.md)\"}" \
+            https://api.github.com/repos/${{ github.repository }}/releases)
 
-          # Loop through all files in the release directory and upload each
+          UPLOAD_URL=$(echo "$response" | jq -r '.upload_url | sub("{?name,label}"; "")')
+          if [ -z "$UPLOAD_URL" ]; then
+            echo "${red}Failed to create release${reset}"
+            echo "$response"
+            exit 1
+          fi
+          echo "Release created successfully"
+          echo "::endgroup::"
+
+          # Upload files with retry logic
+          echo "::group::Uploading Release Files"
+          success_count=0
+          failure_count=0
+          max_retries=2
+
           for file in releases/${RELEASE_NAME}/*; do
             if [ -f "$file" ]; then
-              echo "${green}Uploading $file"
               filename=$(basename "$file")
-              curl -X POST \
-                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                -H "Content-Type: application/octet-stream" \
-                --data-binary @"$file" \
-                "$UPLOAD_URL?name=$filename"
+              echo "${yellow}Uploading $filename${reset}"
+              attempt=0
+              success=false
+
+              while [ $attempt -lt $max_retries ] && [ "$success" = false ]; do
+                if curl -s -X POST \
+                  -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                  -H "Content-Type: application/octet-stream" \
+                  --data-binary @"$file" \
+                  "$UPLOAD_URL?name=$filename"; then
+                  echo "${green}Successfully uploaded $filename${reset}"
+                  success=true
+                  ((success_count++))
+                else
+                  ((attempt++))
+                  status=$(curl -s -o /dev/null -w "%{http_code}" -X POST ...)
+                  echo "${red}Upload attempt $attempt failed for $filename (HTTP $status)${reset}"
+                  [ $attempt -lt $max_retries ] && sleep 2  # Wait before retrying
+                fi
+              done
+
+              if [ "$success" = false ]; then
+                echo "::warning::Failed to upload $filename after $max_retries attempts"
+                ((failure_count++))
+              fi
             fi
           done
+          echo "::endgroup::"
+
+          # Summary
+          if [ $success_count -eq 0 ] && [ $failure_count -gt 0 ]; then
+            echo "::error::${red}No files uploaded successfully${reset}"
+            exit 1
+          fi
+          echo "::group::Upload Summary"
+          echo "${green}Uploaded ${yellow}${bold}$success_count${reset}${green} files successfully${reset}"
+          echo "${red}Failed to upload ${yellow}${bold}$failure_count${reset}${red} files${reset}"
+          if [ $failure_count -gt 0 ]; then
+            echo "::warning::Some uploads failed, check logs for details"
+          fi
+          echo "::endgroup::"
+
         env:
           RELEASE_NAME: ${{ steps.generate_name.outputs.releaseName }}
 
       - name: Upload artifacts and logs
+        if: steps.build.outputs.artifactsFound == 'true'
         uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@f318a266c5a7add9c091f9d3480164fed8abfc08
         with:
           artifactName: "build-artifacts"
