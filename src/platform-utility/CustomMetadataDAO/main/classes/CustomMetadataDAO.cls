@@ -62,4 +62,9 @@ public inherited sharing class CustomMetadataDAO {
 
         return customMetadataRecordsMap.get(query);
     }
+
+    @TestVisible
+    private static String nothing() {
+        return 'Nothing.';
+    }
 }
