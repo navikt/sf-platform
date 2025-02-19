@@ -252,7 +252,6 @@ jobs:
                   echo "${red}curl command failed with exit code $curl_exit_code${reset}"
                   echo "Upload Response: $upload_response"
                   ((attempt++))
-                  [ $attempt -lt $max_retries ] && sleep 2
                 elif [ "$upload_status" -eq 201 ]; then
                   echo "${green}Successfully uploaded $filename (HTTP $upload_status)${reset}"
                   success=true
@@ -261,7 +260,6 @@ jobs:
                   echo "${red}Upload attempt $((attempt + 1)) failed for $filename (HTTP $upload_status)${reset}"
                   echo "Upload Response: $upload_body"
                   ((attempt++))
-                  [ $attempt -lt $max_retries ] && sleep 2
                 fi
               done
 
