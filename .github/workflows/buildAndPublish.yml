@@ -180,6 +180,7 @@ jobs:
 
       - name: Create Github Release
         if: steps.build.outputs.artifactsFound == 'true'
+        shell: bash {0} # Use bash without -e to respect set +e
         run: |
           set +e  # Disable exit-on-error to allow custom error handling
           printf -v red '\033[0;31m'
@@ -250,22 +251,22 @@ jobs:
               success=false
 
               while [ $attempt -lt $max_retries ] && [ "$success" = false ]; do
-                # Explicitly capture curl output and status, even on failure
-                set +e  # Ensure curl failure doesn't exit the script
+                echo "Attempt $((attempt + 1)) for $filename"
                 upload_response=$(curl -s -w "\n%{http_code}" \
                   -H "Authorization: token ${NODE_AUTH_TOKEN}" \
                   -H "Content-Type: application/octet-stream" \
                   --data-binary @"$file" \
                   "$UPLOAD_URL?name=$filename")
                 curl_exit_code=$?
-                set -e  # Re-enable if needed after curl
-
                 upload_status=$(echo "$upload_response" | tail -n1)
                 upload_body=$(echo "$upload_response" | sed '$d')
 
+                echo "curl exit code: $curl_exit_code"
+                echo "Upload status: $upload_status"
+                echo "Upload body: $upload_body"
+
                 if [ $curl_exit_code -ne 0 ]; then
                   echo "${red}curl command failed with exit code $curl_exit_code${reset}"
-                  echo "Upload Response: $upload_response"
                   ((attempt++))
                   [ $attempt -lt $max_retries ] && sleep 2
                 elif [ "$upload_status" -eq 201 ]; then
@@ -274,7 +275,6 @@ jobs:
                   ((success_count++))
                 else
                   echo "${red}Upload attempt $attempt failed for $filename (HTTP $upload_status)${reset}"
-                  echo "Upload Response: $upload_body"
                   ((attempt++))
                   [ $attempt -lt $max_retries ] && sleep 2
                 fi
