@@ -187,24 +187,39 @@ jobs:
           printf -v bold '\033[1m'
           printf -v reset '\033[0m'
 
-          # Create the release and capture the upload URL
           echo "::group::Creating GitHub Release"
-          response=$(curl -s -X POST \
+          # Capture response and HTTP status
+          response=$(curl -s -w "\n%{http_code}" \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -d "{\"tag_name\":\"${RELEASE_NAME}\",\"name\":\"${RELEASE_NAME}\",\"body\":\"$(sed 's/"/\\"/g' releases/${RELEASE_NAME}/Release-Changelog.md)\"}" \
             https://api.github.com/repos/${{ github.repository }}/releases)
 
-          UPLOAD_URL=$(echo "$response" | jq -r '.upload_url | sub("{?name,label}"; "")')
-          if [ -z "$UPLOAD_URL" ]; then
-            echo "${red}Failed to create release${reset}"
-            echo "$response"
+          # Split response into body and status
+          status=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          # Debug: Output the raw response body and status
+          echo "HTTP Status: $status"
+          echo "Response Body:"
+          echo "$body"
+
+          if [ "$status" -ne 201 ]; then
+            echo "${red}Failed to create release (HTTP $status)${reset}"
+            echo "Response: $body"
             exit 1
           fi
-          echo "Release created successfully"
+
+          # Parse upload_url with error handling
+          UPLOAD_URL=$(echo "$body" | jq -r '.upload_url | sub("{?name,label}"; "") // ""')
+          if [ -z "$UPLOAD_URL" ]; then
+            echo "${red}Failed to extract upload_url from response${reset}"
+            echo "Parsed output: $(echo "$body" | jq '.')"
+            exit 1
+          fi
+          echo "Release created successfully. Upload URL: $UPLOAD_URL"
           echo "::endgroup::"
 
-          # Upload files with retry logic
           echo "::group::Uploading Release Files"
           success_count=0
           failure_count=0
@@ -219,7 +234,7 @@ jobs:
 
               while [ $attempt -lt $max_retries ] && [ "$success" = false ]; do
                 if curl -s -X POST \
-                  -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                  -H "Authorization: token ${NODE_AUTH_TOKEN}" \
                   -H "Content-Type: application/octet-stream" \
                   --data-binary @"$file" \
                   "$UPLOAD_URL?name=$filename"; then
@@ -228,9 +243,8 @@ jobs:
                   ((success_count++))
                 else
                   ((attempt++))
-                  status=$(curl -s -o /dev/null -w "%{http_code}" -X POST ...)
-                  echo "${red}Upload attempt $attempt failed for $filename (HTTP $status)${reset}"
-                  [ $attempt -lt $max_retries ] && sleep 2  # Wait before retrying
+                  echo "${red}Upload attempt $attempt failed for $filename${reset}"
+                  [ $attempt -lt $max_retries ] && sleep 2
                 fi
               done
 
@@ -242,19 +256,17 @@ jobs:
           done
           echo "::endgroup::"
 
-          # Summary
-          if [ $success_count -eq 0 ] && [ $failure_count -gt 0 ]; then
-            echo "::error::${red}No files uploaded successfully${reset}"
-            exit 1
-          fi
           echo "::group::Upload Summary"
           echo "${green}Uploaded ${yellow}${bold}$success_count${reset}${green} files successfully${reset}"
           echo "${red}Failed to upload ${yellow}${bold}$failure_count${reset}${red} files${reset}"
           if [ $failure_count -gt 0 ]; then
             echo "::warning::Some uploads failed, check logs for details"
           fi
+          if [ $success_count -eq 0 ] && [ $failure_count -gt 0 ]; then
+            echo "::error::${red}No files uploaded successfully${reset}"
+            exit 1
+          fi
           echo "::endgroup::"
-
         env:
           RELEASE_NAME: ${{ steps.generate_name.outputs.releaseName }}
 
