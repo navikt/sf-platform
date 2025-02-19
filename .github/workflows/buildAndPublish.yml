@@ -181,6 +181,7 @@ jobs:
       - name: Create Github Release
         if: steps.build.outputs.artifactsFound == 'true'
         run: |
+          set -x
           printf -v red '\033[0;31m'
           printf -v yellow '\033[0;33m'
           printf -v green '\033[0;32m'
