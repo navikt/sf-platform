@@ -1,28 +1,30 @@
 # Workflow: Build and Publish
 # Purpose: Builds Salesforce packages, publishes artifacts, generates release files, and creates a GitHub release.
 # Triggers: Manual (workflow_dispatch) or push to main with source changes.
-# Notes: Skips publishing and release steps if no artifacts are generated during build.
+# Notes: Skips publishing and release steps if no artifacts are generated during build. Runs in a single job to minimize container spin-up overhead.
 name: "Build and Publish"
 on:
   workflow_call:
     secrets:
       SF_DEVHUB_URL:
         required: true
+        description: "Salesforce DevHub authentication URL"
   push:
     branches:
       - main
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
+
 jobs:
   staticCodeValidation:
-    name: Validation jobs
+    name: Validation Jobs
     uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
     permissions:
       contents: read
 
-  checkChanges:
-    name: Check changes
+  detectPackageChanges:
+    name: Detect Package Changes
     needs: staticCodeValidation
     runs-on: ubuntu-latest
     outputs:
@@ -30,30 +32,32 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: "Checkout"
+      - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Full history needed for change detection
           persist-credentials: false
 
+      # Check for changes in the src directory
       - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@8a76cf6726f88608113bd6cc313b4a6728ce476a
         id: checkChanges
 
   createReleaseName:
-    name: Create release name
+    name: Create Release Name
     runs-on: ubuntu-latest
+    permissions: {} # No permissions needed}
     outputs:
       releaseName: ${{ steps.createReleaseName.outputs.releaseName }}
     steps:
-      - name: Set release name
+      - name: Set Release Name
         id: createReleaseName
         run: |
-          echo "releaseName=sf-platform_$(date +%s%3N)" >> $GITHUB_OUTPUT
+          echo "releaseName=sf-platform_$(date +%s%3N)" >> "$GITHUB_OUTPUT"
 
   buildAndPublish:
     name: Build and Publish
-    needs: [checkChanges, createReleaseName]
-    if: ${{ github.event_name == 'workflow_dispatch' || needs.checkChanges.outputs.hasSrcChanges == 'true' }}
+    needs: [detectPackageChanges, createReleaseName]
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.detectPackageChanges.outputs.hasSrcChanges == 'true' }}
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION || 'latest' }}
     permissions:
@@ -67,18 +71,20 @@ jobs:
       RELEASE_NAME: ${{ needs.createReleaseName.outputs.releaseName }}
       GIT_REF: ${{ github.sha }}
       BRANCH_NAME: ${{ github.ref_name }}
+      WORKITEM_FILTER: ${{ vars.WORKITEM_FILTER || 'PTCRM-[0-9]' }}
     steps:
-      - name: "Checkout"
+      - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Full history for release definition and changelog
           persist-credentials: true
 
-      - name: Authenticate node
+      - name: Authenticate Node
         uses: actions/setup-node@v4
         with:
           registry-url: "https://npm.pkg.github.com"
 
+      # Sets up Salesforce CLI authentication for the DevHub
       - name: Authenticate DevHub
         uses: navikt/sf-platform/.github/actions/authenticateOrg@a0f22eb5d1c9d1ec5e345c04c96a786bd150042a
         with:
@@ -89,33 +95,50 @@ jobs:
       - name: Build
         id: build
         run: |
-          if sfp build --devhubalias devhub --diffcheck --buildnumber "${GITHUB_RUN_ID}" --branch main --releaseconfig config/releaseConfig.yml --loglevel "${SFP_LOG_LEVEL}"; then
+          echo "::group::Running sfp build"
+          if sfp build \
+            --devhubalias devhub \
+            --diffcheck \
+            --buildnumber "${GITHUB_RUN_ID}" \
+            --branch main \
+            --releaseconfig "${PATH_TO_CONFIG_FILE}" \
+            --loglevel "${SFP_LOG_LEVEL}" \
+            2>&1; then
+            
+            # Check if artifacts were generated
             if [ -d "artifacts" ] && [ -n "$(ls -A artifacts)" ]; then
               echo "Artifacts found"
-              echo "artifactsFound=true" >> $GITHUB_OUTPUT
+              echo "artifactsFound=true" >> "$GITHUB_OUTPUT"
             else
               echo "::warning::No artifacts found after running Build step."
-              echo "artifactsFound=false" >> $GITHUB_OUTPUT
+              echo "artifactsFound=false" >> "$GITHUB_OUTPUT"
             fi
           else
             echo "::error::Build command failed"
-            echo "artifactsFound=false" >> $GITHUB_OUTPUT
-            exit 1  # Fail the job only on build error
+            echo "artifactsFound=false" >> "$GITHUB_OUTPUT"
+            exit 1
           fi
+          echo "::endgroup::"
 
-      - name: Publish artifacts
+      - name: Publish Artifacts
         if: steps.build.outputs.artifactsFound == 'true'
         run: |
-          sfp publish --artifactdir artifacts \
+          echo "::group::Publishing artifacts"
+
+          sfp publish \
+            --artifactdir artifacts \
             --npm \
-            --scope @"${SCOPE}" \
+            --scope "@${SCOPE}" \
             --devhubalias devhub \
             --loglevel "${SFP_LOG_LEVEL}" \
             --gittag \
             --pushgittag \
-            --logsgroupsymbol ::group::,::endgroup::
+            --logsgroupsymbol ::group::,::endgroup:: \
+          || { echo "::error::Publish failed"; exit 1; }
 
-      - name: Generate release definition and change log
+          echo "::endgroup::"
+
+      - name: Generate Release Definition and Changelog
         if: steps.build.outputs.artifactsFound == 'true'
         id: create_release_files
         run: |
@@ -125,15 +148,11 @@ jobs:
           printf -v bold '\033[1m'
           printf -v reset '\033[0m'
 
-          # Debug: Print release name
+          echo "::group::Generating release files"
           echo "${yellow}${bold}Release Name:${reset} ${RELEASE_NAME}"
-
-          # Create the directory for release files
-          mkdir -p releases/${RELEASE_NAME}
+          mkdir -p "releases/${RELEASE_NAME}"
 
           echo "${yellow}Generating release definition...${reset}"
-
-          # Generate release definition and save to file
           releaseDefinitionOutput=$(sfp releasedefinition generate \
             --gitref "${GIT_REF}" \
             --configfile "${PATH_TO_CONFIG_FILE}" \
@@ -141,53 +160,51 @@ jobs:
             --branchname "${BRANCH_NAME}" \
             --loglevel "${SFP_LOG_LEVEL}" \
             --nopush)
-
           echo "$releaseDefinitionOutput"
+          # Remove ANSI color codes from output, extract the release information from output and save to file
+          # TODO: See if we can get the generated file instead of parsing the output (like we do for changelog)
+          # Hopefully flxbl will provide a better way to get this in the future.
+          echo "$releaseDefinitionOutput" | sed 's/\x1b\[[0-9;]*m//g' | awk '/^Release:/,0' > "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml"
 
-          echo "$releaseDefinitionOutput" | sed 's/\x1b\[[0-9;]*m//g' \
-          | awk '/^release:/,0' > releases/${RELEASE_NAME}/${RELEASE_NAME}.yml
-
-          echo "${yellow}Generating changelog...  ${reset}"
-
-          # Generate changelog
+          echo "${yellow}Generating changelog...${reset}"
           changelogOutput=$(sfp changelog generate \
             --branchname main \
-            --releasename ${RELEASE_NAME} \
-            --workitemfilter PTCRM-[0-9] \
+            --releasename "${RELEASE_NAME}" \
+            --workitemfilter "${WORKITEM_FILTER}" \
             --directory changelog \
             --nopush 2>&1)
-
           echo "$changelogOutput"
+          # The path to the generated changelog is not always the same, so we need to extract it from the output.
+          # Hopefully flxbl will provide a better way to get this in the future.
           path=$(echo "$changelogOutput" | grep -oP 'Copying the repository to \K[^ ]+' | head -1)
 
           # Copy changelog files to release directory
+          # Give a warning if the path is not set or the directory does not exist, no need to fail over missing changelog.
           if [ -n "$path" ] && [ -d "$path/changelog" ]; then
-            cp "$path/changelog"/* releases/${RELEASE_NAME}/
+            cp "$path/changelog"/* "releases/${RELEASE_NAME}/"
           else
             echo "::warning::Path not set or directory does not exist. Tried looking for $path/changelog."
           fi
 
-          files=$(find releases/${RELEASE_NAME} -maxdepth 1 -type f \( -name "*.md" -o -name "*.yml" \) -printf '%p,' | sed 's/,$//')
-
-          # Check if the files was created
+          # Check if files were created and create a commaseparated list of them e.g. "releases/release_1/file1.md,releases/release_1/file2.yml"
+          files=$(find "releases/${RELEASE_NAME}" -maxdepth 1 -type f \( -name "*.md" -o -name "*.yml" \) -printf '%p,' | sed 's/,$//')
           if [ -z "$files" ]; then
             echo "::warning::No files found."
           else
-            echo "${yellow}${bold}Files created:${reset}"
-            echo "$files"
+            echo "${yellow}${bold}Files created:${reset} $files"
           fi
-
-          echo "files=$files" >> $GITHUB_OUTPUT
+          echo "files=$files" >> "$GITHUB_OUTPUT"
 
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          echo "::endgroup::"
 
-      - name: Commit release files
+      - name: Commit Release Files
         if: steps.build.outputs.artifactsFound == 'true'
         uses: navikt/sf-platform/.github/actions/commitFiles@9bdaa6b47c446ec455e197a69a313fe963f7f6ec
         with:
           files: ${{ steps.create_release_files.outputs.files }}
-          commitMessage: "Release files for ${RELEASE_NAME}"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          commitMessage: 'Release files for "${{ env.RELEASE_NAME }}"'
+          token: ${{ env.GH_AUTH_TOKEN }}
 
       - name: Create Github Release
         if: steps.build.outputs.artifactsFound == 'true'
@@ -202,6 +219,7 @@ jobs:
 
           echo "::group::Creating GitHub Release"
           changelog_file="releases/${RELEASE_NAME}/Release-Changelog.md"
+          # Use the changelog file as the release body if it exists and is not empty, if not just add the release name as the body
           if [ -f "$changelog_file" ] && [ -s "$changelog_file" ]; then
             body=$(jq -R -s '.' < "$changelog_file")
           else
@@ -215,6 +233,7 @@ jobs:
             --argjson body "$body" \
             '{tag_name: $tag, name: $name, body: $body}')
 
+          # Create the release and get the response with the http status code on the last line
           response=$(curl -s -w "\n%{http_code}" \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${GH_AUTH_TOKEN}" \
@@ -224,12 +243,14 @@ jobs:
           status=$(echo "$response" | tail -n1)
           body=$(echo "$response" | sed '$d')
 
+          # Check if the release was created successfully
           if [ "$status" -ne 201 ]; then
             echo "${red}Failed to create release (HTTP $status)${reset}"
             echo "Response: $body"
             exit 1
           fi
 
+          # Extract the upload URL from the response so that we can upload the release files
           UPLOAD_URL=$(echo "$body" | jq -r '.upload_url | sub("\\{.*$"; "") // ""')
           if [ -z "$UPLOAD_URL" ]; then
             echo "${red}Failed to extract upload_url from response${reset}"
@@ -242,25 +263,35 @@ jobs:
           echo "::group::Uploading Release Files"
           success_count=0
           failure_count=0
-          max_retries=2
+          max_retries=2 # Number of times to retry uploading a file
 
           for file in releases/${RELEASE_NAME}/*; do
             if [ -f "$file" ]; then
               filename=$(basename "$file")
               echo "${yellow}Uploading $filename${reset}"
+              
+              # Skip files larger than 10MB
+              if [ $(stat -c %s "$file") -gt 10485760 ]; then
+                echo "::warning::File $filename is larger than 10MB, skipping upload"
+                continue;
+              fi
+              
               attempt=0
               success=false
 
+              # Try to upload the file and retry if it fails
               while [ $attempt -lt $max_retries ] && [ "$success" = false ]; do
+                # Upload the file and get the response with the http status code on the last line
                 upload_response=$(curl -s -w "\n%{http_code}" \
                   -H "Authorization: token ${GH_AUTH_TOKEN}" \
                   -H "Content-Type: application/octet-stream" \
                   --data-binary @"$file" \
                   "$UPLOAD_URL?name=$filename")
-                curl_exit_code=$?
-                upload_status=$(echo "$upload_response" | tail -n1)
-                upload_body=$(echo "$upload_response" | sed '$d')
+                curl_exit_code=$? # Save the exit code of the curl command
+                upload_status=$(echo "$upload_response" | tail -n1) # Get the http status code
+                upload_body=$(echo "$upload_response" | sed '$d') # Get the response body
 
+                # Check if the upload was successful
                 if [ $curl_exit_code -ne 0 ]; then
                   echo "${red}curl command failed with exit code $curl_exit_code${reset}"
                   echo "Upload Response: $upload_response"
@@ -290,17 +321,22 @@ jobs:
 
           echo "::group::Upload Summary"
           echo "${green}Uploaded ${yellow}${bold}$success_count${reset}${green} files successfully${reset}"
-          echo "${red}Failed to upload ${yellow}${bold}$failure_count${reset}${red} files${reset}"
+
+          # Print a warning if some uploads failed
           if [ $failure_count -gt 0 ]; then
+            echo "${red}Failed to upload ${yellow}${bold}$failure_count${reset}${red} files${reset}"
             echo "::warning::Some uploads failed, check logs for details"
           fi
+
+          # Fail the job if no files were uploaded successfully
           if [ $success_count -eq 0 ] && [ $failure_count -gt 0 ]; then
             echo "::error::${red}No files uploaded successfully${reset}"
             exit 1
           fi
           echo "::endgroup::"
 
-      - name: Upload artifacts and logs
+      # Upload build artifacts and logs if present
+      - name: Upload Artifacts and Logs
         if: steps.build.outputs.artifactsFound == 'true'
         uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@f318a266c5a7add9c091f9d3480164fed8abfc08
         with:
