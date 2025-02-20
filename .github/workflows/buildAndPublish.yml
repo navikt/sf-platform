@@ -200,7 +200,7 @@ jobs:
 
       - name: Commit Release Files
         if: steps.build.outputs.artifactsFound == 'true'
-        uses: navikt/sf-platform/.github/actions/commitFiles@b19d1e1a7e4848135a979c17993a1fe8593ece0e
+        uses: navikt/sf-platform/.github/actions/commitFiles@ff060cd07e4bcb96889765a5a4a08fcaf3f8b920
         with:
           files: ${{ steps.create_release_files.outputs.files }}
           commitMessage: 'Release files for "${{ env.RELEASE_NAME }}"'
