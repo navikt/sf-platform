@@ -62,7 +62,8 @@ runs:
           # Add the files array to the JSON payload
           JSON_PAYLOAD=$(echo "$JSON_PAYLOAD" | jq --argjson files "$FILES_ARRAY" '.variables.files |= $files')
 
-          echo "Token preview (first 5 chars): ${{ inputs.token:0:5 }}"
+          # Debug token preview using Bash substring
+          echo "Token preview 2 (first 5 chars): ${GH_AUTH_TOKEN:0:5}"
           
           # Commit the changes
           curl_output=$(curl --silent --show-error -X POST \
