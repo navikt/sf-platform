@@ -26,7 +26,7 @@ jobs:
     needs: staticCodeValidation
     runs-on: ubuntu-latest
     outputs:
-      hasSrcChanges: ${{ steps.checkChanges.outputs.hasSrcChanges }}
+      hasSrcChanges: ${{ steps.checkChanges.outputs.hasSrcChanges || 'false' }}
     permissions:
       contents: read
     steps:
@@ -39,9 +39,20 @@ jobs:
       - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@8a76cf6726f88608113bd6cc313b4a6728ce476a
         id: checkChanges
 
+  createReleaseName:
+    name: Create release name
+    runs-on: ubuntu-latest
+    outputs:
+      releaseName: ${{ steps.createReleaseName.outputs.releaseName }}
+    steps:
+      - name: Set release name
+        id: createReleaseName
+        run: |
+          echo "releaseName=sf-platform_$(date +%s%3N)" >> $GITHUB_OUTPUT
+
   buildAndPublish:
     name: Build and Publish
-    needs: checkChanges
+    needs: [checkChanges, createReleaseName]
     if: ${{ github.event_name == 'workflow_dispatch' || needs.checkChanges.outputs.hasSrcChanges == 'true' }}
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION || 'latest' }}
@@ -50,8 +61,12 @@ jobs:
       packages: write
     env:
       SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL || 'INFO' }}
-      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SCOPE: ${{ github.repository_owner }}
+      PATH_TO_CONFIG_FILE: "config/releaseConfig.yml"
+      RELEASE_NAME: ${{ needs.createReleaseName.outputs.releaseName }}
+      GIT_REF: ${{ github.sha }}
+      BRANCH_NAME: ${{ github.ref_name }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -74,7 +89,7 @@ jobs:
       - name: Build
         id: build
         run: |
-          if sfp build --devhubalias devhub --diffcheck --buildnumber ${GITHUB_RUN_ID} --branch main --releaseconfig config/releaseConfig.yml --loglevel ${SFP_LOG_LEVEL}; then
+          if sfp build --devhubalias devhub --diffcheck --buildnumber "${GITHUB_RUN_ID}" --branch main --releaseconfig config/releaseConfig.yml --loglevel "${SFP_LOG_LEVEL}"; then
             if [ -d "artifacts" ] && [ -n "$(ls -A artifacts)" ]; then
               echo "Artifacts found"
               echo "artifactsFound=true" >> $GITHUB_OUTPUT
@@ -91,13 +106,14 @@ jobs:
       - name: Publish artifacts
         if: steps.build.outputs.artifactsFound == 'true'
         run: |
-          sfp publish --artifactdir artifacts --npm --scope @${SCOPE} --devhubalias devhub --loglevel ${SFP_LOG_LEVEL} --gittag --pushgittag --logsgroupsymbol ::group::,::endgroup::
-
-      - name: Generate Release Name
-        if: steps.build.outputs.artifactsFound == 'true'
-        id: generate_name
-        run: |
-          echo "releaseName=sf-platform_$(date +%s%3N)" >> $GITHUB_OUTPUT
+          sfp publish --artifactdir artifacts \
+            --npm \
+            --scope @"${SCOPE}" \
+            --devhubalias devhub \
+            --loglevel "${SFP_LOG_LEVEL}" \
+            --gittag \
+            --pushgittag \
+            --logsgroupsymbol ::group::,::endgroup::
 
       - name: Generate release definition and change log
         if: steps.build.outputs.artifactsFound == 'true'
@@ -119,11 +135,11 @@ jobs:
 
           # Generate release definition and save to file
           releaseDefinitionOutput=$(sfp releasedefinition generate \
-            --gitref ${GIT_REF} \
-            --configfile ${PATH_TO_CONFIG_FILE} \
-            --releasename ${RELEASE_NAME} \
-            --branchname ${BRANCH_NAME} \
-            --loglevel ${SFP_LOG_LEVEL} \
+            --gitref "${GIT_REF}" \
+            --configfile "${PATH_TO_CONFIG_FILE}" \
+            --releasename "${RELEASE_NAME}" \
+            --branchname "${BRANCH_NAME}" \
+            --loglevel "${SFP_LOG_LEVEL}" \
             --nopush)
 
           echo "$releaseDefinitionOutput"
@@ -164,18 +180,13 @@ jobs:
           echo "files=$files" >> $GITHUB_OUTPUT
 
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
-        env:
-          GIT_REF: ${{ github.sha }}
-          PATH_TO_CONFIG_FILE: "config/releaseConfig.yml"
-          RELEASE_NAME: ${{ steps.generate_name.outputs.releaseName }}
-          BRANCH_NAME: ${{ github.ref_name }}
 
       - name: Commit release files
         if: steps.build.outputs.artifactsFound == 'true'
         uses: navikt/sf-platform/.github/actions/commitFiles@9bdaa6b47c446ec455e197a69a313fe963f7f6ec
         with:
           files: ${{ steps.create_release_files.outputs.files }}
-          commitMessage: "Release files for ${{ steps.generate_name.outputs.releaseName }}"
+          commitMessage: "Release files for ${RELEASE_NAME}"
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Github Release
@@ -206,7 +217,7 @@ jobs:
 
           response=$(curl -s -w "\n%{http_code}" \
             -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${NODE_AUTH_TOKEN}" \
+            -H "Authorization: token ${GH_AUTH_TOKEN}" \
             -d "$json_payload" \
             https://api.github.com/repos/${{ github.repository }}/releases)
 
@@ -242,7 +253,7 @@ jobs:
 
               while [ $attempt -lt $max_retries ] && [ "$success" = false ]; do
                 upload_response=$(curl -s -w "\n%{http_code}" \
-                  -H "Authorization: token ${NODE_AUTH_TOKEN}" \
+                  -H "Authorization: token ${GH_AUTH_TOKEN}" \
                   -H "Content-Type: application/octet-stream" \
                   --data-binary @"$file" \
                   "$UPLOAD_URL?name=$filename")
@@ -288,8 +299,6 @@ jobs:
             exit 1
           fi
           echo "::endgroup::"
-        env:
-          RELEASE_NAME: ${{ steps.generate_name.outputs.releaseName }}
 
       - name: Upload artifacts and logs
         if: steps.build.outputs.artifactsFound == 'true'
