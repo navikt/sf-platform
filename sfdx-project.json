@@ -17,9 +17,8 @@
       "versionNumber": "0.0.0.NEXT"
     },
     {
-      "versionName": "ver 0.1",
       "versionNumber": "0.1.0.NEXT",
-      "path": "src/platform-utility/CustomMetadataDAO",
+      "path": "src/platform-utility/custom-metadata-dao",
       "default": false,
       "package": "custom-metadata-dao",
       "versionDescription": "Custom Metadata Data Access Object class used to get access to Custom Metadata objects, and at the same time make it easier to test the various paths the code can take based on the values in the Custom Metadata."
