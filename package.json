@@ -17,19 +17,19 @@
     "lint-staged": "lint-staged"
   },
   "devDependencies": {
-    "@eslint/js": "^9.20.0",
+    "@eslint/js": "^9.21.0",
     "@lwc/eslint-plugin-lwc": "^3.0.0-beta.2",
     "@prettier/plugin-xml": "^3.4.1",
     "@salesforce/eslint-config-lwc": "^4.0.0-beta.5",
     "@salesforce/eslint-plugin-lightning": "^2.0.0-beta.1",
     "@salesforce/sfdx-lwc-jest": "^7.0.1",
-    "eslint": "^9.20.0",
+    "eslint": "^9.21.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.11.0",
     "globals": "^15.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
-    "prettier": "^3.5.0",
+    "prettier": "^3.5.2",
     "prettier-plugin-apex": "^2.2.4"
   },
   "lint-staged": {
@@ -41,6 +41,6 @@
     ]
   },
   "dependencies": {
-    "@eslint/compat": "^1.2.6"
+    "@eslint/compat": "^1.2.7"
   }
 }
