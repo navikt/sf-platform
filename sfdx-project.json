@@ -22,10 +22,18 @@
       "default": false,
       "package": "custom-metadata-dao",
       "versionDescription": "Custom Metadata Data Access Object class used to get access to Custom Metadata objects, and at the same time make it easier to test the various paths the code can take based on the values in the Custom Metadata."
+    },
+    {
+      "versionNumber": "0.1.0.NEXT",
+      "path": "src/platform-utility/json-helper",
+      "default": false,
+      "package": "json-helper",
+      "versionDescription": "JSON Helper Classes."
     }
   ],
   "packageAliases": {
     "platform-data-model": "0HoKB00000000010AA",
-    "custom-metadata-dao": "0HoKB000000000B0AQ"
+    "custom-metadata-dao": "0HoKB000000000B0AQ",
+    "json-helper": "0HoKB000000000L0AQ"
   }
 }
