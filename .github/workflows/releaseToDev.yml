@@ -1,0 +1,21 @@
+name: Relase to DEV
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag"
+        required: false
+        default: ""
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+jobs:
+  release:
+    uses: navikt/sf-platform/.github/workflows/ciCreatePlatformPool.yml@main
+    with:
+      release_tag: ${{ github.event.inputs.release_tag }}
+    secrets:
+      SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
+      TARGET_ORG_URL: ${{ secrets.SF_DEV_URL }}
+    permissions:
+      contents: read
+      packages: read

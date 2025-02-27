@@ -1,0 +1,80 @@
+name: "Release"
+on:
+  workflow_call:
+    inputs:
+      release_tag:
+        type: string
+        description: "Optional: Specify a release tag to use instead of the latest"
+        default: ""
+        required: false
+    secrets:
+      SF_DEVHUB_URL:
+        required: true
+      TARGET_ORG_URL:
+        required: true
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION || 'latest' }}
+    permissions:
+      contents: read
+      packages: read
+    env:
+      SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL || 'INFO' }}
+      GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SCOPE: ${{ github.repository_owner }}
+      REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ inputs.release_tag  }}
+    steps:
+      - name: Authenticate Node
+        uses: actions/setup-node@v4
+        with:
+          registry-url: "https://npm.pkg.github.com"
+
+      # Sets up Salesforce CLI authentication for the DevHub
+      - name: Authenticate DevHub
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@a0f22eb5d1c9d1ec5e345c04c96a786bd150042a
+        with:
+          auth-url: ${{ secrets.SF_DEVHUB_URL }}
+          alias: "devhub"
+          setDefaultDevhubUsername: "true"
+
+      # Sets up Salesforce CLI authentication for the DevHub
+      - name: Authenticate Target Org
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@a0f22eb5d1c9d1ec5e345c04c96a786bd150042a
+        with:
+          auth-url: ${{ secrets.TARGET_ORG_URL }}
+          alias: "targetorg"
+
+      - name: Determine release tag
+        id: release
+        run: |
+          if [ -z "${RELEASE_TAG}" ]; then
+            latest_tag=$(curl -s -H "Authorization: token ${GH_AUTH_TOKEN}" \
+              https://api.github.com/repos/${REPO}/releases/latest | jq -r '.tag_name')
+            echo "RELEASE_TAG=$latest_tag" >> $GITHUB_ENV
+          fi
+
+      - name: Get release asset URL
+        id: asset
+        run: |
+          asset_url=$(curl -s -H "Authorization: token ${GH_AUTH_TOKEN}" \
+            https://api.github.com/repos/${REPO}/releases/tags/${RELEASE_TAG} | jq -r '.assets[] | select(.name | test("sf-platform_.*\\.yml")) | .browser_download_url')
+          if [ -z "$asset_url" ]; then
+            echo "::error::No asset matching 'sf-platform_.*\\.yml' found for release ${RELEASE_TAG}"
+            exit 1
+          fi
+          echo "url=$asset_url" >> $GITHUB_OUTPUT
+
+      - name: Download release asset
+        run: |
+          curl -L -o release_file.yml -H "Authorization: token ${GH_AUTH_TOKEN}" ${ASSET_URL}
+        env:
+          ASSET_URL: "${{ steps.asset.outputs.url }}"
+
+      - name: Release to Production
+        run: |
+          sfp release --releasedefinition release_file.yml --targetorg targetorg --devhubalias devhub --npm --scope ${SCOPE} --loglevel ${SFP_LOG_LEVEL}
