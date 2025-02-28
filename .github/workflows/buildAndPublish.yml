@@ -149,11 +149,11 @@ jobs:
           printf -v bold '\033[1m'
           printf -v reset '\033[0m'
 
-          echo "::group::Generating release files"
-          echo "${yellow}${bold}Release Name:${reset} ${RELEASE_NAME}"
+          echo "::group::Generating release files for release ${RELEASE_NAME}"
+
           mkdir -p "releases/${RELEASE_NAME}"
 
-          echo "${yellow}Generating release definition...${reset}"
+          echo "::group::Generating release definition"
           releaseDefinitionOutput=$(sfp releasedefinition generate \
             --gitref "${GIT_REF}" \
             --configfile "${PATH_TO_CONFIG_FILE}" \
@@ -162,12 +162,21 @@ jobs:
             --loglevel "${SFP_LOG_LEVEL}" \
             --nopush)
           echo "$releaseDefinitionOutput"
-          # Remove ANSI color codes from output, extract the release information from output and save to file
-          # TODO: See if we can get the generated file instead of parsing the output (like we do for changelog)
-          # Hopefully flxbl will provide a better way to get this in the future.
-          echo "$releaseDefinitionOutput" | sed 's/\x1b\[[0-9;]*m//g' | awk '/^Release:/,0' > "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml"
 
-          echo "${yellow}Generating changelog...${reset}"
+          # Extract the path of the generated file from the output
+          releaseDefinitionPath=$(echo "$releaseDefinitionOutput" | grep -oP 'Committed File \K[^ ]+' | head -1)
+
+          # Check if the path was found and the file exists, then copy it
+          if [ -n "$releaseDefinitionPath" ] && [ -f "$releaseDefinitionPath" ]; then
+              cp "$releaseDefinitionPath" "releases/${RELEASE_NAME}"
+              echo "Release definition file copied to releases/${RELEASE_NAME}"
+          else
+              echo "::error::Failed to find or access the generated release definition file at '$releaseDefinitionPath'."
+              exit 1
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Generating changelog"
           changelogOutput=$(sfp changelog generate \
             --branchname main \
             --releasename "${RELEASE_NAME}" \
@@ -175,30 +184,37 @@ jobs:
             --directory changelog \
             --nopush 2>&1)
           echo "$changelogOutput"
-          # The path to the generated changelog is not always the same, so we need to extract it from the output.
-          # Hopefully flxbl will provide a better way to get this in the future.
-          path=$(echo "$changelogOutput" | grep -oP 'Copying the repository to \K[^ ]+' | head -1)
 
-          # Copy changelog files to release directory
-          # Give a warning if the path is not set or the directory does not exist, no need to fail over missing changelog.
-          if [ -n "$path" ] && [ -d "$path/changelog" ]; then
-            cp "$path/changelog"/* "releases/${RELEASE_NAME}/"
+          # Extract the comma-separated list of committed files
+          paths=$(echo "$changelogOutput" | sed -n 's/^Committed File //p')
+
+          if [ -n "$paths" ]; then
+            IFS=',' read -ra file_paths <<< "$paths"
+            for file in "${file_paths[@]}"; do
+              if [ -f "$file" ]; then
+                cp "$file" "releases/${RELEASE_NAME}/"
+              else
+                echo "::warning::File not found: $file"
+              fi
+            done
           else
-            echo "::warning::Path not set or directory does not exist. Tried looking for $path/changelog."
+            echo "::warning::No committed files found in the output."
           fi
-
-          # Not needed for now.
-          # # Check if files were created and create a commaseparated list of them e.g. "releases/release_1/file1.md,releases/release_1/file2.yml"
-          # files=$(find "releases/${RELEASE_NAME}" -maxdepth 1 -type f \( -name "*.md" -o -name "*.yml" \) -printf '%p,' | sed 's/,$//')
-          # if [ -z "$files" ]; then
-          #   echo "::warning::No files found."
-          # else
-          #   echo "${yellow}${bold}Files created:${reset} $files"
-          # fi
-          # echo "files=$files" >> "$GITHUB_OUTPUT"
-
-          # git config --global --add safe.directory "$GITHUB_WORKSPACE"
           echo "::endgroup::"
+
+          echo "::endgroup::"
+
+      # Not needed for now.
+      # # Check if files were created and create a commaseparated list of them e.g. "releases/release_1/file1.md,releases/release_1/file2.yml"
+      # files=$(find "releases/${RELEASE_NAME}" -maxdepth 1 -type f \( -name "*.md" -o -name "*.yml" \) -printf '%p,' | sed 's/,$//')
+      # if [ -z "$files" ]; then
+      #   echo "::warning::No files found."
+      # else
+      #   echo "${yellow}${bold}Files created:${reset} $files"
+      # fi
+      # echo "files=$files" >> "$GITHUB_OUTPUT"
+
+      # git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       # Not needed for now.
       # - name: Commit Release Files
@@ -221,7 +237,9 @@ jobs:
           printf -v reset '\033[0m'
 
           echo "::group::Creating GitHub Release"
+
           changelog_file="releases/${RELEASE_NAME}/Release-Changelog.md"
+
           # Use the changelog file as the release body if it exists and is not empty, if not just add the release name as the body
           if [ -f "$changelog_file" ] && [ -s "$changelog_file" ]; then
             body=$(jq -R -s '.' < "$changelog_file")
