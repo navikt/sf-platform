@@ -163,15 +163,14 @@ jobs:
             --nopush)
           echo "$releaseDefinitionOutput"
 
-          # Extract the path of the generated file from the output
-          releaseDefinitionPath=$(echo "$releaseDefinitionOutput" | grep -oP 'Committed File \K[^ ]+' | head -1)
+          # Extract YAML content (lines starting with a space) and remove ANSI color codes
+          echo "$ReleaseDefinitionOutput" | sed 's/\x1b\[[0-9;]*m//g' | awk '/^ / {print}' > "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml"
 
-          # Check if the path was found and the file exists, then copy it
-          if [ -n "$releaseDefinitionPath" ] && [ -f "$releaseDefinitionPath" ]; then
-              cp "$releaseDefinitionPath" "releases/${RELEASE_NAME}"
-              echo "Release definition file copied to releases/${RELEASE_NAME}"
+          # Verify the file was created and has content
+          if [ -s "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml" ]; then
+              echo "Release definition file created at releases/${RELEASE_NAME}/${RELEASE_NAME}.yml"
           else
-              echo "::error::Failed to find or access the generated release definition file at '$releaseDefinitionPath'."
+              echo "::error::Failed to create release definition file."
               exit 1
           fi
           echo "::endgroup::"
