@@ -33,6 +33,7 @@ jobs:
           echo "releaseName=sf-platform_$(date +%s%3N)" >> "$GITHUB_OUTPUT"
 
   createRelease:
+    name: Create Release
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION || 'latest' }}
     permissions:
@@ -90,7 +91,7 @@ jobs:
           echo "$releaseDefinitionOutput"
 
           # Extract YAML content (lines starting with a space) and remove ANSI color codes
-          echo "$ReleaseDefinitionOutput" | sed 's/\x1b\[[0-9;]*m//g' | awk '/^ / {print}' > "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml"
+          echo "$releaseDefinitionOutput" | sed 's/\x1b\[[0-9;]*m//g' | awk '/^ / {print}' > "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml"
 
           # Verify the file was created and has content
           if [ -s "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml" ]; then
