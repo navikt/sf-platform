@@ -1,0 +1,258 @@
+name: "Create Release"
+on:
+  workflow_call:
+    inputs:
+      gitRef:
+        required: false
+        type: string
+        description: "The git reference to create the release from"
+    secrets:
+      SF_DEVHUB_URL:
+        required: true
+        description: "Salesforce DevHub authentication URL"
+  workflow_dispatch:
+    inputs:
+      gitRef:
+        required: false
+        type: string
+        description: "The git reference to create the release from"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+
+jobs:
+  createReleaseName:
+    name: Create Release Name
+    runs-on: ubuntu-latest
+    permissions: {} # No permissions needed}
+    outputs:
+      releaseName: ${{ steps.createReleaseName.outputs.releaseName }}
+    steps:
+      - name: Set Release Name
+        id: createReleaseName
+        run: |
+          echo "releaseName=sf-platform_$(date +%s%3N)" >> "$GITHUB_OUTPUT"
+
+  createRelease:
+    runs-on: ubuntu-latest
+    container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION || 'latest' }}
+    permissions:
+      contents: read
+    env:
+      SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL || 'INFO' }}
+      GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SCOPE: ${{ github.repository_owner }}
+      PATH_TO_CONFIG_FILE: "config/releaseConfig.yml"
+      RELEASE_NAME: "sf-platform"
+      GIT_REF: ${{ inputs.gitRef || github.sha }}
+      BRANCH_NAME: ${{ github.ref_name }}
+      WORKITEM_FILTER: ${{ vars.WORKITEM_FILTER || 'PTCRM-[0-9]' }}
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DEVHUB_ALIAS: "devhub"
+    steps:
+      - name: Set Release Name
+        id: createReleaseName
+        run: |
+          echo "RELEASE_NAME=sf-platform_$(date +%s%3N)" >> "$GITHUB_ENV"
+
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0 # Full history for release definition and changelog
+          persist-credentials: true
+      # Sets up Salesforce CLI authentication for the DevHub
+
+      - name: Authenticate DevHub
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@a0f22eb5d1c9d1ec5e345c04c96a786bd150042a
+        with:
+          auth-url: ${{ secrets.SF_DEVHUB_URL }}
+          alias: "${{ env.DEVHUB_ALIAS }}"
+          setDefaultDevhubUsername: "true"
+
+      - name: Generate Release Definition and Changelog
+        id: create_release_files
+        run: |
+          printf -v red '\033[0;31m'
+          printf -v yellow '\033[0;33m'
+          printf -v green '\033[0;32m'
+          printf -v bold '\033[1m'
+          printf -v reset '\033[0m'
+
+          mkdir -p "releases/${RELEASE_NAME}"
+
+          echo "::group::Generating release definition"
+          releaseDefinitionOutput=$(sfp releasedefinition generate \
+            --gitref "${GIT_REF}" \
+            --configfile "${PATH_TO_CONFIG_FILE}" \
+            --releasename "${RELEASE_NAME}" \
+            --branchname "${BRANCH_NAME}" \
+            --loglevel "${SFP_LOG_LEVEL}" \
+            --nopush)
+          echo "$releaseDefinitionOutput"
+
+          # Extract YAML content (lines starting with a space) and remove ANSI color codes
+          echo "$ReleaseDefinitionOutput" | sed 's/\x1b\[[0-9;]*m//g' | awk '/^ / {print}' > "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml"
+
+          # Verify the file was created and has content
+          if [ -s "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml" ]; then
+              echo "Release definition file created at releases/${RELEASE_NAME}/${RELEASE_NAME}.yml"
+          else
+              echo "::error::Failed to create release definition file."
+              exit 1
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Generating changelog"
+          changelogOutput=$(sfp changelog generate \
+            --branchname main \
+            --releasename "${RELEASE_NAME}" \
+            --workitemfilter "${WORKITEM_FILTER}" \
+            --directory changelog \
+            --nopush 2>&1)
+          echo "$changelogOutput"
+
+          # Extract the comma-separated list of committed files
+          paths=$(echo "$changelogOutput" | sed -n 's/^Committed File //p')
+
+          if [ -n "$paths" ]; then
+            IFS=',' read -ra file_paths <<< "$paths"
+            for file in "${file_paths[@]}"; do
+              if [ -f "$file" ]; then
+                cp "$file" "releases/${RELEASE_NAME}/"
+              else
+                echo "::warning::File not found: $file"
+              fi
+            done
+          else
+            echo "::warning::No committed files found in the output."
+          fi
+          echo "::endgroup::"
+
+      - name: Create Github Release
+        shell: bash {0} # Use bash without -e to respect set +e
+        run: |
+          set +e  # Disable exit-on-error to allow custom error handling
+          printf -v red '\033[0;31m'
+          printf -v yellow '\033[0;33m'
+          printf -v green '\033[0;32m'
+          printf -v bold '\033[1m'
+          printf -v reset '\033[0m'
+
+          echo "::group::Creating GitHub Release"
+
+          changelog_file="releases/${RELEASE_NAME}/Release-Changelog.md"
+
+          # Use the changelog file as the release body if it exists and is not empty, if not just add the release name as the body
+          if [ -f "$changelog_file" ] && [ -s "$changelog_file" ]; then
+            body=$(jq -R -s '.' < "$changelog_file")
+          else
+            echo "::warning::Changelog file $changelog_file is missing or empty, using default body"
+            body=$(jq -R -s '.' <<< "Release ${RELEASE_NAME}")
+          fi
+
+          json_payload=$(jq -n \
+            --arg tag "$RELEASE_NAME" \
+            --arg name "$RELEASE_NAME" \
+            --argjson body "$body" \
+            '{tag_name: $tag, name: $name, body: $body}')
+
+          # Create the release and get the response with the http status code on the last line
+          response=$(curl -s -w "\n%{http_code}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${GH_AUTH_TOKEN}" \
+            -d "$json_payload" \
+            https://api.github.com/repos/${{ github.repository }}/releases)
+
+          status=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          # Check if the release was created successfully
+          if [ "$status" -ne 201 ]; then
+            echo "${red}Failed to create release (HTTP $status)${reset}"
+            echo "Response: $body"
+            exit 1
+          fi
+
+          # Extract the upload URL from the response so that we can upload the release files
+          UPLOAD_URL=$(echo "$body" | jq -r '.upload_url | sub("\\{.*$"; "") // ""')
+          if [ -z "$UPLOAD_URL" ]; then
+            echo "${red}Failed to extract upload_url from response${reset}"
+            echo "Response: $body"
+            exit 1
+          fi
+          echo "Release created successfully. Upload URL: $UPLOAD_URL"
+          echo "::endgroup::"
+
+          echo "::group::Uploading Release Files"
+          success_count=0
+          failure_count=0
+          max_retries=2 # Number of times to retry uploading a file
+
+          for file in releases/${RELEASE_NAME}/*; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file")
+              echo "${yellow}Uploading $filename${reset}"
+              
+              # Skip files larger than 10MB
+              if [ $(stat -c %s "$file") -gt 10485760 ]; then
+                echo "::warning::File $filename is larger than 10MB, skipping upload"
+                continue;
+              fi
+              
+              attempt=0
+              success=false
+
+              # Try to upload the file and retry if it fails
+              while [ $attempt -lt $max_retries ] && [ "$success" = false ]; do
+                # Upload the file and get the response with the http status code on the last line
+                upload_response=$(curl -s -w "\n%{http_code}" \
+                  -H "Authorization: token ${GH_AUTH_TOKEN}" \
+                  -H "Content-Type: application/octet-stream" \
+                  --data-binary @"$file" \
+                  "$UPLOAD_URL?name=$filename")
+                curl_exit_code=$? # Save the exit code of the curl command
+                upload_status=$(echo "$upload_response" | tail -n1) # Get the http status code
+                upload_body=$(echo "$upload_response" | sed '$d') # Get the response body
+
+                # Check if the upload was successful
+                if [ $curl_exit_code -ne 0 ]; then
+                  echo "${red}curl command failed with exit code $curl_exit_code${reset}"
+                  echo "Upload Response: $upload_response"
+                  ((attempt++))
+                  [ $attempt -lt $max_retries ] && sleep 2
+                elif [ "$upload_status" -eq 201 ]; then
+                  echo "${green}Successfully uploaded $filename (HTTP $upload_status)${reset}"
+                  success=true
+                  ((success_count++))
+                else
+                  echo "${red}Upload attempt $((attempt + 1)) failed for $filename (HTTP $upload_status)${reset}"
+                  echo "Upload Response: $upload_body"
+                  ((attempt++))
+                  [ $attempt -lt $max_retries ] && sleep 2
+                fi
+              done
+
+              if [ "$success" = false ]; then
+                echo "::warning::Failed to upload $filename after $max_retries attempts"
+                ((failure_count++))
+              fi
+            else
+              echo "Skipping $file - not a regular file"
+            fi
+          done
+          echo "::endgroup::"
+
+          echo "::group::Upload Summary"
+          echo "${green}Uploaded ${yellow}${bold}$success_count${reset}${green} files successfully${reset}"
+
+          # Print a warning if some uploads failed
+          if [ $failure_count -gt 0 ]; then
+            echo "${red}Failed to upload ${yellow}${bold}$failure_count${reset}${red} files${reset}"
+            echo "::warning::Some uploads failed, check logs for details"
+          fi
+
+          # Fail the job if no files were uploaded successfully
+          if [ $success_count -eq 0 ] && [ $failure_count -gt 0 ]; then
+            echo "::error::${red}No files uploaded successfully${reset}"
+            exit 1
+          fi
+          echo "::endgroup::"
