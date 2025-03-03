@@ -38,6 +38,7 @@ jobs:
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION || 'latest' }}
     permissions:
       contents: read
+      packages: read
     env:
       SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL || 'INFO' }}
       GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -54,6 +55,11 @@ jobs:
         id: createReleaseName
         run: |
           echo "RELEASE_NAME=sf-platform_$(date +%s%3N)" >> "$GITHUB_ENV"
+
+      - name: Authenticate Node
+        uses: actions/setup-node@v4
+        with:
+          registry-url: "https://npm.pkg.github.com"
 
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -103,6 +109,13 @@ jobs:
           echo "::endgroup::"
 
           echo "::group::Generating changelog"
+
+          sfp artifacts fetch \
+            --releasedefinition "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml" \
+            --npm \
+            --scope "${SCOPE}" \
+            --loglevel "${SFP_LOG_LEVEL}"
+
           changelogOutput=$(sfp changelog generate \
             --branchname main \
             --releasename "${RELEASE_NAME}" \
