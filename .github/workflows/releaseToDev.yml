@@ -1,5 +1,7 @@
 name: Relase to DEV
 on:
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       release_tag:
