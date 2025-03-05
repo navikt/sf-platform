@@ -160,7 +160,7 @@ jobs:
             --arg tag "$RELEASE_NAME" \
             --arg name "$RELEASE_NAME" \
             --argjson body "$body" \
-            '{tag_name: $tag, name: $name, body: $body}')
+            '{tag_name: $tag, name: $name, body: $body}, draft: true')
 
           # Create the release and get the response with the http status code on the last line
           response=$(curl -s -w "\n%{http_code}" \
@@ -181,6 +181,7 @@ jobs:
             exit 1
           fi
 
+          RELEASE_ID=$(echo "$body" | jq -r '.id')
           # Extract the upload URL from the response so that we can upload the release files
           UPLOAD_URL=$(echo "$body" | jq -r '.upload_url | sub("\\{.*$"; "") // ""')
           if [ -z "$UPLOAD_URL" ]; then
@@ -214,7 +215,10 @@ jobs:
               while [ $attempt -lt $max_retries ] && [ "$success" = false ]; do
                 # Upload the file and get the response with the http status code on the last line
                 upload_response=$(curl -s -w "\n%{http_code}" \
+                  -X POST \
+                  -H "Accept: application/vnd.github+json" \
                   -H "Authorization: token ${GH_AUTH_TOKEN}" \
+                  -H "X-GitHub-Api-Version: 2022-11-28" \
                   -H "Content-Type: application/octet-stream" \
                   --data-binary @"$file" \
                   "$UPLOAD_URL?name=$filename")
@@ -262,6 +266,26 @@ jobs:
           # Fail the job if no files were uploaded successfully
           if [ $success_count -eq 0 ] && [ $failure_count -gt 0 ]; then
             echo "::error::${red}No files uploaded successfully${reset}"
+            exit 1
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Publish release"
+          publish_response=$(curl -s -w "\n%{http_code}" \
+            -X PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: token ${GH_AUTH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID \
+            -d '{"draft":false}')
+
+          status=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          # Check if the release was updated successfully
+          if [ "$status" -ne 201 ]; then
+            echo "${red}Failed to update release (HTTP $status)${reset}"
+            echo "Response: $body"
             exit 1
           fi
           echo "::endgroup::"
