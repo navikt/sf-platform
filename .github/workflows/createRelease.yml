@@ -160,7 +160,7 @@ jobs:
             --arg tag "$RELEASE_NAME" \
             --arg name "$RELEASE_NAME" \
             --argjson body "$body" \
-            '{tag_name: $tag, name: $name, body: $body}, draft: true')
+            '{tag_name: $tag, name: $name, body: $body, draft: true}')
 
           # Create the release and get the response with the http status code on the last line
           response=$(curl -s -w "\n%{http_code}" \
