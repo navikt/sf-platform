@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION || 'latest' }}
     permissions:
-      contents: read
+      contents: write
       packages: read
     env:
       SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL || 'INFO' }}
