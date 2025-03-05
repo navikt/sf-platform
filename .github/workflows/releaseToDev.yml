@@ -1,7 +1,5 @@
 name: Relase to DEV
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       release_tag:
@@ -19,10 +17,18 @@ on:
           - "WARN"
           - "ERROR"
           - "FATAL"
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
+    branches:
+      - main
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
 jobs:
   release:
+    name: Release to DEV
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     uses: navikt/sf-platform/.github/workflows/release.yml@main
     with:
       release_tag: ${{ github.event.inputs.release_tag }}
