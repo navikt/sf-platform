@@ -270,23 +270,23 @@ jobs:
           fi
           echo "::endgroup::"
 
-          echo "::group::Publish release"
-          publish_response=$(curl -s -w "\n%{http_code}" \
-            -X PATCH \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: token ${GH_AUTH_TOKEN}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID \
-            -d '{"draft":false}')
+          # echo "::group::Publish release"
+          # publish_response=$(curl -s -w "\n%{http_code}" \
+          #   -X PATCH \
+          #   -H "Accept: application/vnd.github+json" \
+          #   -H "Authorization: token ${GH_AUTH_TOKEN}" \
+          #   -H "X-GitHub-Api-Version: 2022-11-28" \
+          #   https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID \
+          #   -d '{"draft":false}')
 
-          status=$(echo "$publish_response" | tail -n1)
-          body=$(echo "$publish_response" | sed '$d')
+          # status=$(echo "$publish_response" | tail -n1)
+          # body=$(echo "$publish_response" | sed '$d')
 
-          # Check if the release was updated successfully
-          if [ "$status" -ne 200 ]; then
-            echo "${red}Failed to update release (HTTP $status)${reset}"
-            echo "Response: $body"
-            exit 1
-          fi
-          echo "${green}Release published successfully 🚀🚀🚀${reset}"
-          echo "::endgroup::"
+          # # Check if the release was updated successfully
+          # if [ "$status" -ne 200 ]; then
+          #   echo "${red}Failed to update release (HTTP $status)${reset}"
+          #   echo "Response: $body"
+          #   exit 1
+          # fi
+          # echo "${green}Release published successfully 🚀🚀🚀${reset}"
+          # echo "::endgroup::"
