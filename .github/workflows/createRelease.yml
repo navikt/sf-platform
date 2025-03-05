@@ -85,7 +85,10 @@ jobs:
           echo "$releaseDefinitionOutput"
 
           # Extract YAML content (lines starting with a space) and remove ANSI color codes
-          echo "$releaseDefinitionOutput" | sed 's/\x1b[[0-9;]*m//g' | awk '/^release:/,0' > releases/${RELEASE_NAME}/${RELEASE_NAME}.yml
+          echo "$releaseDefinitionOutput" \
+          | sed 's/\x1b[[0-9;]*m//g' \
+          | awk '/^release:/,/^$/' \
+          | sed '/^$/d' > "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml"
 
           # Verify the file was created and has content
           if [ -s "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml" ]; then
