@@ -7,6 +7,10 @@ on:
         description: "Optional: Specify a release tag to use instead of the latest"
         default: ""
         required: false
+      loglevel:
+        type: string
+        description: "Optional: Specify the log level"
+        required: false
     secrets:
       SF_DEVHUB_URL:
         required: true
@@ -20,7 +24,7 @@ jobs:
       contents: read
       packages: read
     env:
-      SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL || 'INFO' }}
+      SFP_LOG_LEVEL: ${{ inputs.loglevel || vars.SFP_LOG_LEVEL || 'INFO' }}
       GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SCOPE: ${{ github.repository_owner }}
@@ -70,9 +74,16 @@ jobs:
       - name: Download release asset
         run: |
           curl -L -o release_file.yml -H "Authorization: token ${GH_AUTH_TOKEN}" ${ASSET_URL}
+          echo "File contents:"
+          cat release_file.yml
         env:
           ASSET_URL: "${{ steps.asset.outputs.url }}"
 
-      - name: Release to Production
+      - name: Release to Org
         run: |
-          sfp release --releasedefinition release_file.yml --targetorg targetorg --devhubalias devhub --npm --scope ${SCOPE} --loglevel ${SFP_LOG_LEVEL}
+          sfp release --releasedefinition release_file.yml \
+            --targetorg targetorg \
+            --devhubalias devhub \
+            --npm \
+            --scope ${SCOPE} \
+            --loglevel ${SFP_LOG_LEVEL}
