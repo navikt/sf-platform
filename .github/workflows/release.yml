@@ -12,8 +12,6 @@ on:
         required: true
       TARGET_ORG_URL:
         required: true
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref_name }}
 jobs:
   release:
     runs-on: ubuntu-latest
