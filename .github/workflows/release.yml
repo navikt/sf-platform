@@ -60,6 +60,12 @@ jobs:
             echo "RELEASE_TAG=$latest_tag" >> $GITHUB_ENV
           fi
 
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          persist-credentials: false
+
       - name: Get release asset URL
         id: asset
         run: |
