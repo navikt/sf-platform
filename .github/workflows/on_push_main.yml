@@ -1,0 +1,36 @@
+name: ON PUSH MAIN
+run-name:
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+  workflow_dispatch:
+jobs:
+  build:
+    uses: navikt/sf-platform/.github/workflows/buildAndPublish.yml@main
+    permissions:
+      contents: read
+      packages: write
+    secrets:
+      SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
+  create_release:
+    needs: build
+    if: needs.build.outputs.hasNewArtifacts == true
+    uses: navikt/sf-platform/.github/workflows/createRelease.yml@main
+    permissions:
+      contents: write
+      packages: read
+    secrets:
+      SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
+  release_to_dev:
+    needs: create_release
+    if: needs.create_release.result == 'success'
+    uses: navikt/sf-platform/.github/workflows/releaseToDev.yml@main
+    permissions:
+      contents: read
+      packages: read
+    secrets:
+      SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
+      SF_DEV_URL: ${{ secrets.SF_DEV_URL }}
