@@ -160,7 +160,7 @@ jobs:
             --arg tag "$RELEASE_NAME" \
             --arg name "$RELEASE_NAME" \
             --argjson body "$body" \
-            '{tag_name: $tag, name: $name, body: $body, draft: true}')
+            '{tag_name: $tag, name: $name, body: $body}')
 
           # Create the release and get the response with the http status code on the last line
           response=$(curl -s -w "\n%{http_code}" \
@@ -181,7 +181,6 @@ jobs:
             exit 1
           fi
 
-          RELEASE_ID=$(echo "$body" | jq -r '.id')
           # Extract the upload URL from the response so that we can upload the release files
           UPLOAD_URL=$(echo "$body" | jq -r '.upload_url | sub("\\{.*$"; "") // ""')
           if [ -z "$UPLOAD_URL" ]; then
@@ -268,28 +267,4 @@ jobs:
             echo "::error::${red}No files uploaded successfully${reset}"
             exit 1
           fi
-          echo "::endgroup::"
-
-          echo "::group::Publish release"
-          json_payload=$(jq -n \
-            '{draft: false}')
-
-          publish_response=$(curl -s -w "\n%{http_code}" \
-            -X PATCH \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: token ${GH_AUTH_TOKEN}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            -d "$json_payload" \
-            https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID)
-
-          status=$(echo "$publish_response" | tail -n1)
-          body=$(echo "$publish_response" | sed '$d')
-
-          # Check if the release was updated successfully
-          if [ "$status" -ne 200 ]; then
-            echo "${red}Failed to update release (HTTP $status)${reset}"
-            echo "Response: $body"
-            exit 1
-          fi
-          echo "${green}Release published successfully 🚀🚀🚀${reset}"
           echo "::endgroup::"
