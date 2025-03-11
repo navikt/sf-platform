@@ -17,7 +17,7 @@ jobs:
       SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
   create_release:
     needs: build
-    if: needs.build.outputs.hasNewArtifacts == true
+    if: needs.build.outputs.hasNewArtifacts == 'true'
     uses: navikt/sf-platform/.github/workflows/createRelease.yml@main
     permissions:
       contents: write
