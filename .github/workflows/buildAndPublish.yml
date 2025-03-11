@@ -113,7 +113,7 @@ jobs:
       - name: Promote Artifacts
         if: steps.build.outputs.artifactsFound == 'true'
         run: |
-          sfp promote --targetdevhubusername devhub --loglevel="${SFP_LOG_LEVEL}"
+          sfp artifacts promote --targetdevhubusername devhub --loglevel="${SFP_LOG_LEVEL}"
 
       - name: Publish Artifacts
         if: steps.build.outputs.artifactsFound == 'true'
