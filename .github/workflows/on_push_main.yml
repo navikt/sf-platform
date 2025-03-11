@@ -11,7 +11,7 @@ jobs:
   build:
     uses: navikt/sf-platform/.github/workflows/buildAndPublish.yml@main
     permissions:
-      contents: read
+      contents: write
       packages: write
     secrets:
       SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
