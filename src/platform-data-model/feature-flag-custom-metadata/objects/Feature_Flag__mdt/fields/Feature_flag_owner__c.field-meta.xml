@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Feature_flag_owner__c</fullName>
+    <description>Links to the Nav team that owns the feature flag.</description>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>Links to the Nav team that owns the feature flag.</inlineHelpText>
+    <label>Feature flag owner</label>
+    <referenceTo>Nav_Team__mdt</referenceTo>
+    <relationshipLabel>Feature Flags</relationshipLabel>
+    <relationshipName>Feature_Flags</relationshipName>
+    <required>true</required>
+    <type>MetadataRelationship</type>
+    <unique>false</unique>
+</CustomField>
