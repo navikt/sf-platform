@@ -95,7 +95,7 @@ jobs:
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
         uses: forcedotcom/run-code-analyzer@13c0e7699093dc6294eefe19d1106eeda363c898
         with:
-          run-arguments: --normalize-severity --output-file results.html --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }}
+          run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }}
 
       - name: Check the Salesforce Code Analyzer outputs to determine whether to fail
         if: ${{ !cancelled() && steps.paths.outcome == 'success' && ( steps.run-code-analyzer.outputs.exit-code > 0 || steps.run-code-analyzer.outputs.num-sev1-violations > 0 || steps.run-code-analyzer.outputs.num-violations > 10 ) }}
