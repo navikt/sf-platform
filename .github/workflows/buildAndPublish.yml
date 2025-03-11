@@ -51,7 +51,7 @@ jobs:
     outputs:
       artifactsFound: ${{ steps.build.outputs.artifactsFound || 'false' }}
     permissions:
-      contents: read
+      contents: write
       packages: write
     env:
       SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL || 'INFO' }}
