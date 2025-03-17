@@ -350,7 +350,7 @@ public class JsonHelper {
      * @since 0.1.0, March 2025
      * @param objectA The first object to compare.
      * @param objectB The second object to compare.
-     * @return `Boolean` True if the objects are equal, false otherwise.
+     * @return `Boolean` True if both objects are null, false if one is null, and null if neither is null.
      */
     private static Boolean handleNulls(Object objectA, Object objectB) {
         if (objectA == null && objectB == null) {
