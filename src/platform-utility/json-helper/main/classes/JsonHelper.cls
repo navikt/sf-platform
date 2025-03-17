@@ -19,6 +19,7 @@ public class JsonHelper {
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
      */
+    @TestVisible
     private JSONGenerator generator;
 
     /**
@@ -58,7 +59,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes the start of a JSON object.
+     * @description Writes the start of objectA JSON object.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -69,7 +70,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes the end of a JSON object.
+     * @description Writes the end of objectA JSON object.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -80,7 +81,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes the start of a JSON array.
+     * @description Writes the start of objectA JSON array.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -91,7 +92,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes the end of a JSON array.
+     * @description Writes the end of objectA JSON array.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -102,7 +103,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes a field name to the JSON object.
+     * @description Writes objectA field name to the JSON object.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -114,7 +115,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes a string value to the JSON object.
+     * @description Writes objectA string value to the JSON object.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -126,7 +127,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes a string field to the JSON object if the value is not null.
+     * @description Writes objectA string field to the JSON object if the value is not null.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -156,7 +157,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes a boolean field to the JSON object if the value is not null.
+     * @description Writes objectA boolean field to the JSON object if the value is not null.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -171,7 +172,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes a list of strings to the JSON object if the list is not null and not empty.
+     * @description Writes objectA list of strings to the JSON object if the list is not null and not empty.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -199,8 +200,8 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes a nested object to the JSON object if the object is not null.
-     * The object must have a `toJson` method that returns a JSON string.
+     * @description Writes objectA nested object to the JSON object if the object is not null.
+     * The object must have objectA `toJson` method that returns objectA JSON string.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -220,8 +221,8 @@ public class JsonHelper {
 
     // Helper for list of nested objects
     /**
-     * @description Writes a list of nested objects to the JSON object if the list is not null and
-     * not empty. The objects must have a `toJson` method that returns a JSON string.
+     * @description Writes objectA list of nested objects to the JSON object if the list is not null and
+     * not empty. The objects must have objectA `toJson` method that returns objectA JSON string.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -253,10 +254,16 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes a list of IJsonSerializable objects as a top-level JSON array.
+     * @description Writes objectA list of IJsonSerializable objects as objectA top-level JSON array.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, February 2025
+     * @param objList The list of objects to write.
+     * @see IJsonSerializable
+     * @see JSON.deserializeUntyped
+     * @see JSONGenerator.writeObject
+     * @see JSONGenerator.writeStartArray
+     * @see JSONGenerator.writeEndArray
      */
     public void writeObjectListAsRootArray(List<IJsonSerializable> objList) {
         generator.writeStartArray();
@@ -266,8 +273,6 @@ public class JsonHelper {
                     generator.writeObject(
                         JSON.deserializeUntyped(obj.toJson())
                     );
-                } else {
-                    generator.writeObject(null);
                 }
             }
         }
@@ -282,12 +287,10 @@ public class JsonHelper {
      * @param jsonA The first JSON string to compare.
      * @param jsonB The second JSON string to compare.
      * @return `Boolean` True if the JSON strings are equal, false otherwise.
+     * @see JSON.deserializeUntyped
+     * @see compareObjects
      */
     public static Boolean jsonEquals(String jsonA, String jsonB) {
-        System.debug('jsonA: ' + jsonA);
-        System.debug('jsonB: ' + jsonB);
-
-        // Parse each JSON into a nested Map/List structure
         Object objA = JSON.deserializeUntyped(jsonA);
         Object objB = JSON.deserializeUntyped(jsonB);
 
@@ -299,52 +302,63 @@ public class JsonHelper {
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, February 2025
-     * @param a The first object to compare.
-     * @param b The second object to compare.
+     * @param objectA The first object to compare.
+     * @param objectB The second object to compare.
      * @return `Boolean` True if the objects are equal, false otherwise.
      */
-    private static Boolean compareObjects(Object a, Object b) {
+    @suppressWarnings('PMD.NcssMethodCount')
+    private static Boolean compareObjects(Object objectA, Object objectB) {
         // Case 1: Both null
-        if (a == null && b == null)
+        if (objectA == null && objectB == null) {
             return true;
-        // If one is null but not the other
-        if (a == null || b == null)
+        }
+        // Case 2: If one is null but not the other
+        if (objectA == null || objectB == null) {
             return false;
+        }
 
-        // Case 2: Both are maps
+        // Case 3: Both are maps
         if (
-            a instanceof Map<String, Object> && b instanceof Map<String, Object>
+            objectA instanceof Map<String, Object> &&
+            objectB instanceof Map<String, Object>
         ) {
-            Map<String, Object> mapA = (Map<String, Object>) a;
-            Map<String, Object> mapB = (Map<String, Object>) b;
+            Map<String, Object> mapA = (Map<String, Object>) objectA;
+            Map<String, Object> mapB = (Map<String, Object>) objectB;
             // Must have same number of keys
-            if (mapA.keySet().size() != mapB.keySet().size())
+            if (mapA.keySet().size() != mapB.keySet().size()) {
                 return false;
-            // Check each key
-            for (String key : mapA.keySet()) {
-                if (!mapB.containsKey(key))
+            }
+            // Check each keyMapA
+            for (String keyMapA : mapA.keySet()) {
+                if (!mapB.containsKey(keyMapA)) {
                     return false;
-                if (!compareObjects(mapA.get(key), mapB.get(key)))
+                }
+                if (!compareObjects(mapA.get(keyMapA), mapB.get(keyMapA))) {
                     return false;
+                }
             }
             return true;
         }
 
-        // Case 3: Both are lists
-        if (a instanceof List<Object> && b instanceof List<Object>) {
-            List<Object> listA = (List<Object>) a;
-            List<Object> listB = (List<Object>) b;
-            if (listA.size() != listB.size())
+        // Case 4: Both are lists
+        if (
+            objectA instanceof List<Object> && objectB instanceof List<Object>
+        ) {
+            List<Object> listA = (List<Object>) objectA;
+            List<Object> listB = (List<Object>) objectB;
+            if (listA.size() != listB.size()) {
                 return false;
+            }
             // Compare each element
             for (Integer i = 0; i < listA.size(); i++) {
-                if (!compareObjects(listA[i], listB[i]))
+                if (!compareObjects(listA[i], listB[i])) {
                     return false;
+                }
             }
             return true;
         }
 
-        // Case 4: Otherwise treat as a primitive (String, Integer, etc.)
-        return a == b;
+        // Case 5: Otherwise treat as objectA primitive (String, Integer, etc.)
+        return objectA == objectB;
     }
 }
