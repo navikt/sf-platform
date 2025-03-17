@@ -1,0 +1,46 @@
+name: Release to DEV
+run-name: Release to DEV
+on:
+  workflow_call:
+    inputs:
+      release_tag:
+        required: false
+        type: string
+    secrets:
+      SF_DEVHUB_URL:
+        required: true
+      SF_DEV_URL:
+        required: true
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag"
+        required: false
+        default: ""
+      loglevel:
+        description: "Log level"
+        required: false
+        type: choice
+        options:
+          - " "
+          - "TRACE"
+          - "DEBUG"
+          - "INFO"
+          - "WARN"
+          - "ERROR"
+          - "FATAL"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+jobs:
+  release:
+    name: Release to DEV
+    uses: navikt/sf-platform/.github/workflows/release.yml@main
+    with:
+      release_tag: ${{ github.event.inputs.release_tag }}
+      loglevel: ${{ github.event.inputs.loglevel}}
+    secrets:
+      SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
+      TARGET_ORG_URL: ${{ secrets.SF_DEV_URL }}
+    permissions:
+      contents: read
+      packages: read

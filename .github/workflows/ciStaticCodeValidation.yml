@@ -30,7 +30,7 @@ jobs:
         shell: "bash"
     steps:
       - name: "Install SF CLI"
-        uses: navikt/sf-platform/.github/actions/installSfCli@f318a266c5a7add9c091f9d3480164fed8abfc08
+        uses: navikt/sf-platform/.github/actions/installSfCli@895ff372c53275157c8c1a7148078cb2c64464ad
         with:
           version: ${{ vars.SF_CLI_VERSION }}
 
@@ -80,26 +80,30 @@ jobs:
 
       - name: Prettier Check
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: navikt/sf-platform/.github/actions/prettierCheck@f318a266c5a7add9c091f9d3480164fed8abfc08
+        uses: navikt/sf-platform/.github/actions/prettierCheck@895ff372c53275157c8c1a7148078cb2c64464ad
         with:
           pathToValidate: ${{ steps.paths.outputs.prettierPathsToValidate }}
 
       - name: Eslint check
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: navikt/sf-platform/.github/actions/eslintCheck@f318a266c5a7add9c091f9d3480164fed8abfc08
+        uses: navikt/sf-platform/.github/actions/eslintCheck@895ff372c53275157c8c1a7148078cb2c64464ad
         with:
           pathToValidate: ${{ steps.paths.outputs.eslintPathsToValidate }}
 
       - name: Run Salesforce Code Analyzer
         id: run-code-analyzer
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: forcedotcom/run-code-analyzer@bfae1fe9a8894aea78cf26d2463cc865fbf67b17
+        uses: forcedotcom/run-code-analyzer@13c0e7699093dc6294eefe19d1106eeda363c898
         with:
-          run-command: run
-          run-arguments: --normalize-severity --outfile results.html --target ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }}
-          results-artifact-name: salesforce-code-analyzer-results
+          run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }}
 
       - name: Check the Salesforce Code Analyzer outputs to determine whether to fail
         if: ${{ !cancelled() && steps.paths.outcome == 'success' && ( steps.run-code-analyzer.outputs.exit-code > 0 || steps.run-code-analyzer.outputs.num-sev1-violations > 0 || steps.run-code-analyzer.outputs.num-violations > 10 ) }}
         shell: bash
-        run: exit 1
+        run: |
+          echo "::error title=Code Analyzer failed with exit code: ${EXIT_CODE}::Number of Sev1 violations: ${NUM_SEV1_VIOLATIONS} (max 0). Number of violations: ${NUM_VIOLATIONS} (max 10)."
+          exit 1
+        env:
+          EXIT_CODE: ${{ steps.run-code-analyzer.outputs.exit-code }}
+          NUM_SEV1_VIOLATIONS: ${{ steps.run-code-analyzer.outputs.num-sev1-violations }}
+          NUM_VIOLATIONS: ${{ steps.run-code-analyzer.outputs.num-violations }}
