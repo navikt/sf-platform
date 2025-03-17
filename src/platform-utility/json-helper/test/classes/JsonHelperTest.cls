@@ -986,6 +986,32 @@ private class JsonHelperTest {
         );
     }
 
+    @IsTest
+    static void jsonStringIsCaseSensitive() {
+        String jsonA = '"now"';
+        String jsonB = '"NOW"';
+        System.Test.startTest();
+        Boolean areEqual = JsonHelper.jsonEquals(jsonA, jsonB);
+        System.Test.stopTest();
+        System.Assert.isFalse(
+            areEqual,
+            'Expected jsonEquals comparison to be case sensitive'
+        );
+    }
+
+    @IsTest
+    static void jsonKeyIsCaseSensitive() {
+        String jsonA = '{"now":"winter"}';
+        String jsonB = '{"NOW":"winter"}';
+        System.Test.startTest();
+        Boolean areEqual = JsonHelper.jsonEquals(jsonA, jsonB);
+        System.Test.stopTest();
+        System.Assert.isFalse(
+            areEqual,
+            'Expected jsonEquals comparison to be case sensitive'
+        );
+    }
+
     /**
      * @description A dummy class that implements `IJsonSerializable` for testing purposes.
      *

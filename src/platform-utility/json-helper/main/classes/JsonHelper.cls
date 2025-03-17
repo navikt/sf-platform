@@ -329,7 +329,15 @@ public class JsonHelper {
             return compareLists((List<Object>) objectA, (List<Object>) objectB);
         }
 
+        if (objectA instanceof String && objectB instanceof String) {
+            return caseSensitiveCompareStrings((String)objectA, (String)objectB);
+        }
+
         return comparePrimitives(objectA, objectB);
+    }
+
+    private static Boolean caseSensitiveCompareStrings(String a, String b) {
+        return a.equals(b);
     }
 
     /**
@@ -418,6 +426,7 @@ public class JsonHelper {
      * @return `Boolean` True if the objects are equal, false otherwise.
      */
     private static Boolean comparePrimitives(Object objectA, Object objectB) {
+
         return objectA == objectB;
     }
 }
