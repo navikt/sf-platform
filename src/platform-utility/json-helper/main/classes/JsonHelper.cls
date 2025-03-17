@@ -59,7 +59,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes the start of objectA JSON object.
+     * @description Writes the start of a JSON object.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -70,7 +70,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes the end of objectA JSON object.
+     * @description Writes the end of a JSON object.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -81,7 +81,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes the start of objectA JSON array.
+     * @description Writes the start of a JSON array.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -92,7 +92,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes the end of objectA JSON array.
+     * @description Writes the end of a JSON array.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -103,7 +103,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes objectA field name to the JSON object.
+     * @description Writes a field name to the JSON object.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -115,7 +115,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes objectA string value to the JSON object.
+     * @description Writes a string value to the JSON object.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -127,7 +127,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes objectA string field to the JSON object if the value is not null.
+     * @description Writes a string field to the JSON object if the value is not null.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -157,7 +157,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes objectA boolean field to the JSON object if the value is not null.
+     * @description Writes a boolean field to the JSON object if the value is not null.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -172,7 +172,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes objectA list of strings to the JSON object if the list is not null and not empty.
+     * @description Writes a list of strings to the JSON object if the list is not null and not empty.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -200,8 +200,8 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes objectA nested object to the JSON object if the object is not null.
-     * The object must have objectA `toJson` method that returns objectA JSON string.
+     * @description Writes a nested object to the JSON object if the object is not null.
+     * The object must have a `toJson` method that returns a JSON string.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -221,8 +221,8 @@ public class JsonHelper {
 
     // Helper for list of nested objects
     /**
-     * @description Writes objectA list of nested objects to the JSON object if the list is not null and
-     * not empty. The objects must have objectA `toJson` method that returns objectA JSON string.
+     * @description Writes a list of nested objects to the JSON object if the list is not null and
+     * not empty. The objects must have a `toJson` method that returns a JSON string.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -254,7 +254,7 @@ public class JsonHelper {
     }
 
     /**
-     * @description Writes objectA list of IJsonSerializable objects as objectA top-level JSON array.
+     * @description Writes a list of IJsonSerializable objects as a top-level JSON array.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, February 2025
@@ -358,7 +358,7 @@ public class JsonHelper {
             return true;
         }
 
-        // Case 5: Otherwise treat as objectA primitive (String, Integer, etc.)
+        // Case 5: Otherwise treat as a primitive (String, Integer, etc.)
         return objectA == objectB;
     }
 }
