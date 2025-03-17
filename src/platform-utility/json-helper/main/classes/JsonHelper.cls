@@ -308,57 +308,116 @@ public class JsonHelper {
      */
     @suppressWarnings('PMD.NcssMethodCount')
     private static Boolean compareObjects(Object objectA, Object objectB) {
-        // Case 1: Both null
-        if (objectA == null && objectB == null) {
-            return true;
-        }
-        // Case 2: If one is null but not the other
-        if (objectA == null || objectB == null) {
-            return false;
+        Boolean nullCheck = handleNulls(objectA, objectB);
+        if (nullCheck != null) {
+            return nullCheck;
         }
 
-        // Case 3: Both are maps
         if (
             objectA instanceof Map<String, Object> &&
             objectB instanceof Map<String, Object>
         ) {
-            Map<String, Object> mapA = (Map<String, Object>) objectA;
-            Map<String, Object> mapB = (Map<String, Object>) objectB;
-            // Must have same number of keys
-            if (mapA.keySet().size() != mapB.keySet().size()) {
-                return false;
-            }
-            // Check each keyMapA
-            for (String keyMapA : mapA.keySet()) {
-                if (!mapB.containsKey(keyMapA)) {
-                    return false;
-                }
-                if (!compareObjects(mapA.get(keyMapA), mapB.get(keyMapA))) {
-                    return false;
-                }
-            }
-            return true;
+            return compareMaps(
+                (Map<String, Object>) objectA,
+                (Map<String, Object>) objectB
+            );
         }
 
-        // Case 4: Both are lists
         if (
             objectA instanceof List<Object> && objectB instanceof List<Object>
         ) {
-            List<Object> listA = (List<Object>) objectA;
-            List<Object> listB = (List<Object>) objectB;
-            if (listA.size() != listB.size()) {
-                return false;
-            }
-            // Compare each element
-            for (Integer i = 0; i < listA.size(); i++) {
-                if (!compareObjects(listA[i], listB[i])) {
-                    return false;
-                }
-            }
-            return true;
+            return compareLists((List<Object>) objectA, (List<Object>) objectB);
         }
 
-        // Case 5: Otherwise treat as objectA primitive (String, Integer, etc.)
+        return comparePrimitives(objectA, objectB);
+    }
+
+    /**
+     * @description Helper method to handle nulls.
+     * If both are null, return true.
+     * If one is null but not the other, return false.
+     * Otherwise, return null.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param objectA The first object to compare.
+     * @param objectB The second object to compare.
+     * @return `Boolean` True if the objects are equal, false otherwise.
+     */
+    private static Boolean handleNulls(Object objectA, Object objectB) {
+        if (objectA == null && objectB == null) {
+            return true;
+        }
+        if (objectA == null || objectB == null) {
+            return false;
+        }
+
+        return null;
+    }
+
+    /**
+     * @description Compares two maps for equality.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param mapA The first map to compare.
+     * @param mapB The second map to compare.
+     * @return `Boolean` True if the maps are equal, false otherwise.
+     */
+    private static Boolean compareMaps(
+        Map<String, Object> mapA,
+        Map<String, Object> mapB
+    ) {
+        if (mapA.keySet().size() != mapB.keySet().size()) {
+            return false;
+        }
+
+        for (String keyA : mapA.keySet()) {
+            if (!mapB.containsKey(keyA)) {
+                return false;
+            }
+            if (!compareObjects(mapA.get(keyA), mapB.get(keyA))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @description Compares two lists for equality.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param listA The first list to compare.
+     * @param listB The second list to compare.
+     * @return `Boolean` True if the lists are equal, false otherwise.
+     */
+    private static Boolean compareLists(
+        List<Object> listA,
+        List<Object> listB
+    ) {
+        if (listA.size() != listB.size()) {
+            return false;
+        }
+
+        for (Integer i = 0; i < listA.size(); i++) {
+            if (!compareObjects(listA[i], listB[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @description Compares two primitives for equality.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param objectA The first object to compare.
+     * @param objectB The second object to compare.
+     * @return `Boolean` True if the objects are equal, false otherwise.
+     */
+    private static Boolean comparePrimitives(Object objectA, Object objectB) {
         return objectA == objectB;
     }
 }
