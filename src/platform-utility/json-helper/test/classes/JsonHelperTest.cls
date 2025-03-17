@@ -1012,6 +1012,19 @@ private class JsonHelperTest {
         );
     }
 
+    @IsTest
+    static void jsonDoubleCanEqualInt() {
+        String jsonA = '{"answer": 42.0}';
+        String jsonB = '{"answer": 42}';
+        System.Test.startTest();
+        Boolean areEqual = JsonHelper.jsonEquals(jsonA, jsonB);
+        System.Test.stopTest();
+        System.Assert.isTrue(
+            areEqual,
+            'Expected 42 and 42.0 to be the same'
+        );
+    }
+
     /**
      * @description A dummy class that implements `IJsonSerializable` for testing purposes.
      *
