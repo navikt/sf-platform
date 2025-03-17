@@ -25,6 +25,13 @@
     },
     {
       "versionNumber": "0.1.0.NEXT",
+      "path": "src/platform-utility/platform-interfaces",
+      "default": false,
+      "package": "platform-interfaces",
+      "versionDescription": "A few simple interfaces."
+    },
+    {
+      "versionNumber": "0.1.0.NEXT",
       "path": "src/platform-utility/json-helper",
       "default": false,
       "package": "json-helper",
@@ -35,19 +42,12 @@
           "versionNumber": "0.1.0.LATEST"
         }
       ]
-    },
-    {
-      "versionNumber": "0.1.0.NEXT",
-      "path": "src/platform-utility/platform-interfaces",
-      "default": false,
-      "package": "platform-interfaces",
-      "versionDescription": "A few simple interfaces."
     }
   ],
   "packageAliases": {
     "platform-data-model": "0HoKB00000000010AA",
     "custom-metadata-dao": "0HoKB000000000B0AQ",
-    "json-helper": "0HoKB000000000L0AQ",
-    "platform-interfaces": "0HoKB000000000Q0AQ"
+    "platform-interfaces": "0HoKB000000000Q0AQ",
+    "json-helper": "0HoKB000000000L0AQ"
   }
 }
