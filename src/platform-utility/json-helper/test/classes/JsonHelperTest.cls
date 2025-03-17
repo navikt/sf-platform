@@ -5,7 +5,9 @@
  * @since 0.1.0, January 2025
  * @see JsonHelper
  */
-@SuppressWarnings('PMD.CognitiveComplexity')
+@SuppressWarnings(
+    'PMD.CognitiveComplexity, PMD.ApexUnitTestClassShouldHaveRunAs'
+)
 @isTest(IsParallel=true)
 private class JsonHelperTest {
     /**
