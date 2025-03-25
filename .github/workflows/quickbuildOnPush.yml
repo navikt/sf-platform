@@ -26,7 +26,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@895ff372c53275157c8c1a7148078cb2c64464ad
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@655e1dc08e58247b5ded00cb96e40f4a415bad85
         id: checkChanges
 
   quickBuild:
@@ -46,7 +46,7 @@ jobs:
           persist-credentials: true
 
       - name: Authenticate DevHub
-        uses: navikt/sf-platform/.github/actions/authenticateOrg@895ff372c53275157c8c1a7148078cb2c64464ad
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@655e1dc08e58247b5ded00cb96e40f4a415bad85
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: "devhub"
@@ -62,7 +62,7 @@ jobs:
 
       - name: Upload artifacts and logs
         if: always()
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@895ff372c53275157c8c1a7148078cb2c64464ad
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@655e1dc08e58247b5ded00cb96e40f4a415bad85
         with:
           artifactName: "build-artifacts"
           uploadArtifacts: true
