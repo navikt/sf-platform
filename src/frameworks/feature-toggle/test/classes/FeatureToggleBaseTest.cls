@@ -1,4 +1,5 @@
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
 private with sharing class FeatureToggleBaseTest {
     @IsTest
     private static void noFeatures() {
