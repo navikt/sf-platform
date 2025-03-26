@@ -1,6 +1,20 @@
+/**
+ * @description This is the test class for the FeatureToggleBase class.
+ *
+ * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+ * @since 0.1.0, March 2025
+ * @group Feature Toggle
+ * @see FeatureToggleBase
+ */
 @IsTest
 @SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
 private with sharing class FeatureToggleBaseTest {
+    /**
+     * @description Tests the FeatureToggleBase class with no features.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void noFeatures() {
         CustomMetadataDAO.customMetadataRecordsMap.put(
@@ -24,6 +38,12 @@ private with sharing class FeatureToggleBaseTest {
         );
     }
 
+    /**
+     * @description Tests the FeatureToggleBase class with no features and an exception.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void getFeatureFlagsException() {
         CustomMetadataDAO.customMetadataRecordsMap.put(
@@ -49,6 +69,12 @@ private with sharing class FeatureToggleBaseTest {
         );
     }
 
+    /**
+     * @description Tests the FeatureToggleBase class with one feature enabled.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void oneFeatureEnabled() {
         List<Feature_Flag__mdt> featureFlags = new List<Feature_Flag__mdt>();
@@ -81,6 +107,13 @@ private with sharing class FeatureToggleBaseTest {
         );
     }
 
+    /**
+     * @description Tests the FeatureToggleBase class with one feature enabled and without a custom
+     * setting.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void oneFeatureEnabledWithoutCustomSetting() {
         List<Feature_Flag__mdt> featureFlags = new List<Feature_Flag__mdt>();
@@ -114,6 +147,12 @@ private with sharing class FeatureToggleBaseTest {
         );
     }
 
+    /**
+     * @description Tests the FeatureToggleBase class with one feature disabled.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void oneFeatureDisabled() {
         List<Feature_Flag__mdt> featureFlags = new List<Feature_Flag__mdt>();
@@ -146,6 +185,12 @@ private with sharing class FeatureToggleBaseTest {
         );
     }
 
+    /**
+     * @description Tests the FeatureToggleBase class with an is feature enabled exception.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void isFeatureEnabledException() {
         CustomMetadataDAO.customMetadataRecordsMap.put(
@@ -171,6 +216,12 @@ private with sharing class FeatureToggleBaseTest {
         );
     }
 
+    /**
+     * @description Test if it is possible to enable a feature on the go.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void enableDisabledFeatureOnTheGo() {
         List<Feature_Flag__mdt> featureFlags = new List<Feature_Flag__mdt>();
@@ -199,6 +250,12 @@ private with sharing class FeatureToggleBaseTest {
         );
     }
 
+    /**
+     * @description Test if it is possible to add features on the go.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void addFeaturesOnTheGo() {
         List<Feature_Flag__mdt> featureFlags = new List<Feature_Flag__mdt>();
@@ -220,6 +277,12 @@ private with sharing class FeatureToggleBaseTest {
         );
     }
 
+    /**
+     * @description Test if it is possible to remove features on the go.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void removeFeaturesOnTheGo() {
         List<Feature_Flag__mdt> featureFlags = new List<Feature_Flag__mdt>();
@@ -253,6 +316,12 @@ private with sharing class FeatureToggleBaseTest {
         );
     }
 
+    /**
+     * @description Test if it is possible to disable an enabled feature on the go.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void disableEnabledFeatureOnTheGo() {
         List<Feature_Flag__mdt> featureFlags = new List<Feature_Flag__mdt>();
@@ -280,7 +349,13 @@ private with sharing class FeatureToggleBaseTest {
             'Expected Feature1 to be enabled'
         );
     }
-
+    /**
+     * @description Test if it is possible to reset all features to default values.
+     *
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void resetFeatures() {
         CustomMetadataDAO.customMetadataRecordsMap.put(
@@ -330,8 +405,14 @@ private with sharing class FeatureToggleBaseTest {
         );
     }
 
+    /**
+     * @description Test
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
-    private static void isFeatureEnabledAuraEnabled() {
+    private static void isFeatureEnabled() {
         List<Feature_Flag__mdt> featureFlags = new List<Feature_Flag__mdt>();
         featureFlags.add(
             new Feature_Flag__mdt(
@@ -366,6 +447,12 @@ private with sharing class FeatureToggleBaseTest {
         Test.stopTest();
     }
 
+    /**
+     * @description
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void isFeatureEnabledAuraException() {
         Exception expectedException;
@@ -384,6 +471,12 @@ private with sharing class FeatureToggleBaseTest {
         );
     }
 
+    /**
+     * @description
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     */
     @IsTest
     private static void isFeatureEnabledInvokable() {
         List<Feature_Flag__mdt> featureFlags = new List<Feature_Flag__mdt>();

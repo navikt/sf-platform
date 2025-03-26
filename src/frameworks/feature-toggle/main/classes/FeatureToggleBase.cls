@@ -2,21 +2,86 @@
  * @description Base class for managing feature toggles.
  * Supports checking, enabling and disabling features via custom metadata (Feature_Flag__mdt) and custom permissions.
  *
- * @author Tor Håkon Sigurdsen
- * @since 2025-03-07
+ * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+ * @since 0.1.0, March 2025
+ * @group Feature Toggle
+ * @see IFeatureToggle
+ * @example
+ * Eksempel på direkte bruk:
+ *
+ * public with sharing MyClass {
+ *     public MyClass() {
+ *         ...
+ *     }
+ *
+ *     public Decimal getDiscount() {
+ *         if(new FeatureToggleBase().isFeatureEnabled('improved-discount-calculation')) {
+ *             return getDiscountBeta();
+ *         }
+ *         ...
+ *         return discount
+ *     }
+ *
+ *     private Decimal getDiscountBeta() {
+ *         ...
+ *         return discount;
+ *     }
+ *
+ *     ...
+ * }
+ *
+ * Eksempel hvor man extender FeatureToggleBase:
+ *
+ * public with sharing MyClass extends FeatureToggleBase {
+ *     public MyClass() {
+ *         ...
+ *     }
+ *
+ *     public Decimal getDiscount() {
+ *         if(isFeatureEnabled('improved-discount-calculation')) {
+ *             return getDiscountBeta();
+ *         }
+ *         ...
+ *         return discount
+ *     }
+ *
+ *     private Decimal getDiscountBeta() {
+ *         ...
+ *         return discount;
+ *     }
+ *
+ *     ...
+ * }
  */
 public virtual class FeatureToggleBase implements IFeatureToggle {
     /**
      * @description Metadata query to retrieve feature flags.
      * Retrieves MasterLabel, DeveloperName, Is_Enabled__c, and Description__c.
      *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      * @see CustomMetadataDAO
      */
     @TestVisible
     private final static String METADATA_QUERY = 'SELECT MasterLabel, DeveloperName, Is_Enabled__c, Description__c, Required_Custom_Permission__c FROM Feature_Flag__mdt';
 
+    /**
+     * @description The Custom Metadata Data Access Object.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see CustomMetadataDAO
+     */
     private CustomMetadataDAO dao;
 
+    /**
+     * @description Map of feature flags keyed by DeveloperName.
+     * Lazy-loaded on first access.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see Feature_Flag__mdt
+     */
     private Map<String, Feature_Flag__mdt> featureFlagMap {
         get {
             // If featureFlagMap is not already initialized, load feature flags.
@@ -27,6 +92,10 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
 
     /**
      * @description Default constructor.
+     * Initializes the Custom Metadata Data Access Object.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      */
     public FeatureToggleBase() {
         this(new CustomMetadataDAO());
@@ -34,8 +103,11 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
 
     /**
      * @description Constructor with dependency injection.
+     * Using the provided Custom Metadata Data Access Object for custom metadata access.
      *
-     * @param dao
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param dao The custom metadata DAO.
      */
     public FeatureToggleBase(CustomMetadataDAO dao) {
         this.dao = dao;
@@ -44,6 +116,8 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
     /**
      * @description Checks if a feature is enabled for a specific toggle type.
      *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      * @param featureName The feature name.
      * @param toggleType The type (FEATURE_FLAG or CUSTOM_PERMISSION).
      * @return `true` if enabled, `false` otherwise.
@@ -52,10 +126,11 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
     /**
      * @description Checks if a feature is enabled for a specific toggle type.
      *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      * @param featureName The feature name.
      * @param toogleType The type (FEATURE_FLAG or CUSTOM_PERMISSION).
      * @return `true` if enabled, `false` otherwise.
-     *
      * @exception throws `AuraHandledException` if something goes wrong.
      */
     @AuraEnabled(cacheable=true)
@@ -82,6 +157,8 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
     /**
      * @description Checks if a feature is enabled for a specific toggle type.
      *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      * @param requests A list of `FeatureToogleRequest` objects with the feature name and type.
      * @return A list of `FeatureToogleResponse` objects with the feature name and if it is enabled or not.
      */
@@ -107,10 +184,12 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
     }
 
     /**
-     * @description Loads feature flags from custom metadata using the injected DAO.
+     * @description Loads feature flags from custom metadata using the injected Custom Metadata Data
+     * Access Object.
      *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      * @return Map of feature flags keyed by DeveloperName.
-     *
      * @see CustomMetadataDAO
      */
     private Map<String, Feature_Flag__mdt> getFeatureFlags() {
@@ -137,6 +216,8 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
     /**
      * @description Retrieves a feature flag by developer name.
      *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      * @param featureName The feature's DeveloperName.
      * @return The `Feature_Flag__mdt` record or null if not found.
      */
@@ -148,6 +229,8 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
      * @description Checks if a feature is enabled via feature flags or custom permissions.
      * Uses an OR condition: true if either check passes.
      *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      * @param featureName The feature name.
      * @return `true` if enabled, `false` otherwise.
      */
@@ -159,6 +242,8 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
     /**
      * @description Checks if a feature is enabled for a specific toggle type.
      *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      * @param featureName The feature name.
      * @param toggleType The type (FEATURE_FLAG or CUSTOM_PERMISSION).
      * @return `true` if enabled, `false` otherwise.
@@ -199,6 +284,8 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
      * @description Temporarily enables a feature in this instance’s cache.
      * Does not persist to metadata.
      *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      * @param featureName The feature to enable.
      * @return This instance for chaining.
      */
@@ -219,6 +306,8 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
      * @description Temporarily disables a feature in this instance’s cache.
      * Does not persist to metadata.
      *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      * @param featureName The feature to disable.
      * @return This instance for chaining.
      */
@@ -232,6 +321,8 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
     /**
      * @description Resets caches, forcing reload on next access.
      *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      * @return This instance for chaining
      */
     public virtual FeatureToggleBase resetFeatureFlags() {
@@ -242,6 +333,8 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
     /**
      * @description Checks if a custom permission is granted.+
      *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      * @param customPermissionName The permission name.
      * @return `true` if granted, `false` otherwise.
      */
@@ -251,6 +344,9 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
 
     /**
      * @description Invocable request for enabling a feature.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      */
     public class FeatureToogleRequest {
         @InvocableVariable(
@@ -269,6 +365,8 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
         /**
          * @description Constructor with parameters.
          *
+         * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+         * @since 0.1.0, March 2025
          * @param featureName The feature name.
          * @param featureType The feature type.
          */
@@ -280,6 +378,9 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
 
     /**
      * @description Invocable response for enabling a feature.
+     *
+     * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+     * @since 0.1.0, March 2025
      */
     public class FeatureToogleResponse {
         @InvocableVariable(

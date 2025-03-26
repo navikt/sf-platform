@@ -1,8 +1,9 @@
 /**
  * @description Interface for feature toggle implementations.
  *
- * @author Tor Håkon Sigurdsen
- * @since 2025-03-07
+ * @author Tor Håkon Sigurdsen <tor.hakon.sigurdsen@nav.no>, Nav
+ * @since 0.1.0, March 2025
+ * @group Feature Toggle
  */
 public interface IFeatureToggle {
     /**
