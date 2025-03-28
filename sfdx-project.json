@@ -20,11 +20,32 @@
       "definitionFile": "config/scratch-org-def.json"
     },
     {
-      "versionNumber": "0.1.0.NEXT",
       "path": "src/platform-utility/custom-metadata-dao",
-      "default": false,
       "package": "custom-metadata-dao",
+      "versionNumber": "0.1.0.NEXT",
+      "default": false,
       "definitionFile": "config/scratch-org-def.json"
+    },
+    {
+      "path": "src/platform-utility/platform-interfaces",
+      "default": false,
+      "package": "platform-interfaces",
+      "versionNumber": "0.1.0.NEXT",
+      "versionDescription": "A few simple interfaces."
+    },
+    {
+      "versionNumber": "0.1.0.NEXT",
+      "path": "src/platform-utility/json-helper",
+      "default": false,
+      "package": "json-helper",
+      "definitionFile": "config/scratch-org-def.json",
+      "versionDescription": "JSON Helper Classes.",
+      "dependencies": [
+        {
+          "package": "platform-interfaces",
+          "versionNumber": "0.1.0.LATEST"
+        }
+      ]
     },
     {
       "versionNumber": "0.1.0.NEXT",
@@ -47,12 +68,14 @@
       "path": "src/platform-utility/custom-permission-helper",
       "default": false,
       "package": "custom-permission-helper",
-      "versionDescription": "Custom Permission Helper class used to get access to Custom Permissions, and at the same time make it easier to test the various paths the code can take based on the values in the Custom Permissions."
+      "definitionFile": "config/scratch-org-def.json"
     }
   ],
   "packageAliases": {
     "platform-data-model": "0HoKB00000000010AA",
     "custom-metadata-dao": "0HoKB000000000B0AQ",
+    "platform-interfaces": "0HoKB000000000Q0AQ",
+    "json-helper": "0HoKB000000000L0AQ",
     "feature-toggle": "0HoKB000000000V0AQ"
   }
 }
