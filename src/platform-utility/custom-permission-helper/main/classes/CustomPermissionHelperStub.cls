@@ -118,6 +118,12 @@ public with sharing class CustomPermissionHelperStub implements System.StubProvi
                 .getKeyPrefix() + id.leftPad(15, '1T00000wXYZ12AB'); //NOPMD - We are not using a hardcoded ID, we dynamically set the prefix and generate an ID
     }
 
+    /**
+     * @description Create a SetupEntityAccess object
+     *
+     * @param setupEntityId The ID of the SetupEntityAccess
+     * @return The SetupEntityAccess object
+     */
     public static SetupEntityAccess createSetupEntityAccess(
         String setupEntityId
     ) {
