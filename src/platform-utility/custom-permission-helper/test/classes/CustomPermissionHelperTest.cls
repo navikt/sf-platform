@@ -281,8 +281,10 @@ private with sharing class CustomPermissionHelperTest {
      */
     @IsTest
     private static void getSetupEntityAccesses() {
+        CustomPermissionHelper customPermissionHelper = new CustomPermissionHelper()
+            .setCustomPermissionMaps(new List<CustomPermission>());
         Test.startTest();
-        List<SetupEntityAccess> result = new CustomPermissionHelper()
+        List<SetupEntityAccess> result = customPermissionHelper
             .getSetupEntityAccesses(UserInfo.getUserId());
         Test.stopTest();
 
@@ -302,8 +304,10 @@ private with sharing class CustomPermissionHelperTest {
      */
     @IsTest
     private static void getSetupEntityAccessesNullInput() {
+        CustomPermissionHelper customPermissionHelper = new CustomPermissionHelper()
+            .setCustomPermissionMaps(new List<CustomPermission>());
         Test.startTest();
-        List<SetupEntityAccess> result = new CustomPermissionHelper()
+        List<SetupEntityAccess> result = customPermissionHelper
             .getSetupEntityAccesses(null);
         Test.stopTest();
         System.Assert.isNotNull(result, 'The result should not be null');
