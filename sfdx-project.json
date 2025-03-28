@@ -1,6 +1,7 @@
 {
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "62.0",
+  "sourceApiVersion": "63.0",
+
   "packageDirectories": [
     {
       "path": "src-temp",
@@ -9,25 +10,27 @@
     {
       "path": "src/platform-data-model",
       "package": "platform-data-model",
-      "versionNumber": "0.1.0.NEXT"
+      "versionNumber": "0.1.0.NEXT",
+      "definitionFile": "config/scratch-org-def.json"
     },
     {
       "path": "src/platform-admin",
       "package": "platform-admin",
-      "versionNumber": "0.0.0.NEXT"
+      "versionNumber": "0.0.0.NEXT",
+      "definitionFile": "config/scratch-org-def.json"
     },
     {
-      "versionNumber": "0.1.0.NEXT",
       "path": "src/platform-utility/custom-metadata-dao",
-      "default": false,
       "package": "custom-metadata-dao",
-      "versionDescription": "Custom Metadata Data Access Object class used to get access to Custom Metadata objects, and at the same time make it easier to test the various paths the code can take based on the values in the Custom Metadata."
+      "versionNumber": "0.1.0.NEXT",
+      "default": false,
+      "definitionFile": "config/scratch-org-def.json"
     },
     {
-      "versionNumber": "0.1.0.NEXT",
       "path": "src/platform-utility/platform-interfaces",
       "default": false,
       "package": "platform-interfaces",
+      "versionNumber": "0.1.0.NEXT",
       "versionDescription": "A few simple interfaces."
     },
     {
@@ -35,6 +38,7 @@
       "path": "src/platform-utility/json-helper",
       "default": false,
       "package": "json-helper",
+      "definitionFile": "config/scratch-org-def.json",
       "versionDescription": "JSON Helper Classes.",
       "dependencies": [
         {
@@ -42,12 +46,36 @@
           "versionNumber": "0.1.0.LATEST"
         }
       ]
+    },
+    {
+      "versionNumber": "0.1.0.NEXT",
+      "path": "src/frameworks/feature-toggle",
+      "package": "feature-toggle",
+      "definitionFile": "config/scratch-org-def.json",
+      "dependencies": [
+        {
+          "package": "platform-data-model",
+          "versionNumber": "0.1.0.LATEST"
+        },
+        {
+          "package": "custom-metadata-dao",
+          "versionNumber": "0.1.0.LATEST"
+        }
+      ]
+    },
+    {
+      "versionNumber": "0.1.0.NEXT",
+      "path": "src/platform-utility/custom-permission-helper",
+      "default": false,
+      "package": "custom-permission-helper",
+      "definitionFile": "config/scratch-org-def.json"
     }
   ],
   "packageAliases": {
     "platform-data-model": "0HoKB00000000010AA",
     "custom-metadata-dao": "0HoKB000000000B0AQ",
     "platform-interfaces": "0HoKB000000000Q0AQ",
-    "json-helper": "0HoKB000000000L0AQ"
+    "json-helper": "0HoKB000000000L0AQ",
+    "feature-toggle": "0HoKB000000000V0AQ"
   }
 }
