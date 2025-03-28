@@ -35,6 +35,10 @@
         {
           "package": "platform-data-model",
           "versionNumber": "0.1.0.LATEST"
+        },
+        {
+          "package": "custom-metadata-dao",
+          "versionNumber": "0.1.0.LATEST"
         }
       ]
     },
