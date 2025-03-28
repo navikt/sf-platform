@@ -22,6 +22,13 @@
       "default": false,
       "package": "custom-metadata-dao",
       "versionDescription": "Custom Metadata Data Access Object class used to get access to Custom Metadata objects, and at the same time make it easier to test the various paths the code can take based on the values in the Custom Metadata."
+    },
+    {
+      "versionNumber": "0.1.0.NEXT",
+      "path": "src/platform-utility/custom-permission-helper",
+      "default": false,
+      "package": "custom-permission-helper",
+      "versionDescription": "Custom Permission Helper class used to get access to Custom Permissions, and at the same time make it easier to test the various paths the code can take based on the values in the Custom Permissions."
     }
   ],
   "packageAliases": {
