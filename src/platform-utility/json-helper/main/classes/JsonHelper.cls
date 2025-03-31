@@ -16,7 +16,7 @@ public class JsonHelper {
     /**
      * @description Error message for when the JSON generator is closed.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      */
     public static final String CLOSED_GENERATOR_ERROR_MESSAGE = 'Cannot perform operation on a closed JSON Generator.';
@@ -24,7 +24,7 @@ public class JsonHelper {
     /**
      * @description The JSONGenerator instance that is used to generate the JSON.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      */
     @TestVisible
@@ -34,7 +34,7 @@ public class JsonHelper {
      * @description Constructor for the `JsonHelper` class.
      * Creates a `JSONGenerator` instance with the default configuration.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @see JSONGenerator
      * @see JSON.createGenerator
@@ -47,7 +47,7 @@ public class JsonHelper {
      * @description Constructor for the `JsonHelper` class.
      * Accept an existing `JSONGenerator` instance to use.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @param generator The `JSONGenerator` instance to use.
      * @see JSONGenerator
@@ -60,7 +60,7 @@ public class JsonHelper {
      * @description Constructor for the `JsonHelper` class.
      * Creates a `JSONGenerator` instance with the specified pretty print configuration.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param prettyPrint Determines whether the JSON generator creates JSON content in pretty-print
      * format with the content indented. Set to true to create indented content.
@@ -76,7 +76,7 @@ public class JsonHelper {
      * This method should be called after all JSON writing operations are done.
      * This method is a wrapper for the `JSONGenerator.close` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, march 2025
      * @see JSONGenerator.close
      */
@@ -88,7 +88,7 @@ public class JsonHelper {
      * @description Returns the generated JSON content as a `String`.
      * This method is a wrapper for the `JSONGenerator.getAsString` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @return `String` The JSON content as a string.
      * @see JSONGenerator.getAsString
@@ -101,7 +101,7 @@ public class JsonHelper {
      * @description Returns whether the `JSONGenerator` instance is closed.
      * This method is a wrapper for the `JSONGenerator.isClosed` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, march 2025
      * @return `Boolean` True if the JSON generator is closed; otherwise, false.
      * @see JSONGenerator.isClosed
@@ -114,7 +114,7 @@ public class JsonHelper {
      * @description Writes the specified `Blob` value as a base64-encoded string.
      * This method is a wrapper for the `JSONGenerator.writeBlob` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, march 2025
      * @param blobValue The blob value to write.
      * @exception JsonHelperException If the generator is closed.
@@ -129,7 +129,7 @@ public class JsonHelper {
      * @description Writes a `field` name and value pair using the specified field name and `Blob` value.
      * This method is a wrapper for the `JSONGenerator.writeBlobField` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, march 2025
      * @param fieldName The field name to write.
      * @param blobValue The value to write.
@@ -145,7 +145,7 @@ public class JsonHelper {
      * @description Writes the specified `Boolean` value.
      * This method is a wrapper for the `JSONGenerator.writeBoolean` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, march 2025
      * @param boolenValue The boolean value to write.
      * @exception JsonHelperException If the generator is closed.
@@ -161,7 +161,7 @@ public class JsonHelper {
      * `Boolean` value.
      * This method is a wrapper for the `JSONGenerator.writeBooleanField` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, march 2025
      * @param fieldName The field name to write.
      * @param boolenValue The value to write.
@@ -177,7 +177,7 @@ public class JsonHelper {
      * @description Writes the specified `Date` value.
      * This method is a wrapper for the `JSONGenerator.writeDate` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, march 2025
      * @param dateValue The date value to write.
      * @exception JsonHelperException If the generator is closed.
@@ -193,7 +193,7 @@ public class JsonHelper {
      * value.
      * This method is a wrapper for the `JSONGenerator.writeDateField` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, march 2025
      * @param fieldName The field name to write.
      * @param dateValue The value to write.
@@ -209,7 +209,7 @@ public class JsonHelper {
      * @description Writes the specified `Datetime` value.
      * This method is a wrapper for the `JSONGenerator.writeDateTime` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, march 2025
      * @param dateTimeValue The datetime value to write.
      * @exception JsonHelperException If the generator is closed.
@@ -225,7 +225,7 @@ public class JsonHelper {
      * `Datetime` value.
      * This method is a wrapper for the `JSONGenerator.writeDateTimeField` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, march 2025
      * @param fieldName The field name to write.
      * @param dateTimeValue The value to write.
@@ -241,7 +241,7 @@ public class JsonHelper {
      * @description Writes the ending marker of a JSON array (']').
      * This method is a wrapper for the `JSONGenerator.writeEndArray` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @exception JsonHelperException If the generator is closed.
      * @see JSONGenerator.writeEndArray
@@ -255,7 +255,7 @@ public class JsonHelper {
      * @description Writes the ending marker of a JSON object ('}').
      * This method is a wrapper for the `JSONGenerator.writeEndObject` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @exception JsonHelperException If the generator is closed.
      * @see JSONGenerator.writeEndObject
@@ -269,7 +269,7 @@ public class JsonHelper {
      * @description Writes a field name to the JSON object.
      * This method is a wrapper for the `JSONGenerator.writeFieldName` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @param name The field name to write.
      * @exception JsonHelperException If the generator is closed.
@@ -284,7 +284,7 @@ public class JsonHelper {
      * @description Writes the specified `Id` value as a string.
      * This method is a wrapper for the `JSONGenerator.writeId` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param id The ID value to write.
      * @exception JsonHelperException If the generator is closed.
@@ -299,7 +299,7 @@ public class JsonHelper {
      * @description Writes a `field` name and value pair using the specified field name and `Id` value.
      * This method is a wrapper for the `JSONGenerator.writeIdField` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param fieldName The field name to write.
      * @param id The value to write.
@@ -315,7 +315,7 @@ public class JsonHelper {
      * @description Writes the `null` value to the JSON object.
      * This method is a wrapper for the `JSONGenerator.writeNull` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      */
     public void writeNull() {
@@ -327,7 +327,7 @@ public class JsonHelper {
      * @description Writes a `field` name and the `null` value to the JSON object.
      * This method is a wrapper for the `JSONGenerator.writeNullField` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param fieldName The field name to write.
      * @exception JsonHelperException If the generator is closed.
@@ -342,7 +342,7 @@ public class JsonHelper {
      * @description Writes the specified `Decimal` value.
      * This method is a wrapper for the `JSONGenerator.writeNumber` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param decimalValue The decimal value to write.
      * @exception JsonHelperException If the generator is closed.
@@ -357,7 +357,7 @@ public class JsonHelper {
      * @description Writes the specified `Double` value.
      * This method is a wrapper for the `JSONGenerator.writeNumber` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param doubleValue The double value to write.
      * @exception JsonHelperException If the generator is closed.
@@ -372,7 +372,7 @@ public class JsonHelper {
      * @description Writes the specified `Integer` value.
      * This method is a wrapper for the `JSONGenerator.writeNumber` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param integerValue The integer value to write.
      * @exception JsonHelperException If the generator is closed.
@@ -387,7 +387,7 @@ public class JsonHelper {
      * @description Writes the specified `Long` value.
      * This method is a wrapper for the `JSONGenerator.writeNumber` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param longValue The long value to write.
      * @exception JsonHelperException If the generator is closed.
@@ -402,7 +402,7 @@ public class JsonHelper {
      * @description Writes a `field` name and the specified `Decimal` value to the JSON object.
      * This method is a wrapper for the `JSONGenerator.writeNumberField` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param fieldName The field name to write.
      * @param decimalValue The decimal value to write.
@@ -418,7 +418,7 @@ public class JsonHelper {
      * @description Writes a `field` name and the specified `Double` value to the JSON object.
      * This method is a wrapper for the `JSONGenerator.writeNumberField` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param fieldName The field name to write.
      * @param doubleValue The double value to write.
@@ -434,7 +434,7 @@ public class JsonHelper {
      * @description Writes a `field` name and the specified `Integer` value to the JSON object.
      * This method is a wrapper for the `JSONGenerator.writeNumberField` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param fieldName The field name to write.
      * @param integerValue The integer value to write.
@@ -450,7 +450,7 @@ public class JsonHelper {
      * @description Writes a `field` name and the specified `Long` value to the JSON object.
      * This method is a wrapper for the `JSONGenerator.writeNumberField` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param fieldName The field name to write.
      * @param longValue The long value to write.
@@ -466,7 +466,7 @@ public class JsonHelper {
      * @description Writes the specified Apex object in JSON format.
      * This method is a wrapper for the `JSONGenerator.writeObjectField` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param objectValue The object to write.
      * @exception JsonHelperException If the generator is closed.
@@ -481,7 +481,7 @@ public class JsonHelper {
      * @description Writes a `field` name and the specified Apex object in JSON format.
      * This method is a wrapper for the `JSONGenerator.writeObjectField` method.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param fieldName The field name to write.
      * @param objectValue The object to write.
@@ -496,7 +496,7 @@ public class JsonHelper {
     /**
      * @description Writes the starting marker of a JSON array ('[').
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @exception JsonHelperException If the generator is closed.
      * @see JSONGenerator.writeStartArray
@@ -509,7 +509,7 @@ public class JsonHelper {
     /**
      * @description Writes the starting marker of a JSON object ('{').
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @exception JsonHelperException If the generator is closed.
      * @see JSONGenerator.writeStartObject
@@ -522,7 +522,7 @@ public class JsonHelper {
     /**
      * @description Writes string value to the JSON object.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @param value The value to write.
      * @exception JsonHelperException If the generator is closed.
@@ -578,26 +578,39 @@ public class JsonHelper {
     /**
      * @description
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @param fieldName
      * @param value
-     * @see JSONGenerator.writeStringField
-     * @see JSONGenerator.writeNumberField
-     * @see JSONGenerator.writeBooleanField
      */
+    @TestVisible
     private void writeFieldIfNotNull(String fieldName, Object value) {
         if (value != null) {
-            /*if(value instanceof ){}
-            
-            
-            else if (value instanceof String) {
-                generator.writeStringField(fieldName, (String) value);
-            } else if (value instanceof Integer) {
-                generator.writeNumberField(fieldName, (Integer) value);
+            if (value instanceof Blob) {
+                generator.writeBlobField(fieldName, (Blob) value);
             } else if (value instanceof Boolean) {
                 generator.writeBooleanField(fieldName, (Boolean) value);
-            }*/
+            } else if (value instanceof Date) {
+                generator.writeDateField(fieldName, (Date) value);
+            } else if (value instanceof Datetime) {
+                generator.writeDateTimeField(fieldName, (Datetime) value);
+            } else if (value instanceof Id) {
+                generator.writeIdField(fieldName, (Id) value);
+            } else if (value instanceof Decimal) {
+                generator.writeNumberField(fieldName, (Decimal) value);
+            } else if (value instanceof Double) {
+                generator.writeNumberField(fieldName, (Double) value);
+            } else if (value instanceof Integer) {
+                generator.writeNumberField(fieldName, (Integer) value);
+            } else if (value instanceof Long) {
+                generator.writeNumberField(fieldName, (Long) value);
+            } else if (value instanceof String) {
+                generator.writeStringField(fieldName, (String) value);
+            } else if (value instanceof Time) {
+                generator.writeTimeField(fieldName, (Time) value);
+            } else {
+                generator.writeObjectField(fieldName, (Object) value);
+            }
         }
     }
 
@@ -608,7 +621,7 @@ public class JsonHelper {
     /**
      * @description Writes objectA string field to the JSON object if the value is not null.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @param fieldName The field name to write.
      * @param value The value to write.
@@ -622,7 +635,7 @@ public class JsonHelper {
     /**
      * @description Writes an integer field to the JSON object if the value is not null.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @param fieldName The field name to write.
      * @param value The value to write.
@@ -636,7 +649,7 @@ public class JsonHelper {
     /**
      * @description Writes objectA boolean field to the JSON object if the value is not null.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @param fieldName The field name to write.
      * @param value The value to write.
@@ -650,7 +663,7 @@ public class JsonHelper {
     /**
      * @description Writes objectA list of strings to the JSON object if the list is not null and not empty.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @param fieldName The field name to write.
      * @param values The list of strings to write.
@@ -679,7 +692,7 @@ public class JsonHelper {
      * @description Writes objectA nested object to the JSON object if the object is not null.
      * The object must have objectA `toJson` method that returns objectA JSON string.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @param fieldName The field name to write.
      * @param obj The object to write.
@@ -700,7 +713,7 @@ public class JsonHelper {
      * @description Writes objectA list of nested objects to the JSON object if the list is not null and
      * not empty. The objects must have objectA `toJson` method that returns objectA JSON string.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, January 2025
      * @param fieldName The field name to write.
      * @param objList The list of objects to write.
@@ -732,7 +745,7 @@ public class JsonHelper {
     /**
      * @description Writes objectA list of IJsonSerializable objects as objectA top-level JSON array.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, February 2025
      * @param objList The list of objects to write.
      * @see IJsonSerializable
@@ -758,7 +771,7 @@ public class JsonHelper {
     /**
      * @description Compares two JSON strings for equality.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, February 2025
      * @param jsonA The first JSON string to compare.
      * @param jsonB The second JSON string to compare.
@@ -776,7 +789,7 @@ public class JsonHelper {
     /**
      * @description Compares two objects for equality.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, February 2025
      * @param objectA The first object to compare.
      * @param objectB The second object to compare.
@@ -833,7 +846,7 @@ public class JsonHelper {
      * If one is null but not the other, return false.
      * Otherwise, return null.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param objectA The first object to compare.
      * @param objectB The second object to compare.
@@ -853,7 +866,7 @@ public class JsonHelper {
     /**
      * @description Compares two maps for equality.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param mapA The first map to compare.
      * @param mapB The second map to compare.
@@ -881,7 +894,7 @@ public class JsonHelper {
     /**
      * @description Compares two lists for equality.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param listA The first list to compare.
      * @param listB The second list to compare.
@@ -906,7 +919,7 @@ public class JsonHelper {
     /**
      * @description Compares two primitives for equality.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @param objectA The first object to compare.
      * @param objectB The second object to compare.
@@ -920,7 +933,7 @@ public class JsonHelper {
      * @description Ensures that the JSON generator is open.
      * Throws an exception if the generator is closed.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, March 2025
      * @throws JsonHelperException If the generator is closed.
      * @see CLOSED_GENERATOR_ERROR_MESSAGE
@@ -935,7 +948,7 @@ public class JsonHelper {
     /**
      * @description Custom exception class for the `JsonHelper` class.
      *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @author Kenneth Sørensen
      * @since 0.1.0, December 2024
      * @group Public 360 Integration
      */
