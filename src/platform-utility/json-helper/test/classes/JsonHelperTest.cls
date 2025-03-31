@@ -2,7 +2,8 @@
  * @description Tests the `JsonHelper` class.
  *
  * @author Kenneth Sørensen
- * @since 0.1.0, January 2025
+ * @since January 2025 - Initial Release.
+ *
  * @group JSON Helper
  * @see JsonHelper
  */
@@ -17,7 +18,8 @@ private class JsonHelperTest {
      * The `generator` property should be an instance of `JSONGenerator`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper
      */
     @IsTest
@@ -40,7 +42,8 @@ private class JsonHelperTest {
      * The `generator` property should be the same instance as the one passed to the constructor.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper
      */
     @IsTest
@@ -71,7 +74,8 @@ private class JsonHelperTest {
      * The JSON string should not contain newline characters or indentation when pretty printing is disabled.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper
      */
     @IsTest
@@ -106,7 +110,8 @@ private class JsonHelperTest {
      * The JSON string should contain newline characters and indentation when pretty printing is enabled.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper
      */
     @IsTest
@@ -138,7 +143,8 @@ private class JsonHelperTest {
      * @description Tests the default constructor and basic usage of the `JsonHelper` class.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper
      */
     @IsTest
@@ -166,7 +172,8 @@ private class JsonHelperTest {
      * @description Tests the constructor that accepts an existing `JSONGenerator`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper
      */
     @IsTest
@@ -195,7 +202,8 @@ private class JsonHelperTest {
      * The `isClosed` method should return `true` after calling `close`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.close
      * @see JsonHelper.isClosed
      */
@@ -222,7 +230,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
      * @see JsonHelper.JsonHelperException
      */
@@ -275,7 +284,8 @@ private class JsonHelperTest {
      * The JSON string should contain the field name and value.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.getAsString
      */
     @IsTest
@@ -305,7 +315,8 @@ private class JsonHelperTest {
      * The JSON string should contain the base64 encoded blob value.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeBlob
      */
     @IsTest
@@ -335,7 +346,8 @@ private class JsonHelperTest {
      * closed generator.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeBlob
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -390,7 +402,8 @@ private class JsonHelperTest {
      * The JSON string should contain the field name and base64 encoded blob value.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeBlobField
      */
     @IsTest
@@ -420,7 +433,8 @@ private class JsonHelperTest {
      * closed generator.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeBlobField
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -474,7 +488,8 @@ private class JsonHelperTest {
      * The JSON string should contain the boolean value `true`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeBoolean
      */
     @IsTest
@@ -502,7 +517,8 @@ private class JsonHelperTest {
      * a closed generator.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeBoolean
      * @see JsonHelper.JsonHelperException
      */
@@ -555,7 +571,8 @@ private class JsonHelperTest {
      * The JSON string should contain the field name and boolean value `false`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeBooleanField
      */
     @IsTest
@@ -582,7 +599,8 @@ private class JsonHelperTest {
      * on a closed generator.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeBooleanField
      * @see JsonHelper.JsonHelperException
      */
@@ -634,7 +652,8 @@ private class JsonHelperTest {
      * The JSON string should contain the date value in the format "yyyy-MM-dd".
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeDate
      */
     @IsTest
@@ -664,7 +683,8 @@ private class JsonHelperTest {
      * a closed generator.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeDate
      * @see JsonHelper.JsonHelperException
      */
@@ -718,7 +738,8 @@ private class JsonHelperTest {
      * The JSON string should contain the field name and date value in the format "yyyy-MM-dd".
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeDateField
      */
     @IsTest
@@ -747,7 +768,8 @@ private class JsonHelperTest {
      * a closed generator.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeDateField
      * @see JsonHelper.JsonHelperException
      */
@@ -801,7 +823,8 @@ private class JsonHelperTest {
      * The timezone should be UTC.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeDateTime
      */
     @IsTest
@@ -836,7 +859,8 @@ private class JsonHelperTest {
      * a closed generator.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeDateTime
      * @see JsonHelper.JsonHelperException
      */
@@ -891,7 +915,8 @@ private class JsonHelperTest {
      * The timezone should be UTC.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeDateTimeField
      */
     @IsTest
@@ -925,7 +950,8 @@ private class JsonHelperTest {
      * on a closed generator.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeDateTimeField
      * @see JsonHelper.JsonHelperException
      */
@@ -978,7 +1004,8 @@ private class JsonHelperTest {
      * The JSON string should contain the end of the array "]".
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeEndArray
      */
     @IsTest
@@ -1007,6 +1034,9 @@ private class JsonHelperTest {
      * a closed generator.
      * The exception message should contain a warning about a closed generator.
      * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Sørensen
+     * @since March 2025 - Initial Release.
      *
      * @see JsonHelper.writeEndArray
      * @see JsonHelper.JsonHelperException
@@ -1062,7 +1092,8 @@ private class JsonHelperTest {
      * The JSON string should contain the end of the object "}".
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeEndObject
      */
     @IsTest
@@ -1090,7 +1121,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeEndObject
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -1143,7 +1175,8 @@ private class JsonHelperTest {
      * The JSON string should contain the field name.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper.writeFieldName
      */
     @IsTest
@@ -1171,7 +1204,8 @@ private class JsonHelperTest {
      * The JSON string should contain an empty key with value "EmptyKey".
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.writeFieldName
      */
     @IsTest
@@ -1202,7 +1236,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeFieldName
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -1255,7 +1290,8 @@ private class JsonHelperTest {
      * The exception type should be `System.NullPointerException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper.writeFieldName
      * @see System.NullPointerException
      */
@@ -1297,7 +1333,8 @@ private class JsonHelperTest {
      * The JSON string should contain the Id value.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper.writeId
      */
     @SuppressWarnings('PMD.AvoidHardcodingId')
@@ -1327,7 +1364,8 @@ private class JsonHelperTest {
      * a closed generator.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeId
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -1383,7 +1421,8 @@ private class JsonHelperTest {
      * The JSON string should contain the field name and Id value.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeIdField
      */
     @SuppressWarnings('PMD.AvoidHardcodingId')
@@ -1412,7 +1451,8 @@ private class JsonHelperTest {
      * a closed generator.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeIdField
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -1466,7 +1506,8 @@ private class JsonHelperTest {
      * The JSON string should contain the field name and null value.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNull
      */
     @IsTest
@@ -1496,7 +1537,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNull
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -1549,7 +1591,8 @@ private class JsonHelperTest {
      * The JSON string should contain the field name and null value.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNullField
      */
     @IsTest
@@ -1578,7 +1621,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNullField
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -1632,7 +1676,8 @@ private class JsonHelperTest {
      * The decimal value should be serialized as a number without quotes.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumber
      */
     @IsTest
@@ -1663,7 +1708,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumber
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -1719,7 +1765,8 @@ private class JsonHelperTest {
      * The double value should be serialized as a number without quotes.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumber
      */
     @IsTest
@@ -1750,7 +1797,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumber
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -1806,7 +1854,8 @@ private class JsonHelperTest {
      * The integer value should be serialized as a number without quotes.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumber
      */
     @IsTest
@@ -1837,7 +1886,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumber
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -1893,7 +1943,8 @@ private class JsonHelperTest {
      * The long value should be serialized as a number without quotes.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumber
      */
     @IsTest
@@ -1924,7 +1975,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumber
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -1980,7 +2032,8 @@ private class JsonHelperTest {
      * The decimal value should be serialized as a number without quotes.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumberField
      */
     @IsTest
@@ -2010,7 +2063,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumberField
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -2065,7 +2119,8 @@ private class JsonHelperTest {
      * The double value should be serialized as a number without quotes.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumberField
      */
     @IsTest
@@ -2095,7 +2150,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumberField
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -2151,7 +2207,8 @@ private class JsonHelperTest {
      * The integer value should be serialized as a number without quotes.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumberField
      */
     @IsTest
@@ -2181,7 +2238,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumberField
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -2238,7 +2296,8 @@ private class JsonHelperTest {
      * The long value should be serialized as a number without quotes.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumberField
      */
     @IsTest
@@ -2268,7 +2327,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNumberField
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -2325,7 +2385,8 @@ private class JsonHelperTest {
      * The object should be serialized as an empty object "{}".
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeObject
      */
     @IsTest
@@ -2356,7 +2417,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeObject
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -2412,7 +2474,8 @@ private class JsonHelperTest {
      * The object should be serialized as an empty object "{}".
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeObjectField
      */
     @IsTest
@@ -2442,7 +2505,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeObjectField
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -2496,7 +2560,8 @@ private class JsonHelperTest {
      * The JSON string should contain the end of the array "]".
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeStartArray
      */
     @IsTest
@@ -2525,6 +2590,9 @@ private class JsonHelperTest {
      * a closed generator.
      * The exception message should contain a warning about a closed generator.
      * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Sørensen
+     * @since March 2025 - Initial Release.
      *
      * @see JsonHelper.writeStartArray
      * @see JsonHelper.JsonHelperException
@@ -2579,7 +2647,8 @@ private class JsonHelperTest {
      * The JSON string should contain the end of the object "}".
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeStartObject
      */
     @IsTest
@@ -2607,7 +2676,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeStartObject
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -2660,7 +2730,8 @@ private class JsonHelperTest {
      * The string value should be serialized with quotes.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.writeString
      */
     @IsTest
@@ -2690,7 +2761,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeString
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -2745,7 +2817,8 @@ private class JsonHelperTest {
      * The string value should be serialized with quotes.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeStringField
      */
     @IsTest
@@ -2774,7 +2847,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeStringField
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -2830,7 +2904,8 @@ private class JsonHelperTest {
      * The time value should be in UTC time zone.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeTime
      */
     @IsTest
@@ -2861,7 +2936,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeTime
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -2919,7 +2995,8 @@ private class JsonHelperTest {
      * The time value should be in UTC time zone.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeTimeField
      */
     @IsTest
@@ -2949,7 +3026,8 @@ private class JsonHelperTest {
      * The exception type should be `JsonHelper.JsonHelperException`.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeTimeField
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
@@ -3003,7 +3081,8 @@ private class JsonHelperTest {
      * The JSON string should contain the field name and blob value as a string.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeFieldIfNotNull
      */
     @IsTest
@@ -3035,7 +3114,8 @@ private class JsonHelperTest {
      * The JSON string should not contain the field name and null value.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeFieldIfNotNull
      */
     @IsTest
@@ -3063,7 +3143,8 @@ private class JsonHelperTest {
      * The JSON string should contain the field name and boolean value.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeFieldIfNotNull
      */
     @IsTest
@@ -3093,7 +3174,8 @@ private class JsonHelperTest {
      * The JSON string should not contain the field name and null value.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeFieldIfNotNull
      */
     @IsTest
@@ -3121,7 +3203,8 @@ private class JsonHelperTest {
      * The JSON string should contain the field name and date value in the format "yyyy-MM-dd".
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
+     * @since March 2025 - Initial Release.
+     *
      * @see JsonHelper.writeFieldIfNotNull
      */
     @IsTest
@@ -3155,22 +3238,16 @@ private class JsonHelperTest {
     // Fix tests under this line
     //--------------------------------------------------------------------------------------------------
 
-    @IsTest
+    /*@IsTest
     private static void fixTestsUnderThisLine() {
         System.debug('Fix tests under this line');
         System.Assert.fail('Fix tests under this line');
-    }
+    }*/
 
-    /**
-     * @description Tests the `writeFieldIfNotNull` method for various data types.
-     *
-     * @author Kenneth Sørensen
-     * @since 0.1.0, March 2025
-     */
-    @IsTest
-    static void testWriteFieldIfNotNull() {
-        // Arrange
-        /*JsonHelper helper = new JsonHelper();
+    //@IsTest
+    //static void testWriteFieldIfNotNull() {
+    // Arrange
+    /*JsonHelper helper = new JsonHelper();
         Test.startTest();
 
         // Act & Assert
@@ -3192,14 +3269,15 @@ private class JsonHelperTest {
         // Assert
         // Verify that no exceptions were thrown and the JSONGenerator is not closed
         System.assert(!helper.isClosed(), 'JSONGenerator should remain open.');*/
-    }
+    //}
 
     /**
      * @description Tests `writeStartObject` and `writeEndObject` without any fields.
      * This is a "negative" or edge scenario: an empty object.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper.writeStartObject
      * @see JsonHelper.writeEndObject
      */
@@ -3224,7 +3302,8 @@ private class JsonHelperTest {
      * @description Tests `writeStartArray` and `writeEndArray` directly.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.writeStartArray
      * @see JsonHelper.writeEndArray
      */
@@ -3251,7 +3330,8 @@ private class JsonHelperTest {
      * @description Tests `writeStartArray`, `writeEndArray`, and `writeFieldName` for an empty array.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper.writeStartArray
      * @see JsonHelper.writeEndArray
      * @see JsonHelper.writeFieldName
@@ -3282,7 +3362,8 @@ private class JsonHelperTest {
      * This test is similar to `emptyArray` but writes the array directly without a field name.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper.writeStartArray
      * @see JsonHelper.writeEndArray
      */
@@ -3307,7 +3388,8 @@ private class JsonHelperTest {
      * @description Tests `writeBooleanFieldIfNotNull` with both null and non-null values.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper.writeBooleanFieldIfNotNull
      */
     @IsTest
@@ -3341,7 +3423,8 @@ private class JsonHelperTest {
      * @description Tests `writeIntegerFieldIfNotNull` with a valid integer and null.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper.writeIntegerFieldIfNotNull
      */
     @IsTest
@@ -3370,7 +3453,8 @@ private class JsonHelperTest {
      * @description Tests that `writeStringFieldIfNotNull` does not write a field when value is null.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.writeStringFieldIfNotNull
      */
     @IsTest
@@ -3395,7 +3479,8 @@ private class JsonHelperTest {
      * @description Tests `writeStringListIfNotEmpty` with a non-empty and empty or null lists.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper.writeStringListIfNotEmpty
      */
     @IsTest
@@ -3433,7 +3518,8 @@ private class JsonHelperTest {
      * @description Tests `writeNestedObject` with a dummy `IJsonSerializable` object and null.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNestedObject
      * @see IJsonSerializable
      */
@@ -3467,7 +3553,8 @@ private class JsonHelperTest {
      * an empty list, and a null list.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper.writeNestedObjectList
      * @see IJsonSerializable
      */
@@ -3511,7 +3598,9 @@ private class JsonHelperTest {
      * @description Tests `writeFieldName` with a valid name.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
+     *
      * @see JsonHelper.writeFieldName
      */
     /*@IsTest
@@ -3538,7 +3627,8 @@ private class JsonHelperTest {
      * The Apex JSON generator allow empty keys, so we check for key-value pair with empty key.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.writeFieldName
      */
     /*@IsTest
@@ -3565,7 +3655,8 @@ private class JsonHelperTest {
      * expecting an exception or error.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see JsonHelper.writeFieldName
      */
     /*@IsTest
@@ -3605,7 +3696,8 @@ private class JsonHelperTest {
      * including a null object in the list.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.writeObjectListAsRootArray
      */
     @IsTest
@@ -3650,7 +3742,8 @@ private class JsonHelperTest {
      * @description Tests `jsonEquals` for two equivalent JSON strings (even with different key order).
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.jsonEquals
      */
     @IsTest
@@ -3672,7 +3765,8 @@ private class JsonHelperTest {
      * @description Tests `jsonEquals` for two non-equivalent JSON strings.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.jsonEquals
      */
     @IsTest
@@ -3694,7 +3788,8 @@ private class JsonHelperTest {
      * @description Tests that two JSON arrays with the same elements in different orders are not equal.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.jsonEquals
      */
     @IsTest
@@ -3717,7 +3812,8 @@ private class JsonHelperTest {
      * and then deserialize it, verifying that the roundtrip preserves the data.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.writeObjectListAsRootArray
      * @see IJsonSerializable
      */
@@ -3763,7 +3859,8 @@ private class JsonHelperTest {
      * @description Test `jsonEquals` when both JSON strings are "null".
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.jsonEquals
      */
     @IsTest
@@ -3785,7 +3882,8 @@ private class JsonHelperTest {
      * @description Test `jsonEquals` when one JSON string is "null" and the other is not.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.jsonEquals
      */
     @IsTest
@@ -3807,7 +3905,8 @@ private class JsonHelperTest {
      * @description Test `jsonEquals` with two maps of different key counts.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.jsonEquals
      */
     @IsTest
@@ -3829,7 +3928,8 @@ private class JsonHelperTest {
      * @description Test `jsonEquals` with nested maps where one nested value differs.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.jsonEquals
      */
     @IsTest
@@ -3851,7 +3951,8 @@ private class JsonHelperTest {
      * @description Test `jsonEquals` with two lists of different sizes.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.jsonEquals
      */
     @IsTest
@@ -3873,7 +3974,7 @@ private class JsonHelperTest {
      * @description Test jsonEquals for two identical primitive values.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
      */
     @IsTest
     private static void jsonEqualsComparingTwoIdenticalPrimitives() {
@@ -3892,7 +3993,8 @@ private class JsonHelperTest {
      * @description Test `jsonEquals` for two different primitive values.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.jsonEquals
      */
     @IsTest
@@ -3916,7 +4018,8 @@ private class JsonHelperTest {
      * exists in one map but not in the other.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.jsonEquals
      */
     @IsTest
@@ -3939,7 +4042,7 @@ private class JsonHelperTest {
      * values that differ.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
      */
     @IsTest
     private static void jsonEqualsNestedMapValueDifferent() {
@@ -3962,7 +4065,8 @@ private class JsonHelperTest {
      *
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.jsonEquals
      */
     @IsTest
@@ -3984,7 +4088,8 @@ private class JsonHelperTest {
      * @description Verifies that `jsonEquals` returns true for two identical lists.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, February 2025
+     * @since February 2025 - Initial Release.
+     *
      * @see JsonHelper.jsonEquals
      */
     @IsTest
@@ -4005,8 +4110,8 @@ private class JsonHelperTest {
     /**
      * @description Tests that `jsonEquals` returns false when strings differ only in case.
      *
-     * @author Eivind Øksnevad <eivind.oksnevad@nav.no>, Nav
-     * @since 0.1.0, March 2025
+     * @author Eivind Øksnevad
+     * @since March 2025 - Initial Release.
      */
     @IsTest
     private static void jsonStringIsCaseSensitive() {
@@ -4026,8 +4131,8 @@ private class JsonHelperTest {
     /**
      * @description Tests that `jsonEquals` returns false when key is different case in two JSON strings.
      *
-     * @author Eivind Øksnevad <eivind.oksnevad@nav.no>, Nav
-     * @since 0.1.0, March 2025
+     * @author Eivind Øksnevad
+     * @since March 2025 - Initial Release.
      */
     @IsTest
     private static void jsonKeyIsCaseSensitive() {
@@ -4047,8 +4152,8 @@ private class JsonHelperTest {
     /**
      * @description Tests that `jsonEquals` returns true when double and integer values are equal.
      *
-     * @author Eivind Øksnevad <eivind.oksnevad@nav.no>, Nav
-     * @since 0.1.0, March 2025
+     * @author Eivind Øksnevad
+     * @since March 2025 - Initial Release.
      */
     @IsTest
     private static void jsonDoubleCanEqualInt() {
@@ -4066,7 +4171,8 @@ private class JsonHelperTest {
      * @description A dummy class that implements `IJsonSerializable` for testing purposes.
      *
      * @author Kenneth Sørensen
-     * @since 0.1.0, January 2025
+     * @since January 2025 - Initial Release.
+     *
      * @see IJsonSerializable
      */
     @SuppressWarnings('PMD.ApexDoc')

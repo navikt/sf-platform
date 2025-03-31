@@ -2,12 +2,19 @@
  * @description Tests the `IJsonSerializable` interface.
  *
  * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
- * @since 0.1.0, January 2025
+ * @since March 2025 - Initial Release.
+ *
  * @group Platform Interfaces
  */
-@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
 @isTest
 private class IJsonSerializableTest {
+    /**
+     * @description Tests the `toJson` method of the `IJsonSerializable` interface.
+     *
+     * @author Kenneth Sørensen
+     * @since March 2025 - Initial Release.
+     */
     @isTest
     private static void toJson() {
         MyClass myObject = new MyClass('John Doe', 30);
@@ -24,15 +31,38 @@ private class IJsonSerializableTest {
         );
     }
 
+    /**
+     * @description A sample class implementing the `IJsonSerializable` interface.
+     *
+     * @author Kenneth Sørensen
+     * @since March 2025 - Initial Release.
+     */
     class MyClass implements IJsonSerializable {
         public String name;
         public Integer age;
 
+        /**
+         * @description Constructor for MyClass.
+         *
+         * @author Kenneth Sørensen
+         * @since March 2025 - Initial Release.
+         *
+         * @param name
+         * @param age
+         */
         public MyClass(String name, Integer age) {
             this.name = name;
             this.age = age;
         }
 
+        /**
+         * @description Converts the object to a JSON string.
+         *
+         * @author Kenneth Sørensen
+         * @since March 2025 - Initial Release.
+         *
+         * @return A JSON string representation of the object.
+         */
         public String toJson() {
             return JSON.serialize(this);
         }
