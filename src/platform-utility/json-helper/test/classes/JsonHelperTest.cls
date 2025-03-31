@@ -20,7 +20,7 @@ private class JsonHelperTest {
      * @see JsonHelper
      */
     @IsTest
-    static void defaultConstructor() {
+    private static void defaultConstructor() {
         System.Test.startTest();
         JsonHelper helper = new JsonHelper();
         System.Test.stopTest();
@@ -43,7 +43,7 @@ private class JsonHelperTest {
      * @see JsonHelper
      */
     @IsTest
-    static void constructorWithJSONGenerator() {
+    private static void constructorWithJSONGenerator() {
         JSONGenerator generator = JSON.createGenerator(false);
 
         System.Test.startTest();
@@ -74,7 +74,7 @@ private class JsonHelperTest {
      * @see JsonHelper
      */
     @IsTest
-    static void constructorWithPrettyPrintFalse() {
+    private static void constructorWithPrettyPrintFalse() {
         System.Test.startTest();
         JsonHelper helper = new JsonHelper(false);
         helper.generator.writeStartObject();
@@ -109,7 +109,7 @@ private class JsonHelperTest {
      * @see JsonHelper
      */
     @IsTest
-    static void constructorWithPrettyPrintTrue() {
+    private static void constructorWithPrettyPrintTrue() {
         System.Test.startTest();
         JsonHelper helper = new JsonHelper(true);
         helper.generator.writeStartObject();
@@ -141,7 +141,7 @@ private class JsonHelperTest {
      * @see JsonHelper
      */
     @IsTest
-    static void defaultConstructorAndBasicUsage() {
+    private static void defaultConstructorAndBasicUsage() {
         JsonHelper helper = new JsonHelper();
 
         System.Test.startTest();
@@ -169,7 +169,7 @@ private class JsonHelperTest {
      * @see JsonHelper
      */
     @IsTest
-    static void constructorWithJSONGeneratorAndBasicUsage() {
+    private static void constructorWithJSONGeneratorAndBasicUsage() {
         JSONGenerator generator = JSON.createGenerator(false);
         JsonHelper helper = new JsonHelper(generator);
 
@@ -198,7 +198,7 @@ private class JsonHelperTest {
      * @see JsonHelper.isClosed
      */
     @IsTest
-    static void closed() {
+    private static void closed() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
         helper.generator.writeStringField('FieldOne', 'ValueOne');
@@ -225,7 +225,7 @@ private class JsonHelperTest {
      * @see JsonHelper.JsonHelperException
      */
     @IsTest
-    static void closedThrowException() {
+    private static void closedThrowException() {
         JsonHelper helper = new JsonHelper();
         helper.writeStartObject();
         helper.writeStringField('FieldOne', 'ValueOne');
@@ -277,7 +277,7 @@ private class JsonHelperTest {
      * @see JsonHelper.getAsString
      */
     @IsTest
-    static void getAsString() {
+    private static void getAsString() {
         String fieldName = 'FieldOne';
         String fieldValue = 'ValueOne';
 
@@ -307,7 +307,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeBlob
      */
     @IsTest
-    static void writeBlob() {
+    private static void writeBlob() {
         JsonHelper helper = new JsonHelper();
         Blob blobValue = Blob.valueOf('Hello, World!');
         helper.generator.writeStartObject();
@@ -339,7 +339,7 @@ private class JsonHelperTest {
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
      */
     @IsTest
-    static void writeBlobThrowCloseGeneratorException() {
+    private static void writeBlobThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         Blob blobValue = Blob.valueOf('Hello, World!');
         helper.generator.writeStartObject();
@@ -392,7 +392,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeBlobField
      */
     @IsTest
-    static void writeBlobField() {
+    private static void writeBlobField() {
         JsonHelper helper = new JsonHelper();
         Blob blobValue = Blob.valueOf('Hello, World!');
         helper.generator.writeStartObject();
@@ -424,7 +424,7 @@ private class JsonHelperTest {
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
      */
     @IsTest
-    static void writeBlobFieldThrowCloseGeneratorException() {
+    private static void writeBlobFieldThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         Blob blobValue = Blob.valueOf('Hello, World!');
         helper.generator.writeStartObject();
@@ -476,7 +476,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeBoolean
      */
     @IsTest
-    static void writeBoolean() {
+    private static void writeBoolean() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
         helper.generator.writeFieldName('BooleanField');
@@ -505,7 +505,7 @@ private class JsonHelperTest {
      * @see JsonHelper.JsonHelperException
      */
     @IsTest
-    static void writeBooleanThrowCloseGeneratorException() {
+    private static void writeBooleanThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
         helper.generator.writeFieldName('BooleanField');
@@ -557,7 +557,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeBooleanField
      */
     @IsTest
-    static void writeBooleanField() {
+    private static void writeBooleanField() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
 
@@ -585,7 +585,7 @@ private class JsonHelperTest {
      * @see JsonHelper.JsonHelperException
      */
     @IsTest
-    static void writeBooleanFieldThrowCloseGeneratorException() {
+    private static void writeBooleanFieldThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
         helper.close();
@@ -636,7 +636,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeDate
      */
     @IsTest
-    static void writeDate() {
+    private static void writeDate() {
         JsonHelper helper = new JsonHelper();
         Date dateValue = Date.today();
         helper.generator.writeStartObject();
@@ -667,7 +667,7 @@ private class JsonHelperTest {
      * @see JsonHelper.JsonHelperException
      */
     @IsTest
-    static void writeDateThrowCloseGeneratorException() {
+    private static void writeDateThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         Date dateValue = Date.today();
         helper.generator.writeStartObject();
@@ -720,7 +720,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeDateField
      */
     @IsTest
-    static void writeDateField() {
+    private static void writeDateField() {
         JsonHelper helper = new JsonHelper();
         Date dateValue = Date.today();
         helper.generator.writeStartObject();
@@ -750,7 +750,7 @@ private class JsonHelperTest {
      * @see JsonHelper.JsonHelperException
      */
     @IsTest
-    static void writeDateFieldThrowCloseGeneratorException() {
+    private static void writeDateFieldThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         Date dateValue = Date.today();
         helper.generator.writeStartObject();
@@ -803,7 +803,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeDateTime
      */
     @IsTest
-    static void writeDateTime() {
+    private static void writeDateTime() {
         JsonHelper helper = new JsonHelper();
         Datetime dateTimeValue = Datetime.now();
         helper.generator.writeStartObject();
@@ -839,7 +839,7 @@ private class JsonHelperTest {
      * @see JsonHelper.JsonHelperException
      */
     @IsTest
-    static void writeDateTimeThrowCloseGeneratorException() {
+    private static void writeDateTimeThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         Datetime dateTimeValue = Datetime.now();
         helper.generator.writeStartObject();
@@ -893,7 +893,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeDateTimeField
      */
     @IsTest
-    static void writeDateTimeField() {
+    private static void writeDateTimeField() {
         JsonHelper helper = new JsonHelper();
         Datetime dateTimeValue = Datetime.now();
         helper.generator.writeStartObject();
@@ -928,7 +928,7 @@ private class JsonHelperTest {
      * @see JsonHelper.JsonHelperException
      */
     @IsTest
-    static void writeDateTimeFieldThrowCloseGeneratorException() {
+    private static void writeDateTimeFieldThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         Datetime dateTimeValue = Datetime.now();
         helper.generator.writeStartObject();
@@ -980,7 +980,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeEndArray
      */
     @IsTest
-    static void writeEndArray() {
+    private static void writeEndArray() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
         helper.generator.writeFieldName('ArrayField');
@@ -1011,7 +1011,7 @@ private class JsonHelperTest {
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
      */
     @IsTest
-    static void writeEndArrayThrowCloseGeneratorException() {
+    private static void writeEndArrayThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
         helper.generator.writeFieldName('ArrayField');
@@ -1064,7 +1064,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeEndObject
      */
     @IsTest
-    static void writeEndObject() {
+    private static void writeEndObject() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
 
@@ -1094,7 +1094,7 @@ private class JsonHelperTest {
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
      */
     @IsTest
-    static void writeEndObjectThrowCloseGeneratorException() {
+    private static void writeEndObjectThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
         helper.close();
@@ -1145,7 +1145,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeFieldName
      */
     @IsTest
-    static void writeFieldName() {
+    private static void writeFieldName() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
 
@@ -1173,7 +1173,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeFieldName
      */
     @IsTest
-    static void writeFieldNameEmpty() {
+    private static void writeFieldNameEmpty() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
 
@@ -1206,7 +1206,7 @@ private class JsonHelperTest {
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
      */
     @IsTest
-    static void writeFieldNameThrowCloseGeneratorException() {
+    private static void writeFieldNameThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
         helper.close();
@@ -1258,7 +1258,7 @@ private class JsonHelperTest {
      * @see System.NullPointerException
      */
     @IsTest
-    static void writeFieldNameWithNullArgument() {
+    private static void writeFieldNameWithNullArgument() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
 
@@ -1298,8 +1298,9 @@ private class JsonHelperTest {
      * @since 0.1.0, January 2025
      * @see JsonHelper.writeId
      */
+    @SuppressWarnings('PMD.AvoidHardcodingId')
     @IsTest
-    static void writeId() {
+    private static void writeId() {
         JsonHelper helper = new JsonHelper();
         Id idValue = '001000000000000AAA';
         helper.generator.writeStartObject();
@@ -1329,8 +1330,9 @@ private class JsonHelperTest {
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
      */
+    @SuppressWarnings('PMD.AvoidHardcodingId')
     @IsTest
-    static void writeIdThrowCloseGeneratorException() {
+    private static void writeIdThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         Id idValue = '001000000000000AAA';
         helper.generator.writeStartObject();
@@ -1382,8 +1384,9 @@ private class JsonHelperTest {
      * @since 0.1.0, March 2025
      * @see JsonHelper.writeIdField
      */
+    @SuppressWarnings('PMD.AvoidHardcodingId')
     @IsTest
-    static void writeIdField() {
+    private static void writeIdField() {
         JsonHelper helper = new JsonHelper();
         Id idValue = '001000000000000AAA';
         helper.generator.writeStartObject();
@@ -1412,8 +1415,9 @@ private class JsonHelperTest {
      * @see JsonHelper.JsonHelperException
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
      */
+    @SuppressWarnings('PMD.AvoidHardcodingId')
     @IsTest
-    static void writeIdFieldThrowCloseGeneratorException() {
+    private static void writeIdFieldThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         Id idValue = '001000000000000AAA';
         helper.generator.writeStartObject();
@@ -1464,7 +1468,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeNull
      */
     @IsTest
-    static void writeNull() {
+    private static void writeNull() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
         helper.generator.writeFieldName('NullField');
@@ -1496,7 +1500,7 @@ private class JsonHelperTest {
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
      */
     @IsTest
-    static void writeNullThrowCloseGeneratorException() {
+    private static void writeNullThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
         helper.generator.writeFieldName('NullField');
@@ -1547,7 +1551,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeNullField
      */
     @IsTest
-    static void writeNullField() {
+    private static void writeNullField() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
 
@@ -1578,7 +1582,7 @@ private class JsonHelperTest {
      * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
      */
     @IsTest
-    static void writeNullFieldThrowCloseGeneratorException() {
+    private static void writeNullFieldThrowCloseGeneratorException() {
         JsonHelper helper = new JsonHelper();
         helper.generator.writeStartObject();
         helper.close();
@@ -1619,12 +1623,1384 @@ private class JsonHelperTest {
         );
     }
 
+    /**
+     * @description Tests `writeNumber` with a valid `Decimal` value.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and decimal value.
+     * The decimal value should be serialized as a number without quotes.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumber
+     */
+    @IsTest
+    private static void writeNumberWithDecimal() {
+        Decimal decimalValue = 123.456;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('DecimalField');
+
+        System.Test.startTest();
+        helper.writeNumber(decimalValue);
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"DecimalField":' + decimalValue),
+            'Expected JSON to contain the field name and decimal value.'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumber` with a `Decimal` property when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeNumber` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumber
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeNumberWithDecimalThrowCloseGeneratorException() {
+        Decimal decimalValue = 123.456;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('DecimalField');
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeNumber(decimalValue);
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumber` with a valid `Double` value.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and double value.
+     * The double value should be serialized as a number without quotes.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumber
+     */
+    @IsTest
+    private static void writeNumberWithDouble() {
+        Double doubleValue = 123.456;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('DoubleField');
+
+        System.Test.startTest();
+        helper.writeNumber(doubleValue);
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"DoubleField":' + doubleValue),
+            'Expected JSON to contain the field name and double value.'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumber` with a `Double` property when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeNumber` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumber
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeNumberWithDoubleThrowCloseGeneratorException() {
+        Double doubleValue = 123.456;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('DoubleField');
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeNumber(doubleValue);
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumber` with a valid `Integer` value.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and integer value.
+     * The integer value should be serialized as a number without quotes.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumber
+     */
+    @IsTest
+    private static void writeNumberWithInteger() {
+        Integer integerValue = 123;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('IntegerField');
+
+        System.Test.startTest();
+        helper.writeNumber(integerValue);
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"IntegerField":' + integerValue),
+            'Expected JSON to contain the field name and integer value.'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumber` with a `Integer` property when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeNumber` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumber
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeNumberWithIntegerThrowClosedGeneratorException() {
+        Integer integerValue = 123;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('IntegerField');
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeNumber(integerValue);
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumber` with a valid `Long` value.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and long value.
+     * The long value should be serialized as a number without quotes.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumber
+     */
+    @IsTest
+    private static void writeNumberWithLong() {
+        Long longValue = 123;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('LongField');
+
+        System.Test.startTest();
+        helper.writeNumber(longValue);
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"LongField":' + longValue),
+            'Expected JSON to contain the field name and long value.'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumber` with a `Integer` property when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeNumber` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumber
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeNumberWithLongThrowClosedGeneratorException() {
+        Long longValue = 123;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('LongField');
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeNumber(longValue);
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumberField` with a valid `Decimal` value.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and decimal value.
+     * The decimal value should be serialized as a number without quotes.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumberField
+     */
+    @IsTest
+    private static void writeNumberFieldWithDecimal() {
+        Decimal decimalValue = 123.456;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+
+        System.Test.startTest();
+        helper.writeNumberField('DecimalField', decimalValue);
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"DecimalField":' + decimalValue),
+            'Expected JSON to contain the field name and decimal value.'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumberField` with a `Decimal` property when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeNumberField` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumberField
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeNumberFieldWithDecimalThrowClosedGeneratorException() {
+        Decimal decimalValue = 123.456;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeNumberField('DecimalField', decimalValue);
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumberField` with a valid `Double` value.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and double value.
+     * The double value should be serialized as a number without quotes.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumberField
+     */
+    @IsTest
+    private static void writeNumberFieldWithDouble() {
+        Double doubleValue = 123.456;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+
+        System.Test.startTest();
+        helper.writeNumberField('DoubleField', doubleValue);
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"DoubleField":' + doubleValue),
+            'Expected JSON to contain the field name and double value.'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumberField` with a `Double` property when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeNumberField` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumberField
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeNumberFieldWithDoubleThrowClosedGeneratorException() {
+        Double doubleValue = 123.456;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+
+        try {
+            helper.writeNumberField('DoubleField', doubleValue);
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumberField` with a valid `Integer` value.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and integer value.
+     * The integer value should be serialized as a number without quotes.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumberField
+     */
+    @IsTest
+    private static void writeNumberFieldWithInteger() {
+        Integer integerValue = 123;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+
+        System.Test.startTest();
+        helper.writeNumberField('IntegerField', integerValue);
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"IntegerField":' + integerValue),
+            'Expected JSON to contain the field name and integer value.'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumberField` with a `Integer` property when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeNumberField` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumberField
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeNumberFieldWithIntegerThrowClosedGeneratorException() {
+        Integer integerValue = 123;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeNumberField('IntegerField', integerValue);
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumberField` with a valid `Long` value.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and long value.
+     * The long value should be serialized as a number without quotes.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumberField
+     */
+    @IsTest
+    private static void writeNumberFieldWithLong() {
+        Long longValue = 123;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+
+        System.Test.startTest();
+        helper.writeNumberField('LongField', longValue);
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"LongField":' + longValue),
+            'Expected JSON to contain the field name and long value.'
+        );
+    }
+
+    /**
+     * @description Tests `writeNumberField` with a `Long` property when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeNumberField` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeNumberField
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeNumberFieldWithLongThrowClosedGeneratorException() {
+        Long longValue = 123;
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeNumberField('LongField', longValue);
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeObject` with an empty object.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and an empty object.
+     * The object should be serialized as an empty object "{}".
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeObject
+     */
+    @IsTest
+    private static void writeObject() {
+        Map<String, Object> obj = new Map<String, Object>();
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('ObjectField');
+
+        System.Test.startTest();
+        helper.writeObject(obj);
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"ObjectField":{}'),
+            'Expected JSON to contain the field name and empty object.'
+        );
+    }
+
+    /**
+     * @description Tests `writeObject` with an empty object when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeObject` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeObject
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeObjectThrowClosedGeneratorException() {
+        Map<String, Object> obj = new Map<String, Object>();
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('ObjectField');
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeObject(obj);
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Test ´writeObjectField´ with an empty object.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and an empty object.
+     * The object should be serialized as an empty object "{}".
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeObjectField
+     */
+    @IsTest
+    private static void writeObjectField() {
+        Map<String, Object> obj = new Map<String, Object>();
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+
+        System.Test.startTest();
+        helper.writeObjectField('ObjectField', obj);
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"ObjectField":{}'),
+            'Expected JSON to contain the field name and empty object.'
+        );
+    }
+
+    /**
+     * @description Tests `writeObjectField` with an empty object when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeObjectField` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeObjectField
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeObjectFieldThrowClosedGeneratorException() {
+        Map<String, Object> obj = new Map<String, Object>();
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeObjectField('ObjectField', obj);
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeStartArray` with an open array.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the end of the array "]".
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeStartArray
+     */
+    @IsTest
+    private static void writeStartArray() {
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('ArrayField');
+
+        System.Test.startTest();
+        helper.writeStartArray();
+        System.Test.stopTest();
+
+        helper.generator.writeEndArray();
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"ArrayField":[]'),
+            'Expected JSON to contain the field name and start of an array.'
+        );
+    }
+
+    /**
+     * @description Tests `writeStartArray` when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeStartArray` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @see JsonHelper.writeStartArray
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeStartArrayThrowCloseGeneratorException() {
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('ArrayField');
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeStartArray();
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeStartObject` with an open object.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the end of the object "}".
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeStartObject
+     */
+    @IsTest
+    private static void writeStartObject() {
+        JsonHelper helper = new JsonHelper();
+
+        System.Test.startTest();
+        helper.writeStartObject();
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('{}'),
+            'Expected JSON to contain the end of an object "}".'
+        );
+    }
+
+    /**
+     * @description Tests `writeStartObject` when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeStartObject` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeStartObject
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeStartObjectThrowCloseGeneratorException() {
+        JsonHelper helper = new JsonHelper();
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeStartObject();
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeString` with a valid `String` value.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and string value.
+     * The string value should be serialized with quotes.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, February 2025
+     * @see JsonHelper.writeString
+     */
+    @IsTest
+    private static void writeString() {
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('StringField');
+
+        System.Test.startTest();
+        helper.writeString('Hello, World!');
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"StringField":"Hello, World!"'),
+            'Expected JSON to contain the field name and string value.'
+        );
+    }
+
+    /**
+     * @description Tests `writeString` with a `String` property when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeString` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeString
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeStringThrowCloseGeneratorException() {
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('StringField');
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeString('Hello, World!');
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeStringField` with a valid `String` value.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and string value.
+     * The string value should be serialized with quotes.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeStringField
+     */
+    @IsTest
+    private static void writeStringField() {
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+
+        System.Test.startTest();
+        helper.writeStringField('StringField', 'Hello, World!');
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"StringField":"Hello, World!"'),
+            'Expected JSON to contain the field name and string value.'
+        );
+    }
+
+    /**
+     * @description Tests `writeStringField` with a `String` property when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeStringField` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeStringField
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeStringFieldThrowClosedGeneratorException() {
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeStringField('StringField', 'Hello, World!');
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeTime` with a valid `Time` value.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and time value.
+     * The time value should be serialized as a string with quotes.
+     * The time value should be formatted as "HH:mm:ss.SSS".
+     * The time value should be in UTC time zone.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeTime
+     */
+    @IsTest
+    private static void writeTime() {
+        Time timeValue = Time.newInstance(12, 34, 56, 789);
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('TimeField');
+
+        System.Test.startTest();
+        helper.writeTime(timeValue);
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"TimeField":"' + timeValue.toString() + '"'),
+            'Expected JSON to contain the field name and time value.'
+        );
+    }
+
+    /**
+     * @description Tests `writeTime` with a closed `JSONGenerator`.
+     * This is a negative test to ensure that an exception is thrown when calling `writeTime` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeTime
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeTimeThrowClosedGeneratorException() {
+        Time timeValue = Time.newInstance(12, 34, 56, 789);
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.generator.writeFieldName('TimeField');
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeTime(timeValue);
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
+    /**
+     * @description Tests `writeTimeField` with a valid `Time` value.
+     * This is a basic test to ensure that the method can be called without errors.
+     * The JSON string should contain the field name and time value.
+     * The time value should be serialized as a string with quotes.
+     * The time value should be formatted as "HH:mm:ss.SSS".
+     * The time value should be in UTC time zone.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeTimeField
+     */
+    @IsTest
+    private static void writeTimeField() {
+        Time timeValue = Time.newInstance(12, 34, 56, 789);
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+
+        System.Test.startTest();
+        helper.writeTimeField('TimeField', timeValue);
+        System.Test.stopTest();
+
+        helper.generator.writeEndObject();
+        String result = helper.getAsString();
+
+        System.Assert.isTrue(
+            result.contains('"TimeField":"' + timeValue.toString() + '"'),
+            'Expected JSON to contain the field name and time value.'
+        );
+    }
+
+    /**
+     * @description Tests `writeTimeField` with a `Time` property when the `JSONGenerator` is closed.
+     * This is a negative test to ensure that an exception is thrown when calling `writeTimeField` on
+     * a closed generator.
+     * The exception message should contain a warning about a closed generator.
+     * The exception type should be `JsonHelper.JsonHelperException`.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @see JsonHelper.writeTimeField
+     * @see JsonHelper.JsonHelperException
+     * @see JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE
+     */
+    @IsTest
+    private static void writeTimeFieldhrowClosedGeneratorException() {
+        Time timeValue = Time.newInstance(12, 34, 56, 789);
+        JsonHelper helper = new JsonHelper();
+        helper.generator.writeStartObject();
+        helper.close();
+
+        System.Assert.isTrue(
+            helper.isClosed(),
+            'Expected JSON Generator to be closed'
+        );
+
+        Boolean exceptionThrown = false;
+        String exceptionTypeName = '';
+        String exceptionMessage = '';
+
+        System.Test.startTest();
+        try {
+            helper.writeTimeField('TimeField', timeValue);
+            exceptionThrown = false;
+        } catch (Exception e) {
+            exceptionThrown = true;
+            exceptionTypeName = e.getTypeName();
+            exceptionMessage = e.getMessage();
+        }
+        System.Test.stopTest();
+
+        System.Assert.isTrue(
+            exceptionThrown,
+            'Expected an exception when performing operations on a closed "JSONGenerator".'
+        );
+        System.Assert.areEqual(
+            JsonHelper.CLOSED_GENERATOR_ERROR_MESSAGE,
+            exceptionMessage,
+            'Expected the exception message warning about a closed generator.'
+        );
+        System.Assert.areEqual(
+            'JsonHelper.JsonHelperException',
+            exceptionTypeName,
+            'Expected the exception type to be "JsonHelper.JsonHelperException".'
+        );
+    }
+
     //--------------------------------------------------------------------------------------------------
     // Fix tests under this line
     //--------------------------------------------------------------------------------------------------
 
     @IsTest
-    static void fixTestsUnderThisLine() {
+    private static void fixTestsUnderThisLine() {
         System.debug('Fix tests under this line');
         System.Assert.fail('Fix tests under this line');
     }
@@ -1639,7 +3015,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeEndObject
      */
     @IsTest
-    static void emptyObject() {
+    private static void emptyObject() {
         JsonHelper helper = new JsonHelper();
 
         System.Test.startTest();
@@ -1664,7 +3040,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeEndArray
      */
     @IsTest
-    static void writeArrayDirectly() {
+    private static void writeArrayDirectly() {
         JsonHelper helper = new JsonHelper();
 
         System.Test.startTest();
@@ -1692,7 +3068,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeFieldName
      */
     @IsTest
-    static void emptyArray() {
+    private static void emptyArray() {
         JsonHelper helper = new JsonHelper();
 
         System.Test.startTest();
@@ -1722,7 +3098,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeEndArray
      */
     @IsTest
-    static void emptyArrayDirectly() {
+    private static void emptyArrayDirectly() {
         JsonHelper helper = new JsonHelper();
 
         System.Test.startTest();
@@ -1746,7 +3122,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeBooleanFieldIfNotNull
      */
     @IsTest
-    static void writeBooleanFieldIfNotNull() {
+    private static void writeBooleanFieldIfNotNull() {
         JsonHelper helper = new JsonHelper();
 
         System.Test.startTest();
@@ -1780,7 +3156,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeIntegerFieldIfNotNull
      */
     @IsTest
-    static void writeIntegerFieldIfNotNull() {
+    private static void writeIntegerFieldIfNotNull() {
         JsonHelper helper = new JsonHelper();
 
         System.Test.startTest();
@@ -1802,32 +3178,6 @@ private class JsonHelperTest {
     }
 
     /**
-     * @description Tests `writeString` by invoking it directly within a JSON object.
-     *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
-     * @since 0.1.0, February 2025
-     * @see JsonHelper.writeString
-     */
-    @IsTest
-    static void writeStringDirectly() {
-        JsonHelper helper = new JsonHelper();
-
-        System.Test.startTest();
-        helper.writeStartObject();
-        helper.writeFieldName('DirectString');
-        helper.writeString('Hello, World!');
-        helper.writeEndObject();
-        String result = helper.getAsString();
-        System.Test.stopTest();
-
-        System.Assert.isTrue(
-            result.contains('"DirectString":"Hello, World!"'),
-            'Expected JSON to contain "DirectString":"Hello, World!". Actual: ' +
-            result
-        );
-    }
-
-    /**
      * @description Tests that `writeStringFieldIfNotNull` does not write a field when value is null.
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
@@ -1835,7 +3185,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeStringFieldIfNotNull
      */
     @IsTest
-    static void writeStringFieldIfNotNullNullValue() {
+    private static void writeStringFieldIfNotNullNullValue() {
         JsonHelper helper = new JsonHelper();
 
         System.Test.startTest();
@@ -1860,7 +3210,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeStringListIfNotEmpty
      */
     @IsTest
-    static void writeStringListIfNotEmpty() {
+    private static void writeStringListIfNotEmpty() {
         JsonHelper helper = new JsonHelper();
 
         System.Test.startTest();
@@ -1899,7 +3249,7 @@ private class JsonHelperTest {
      * @see IJsonSerializable
      */
     @IsTest
-    static void writeNestedObject() {
+    private static void writeNestedObject() {
         JsonHelper helper = new JsonHelper();
 
         // A dummy object that returns {"testField":"TestValue"}
@@ -1933,7 +3283,7 @@ private class JsonHelperTest {
      * @see IJsonSerializable
      */
     @IsTest
-    static void writeNestedObjectList() {
+    private static void writeNestedObjectList() {
         JsonHelper helper = new JsonHelper();
         List<IJsonSerializable> dummyList = new List<IJsonSerializable>{
             new DummySerializable('Val1'),
@@ -1976,7 +3326,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeFieldName
      */
     /*@IsTest
-    static void writeFieldName() {
+    private static void writeFieldName() {
         JsonHelper helper = new JsonHelper();
 
         System.Test.startTest();
@@ -2003,7 +3353,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeFieldName
      */
     /*@IsTest
-    static void writeFieldNameEmpty() {
+    private static void writeFieldNameEmpty() {
         JsonHelper helper = new JsonHelper();
 
         System.Test.startTest();
@@ -2030,7 +3380,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeFieldName
      */
     /*@IsTest
-    static void writeFieldNameWithNullArgument() {
+    private static void writeFieldNameWithNullArgument() {
         JsonHelper helper = new JsonHelper();
 
         Boolean exceptionThrown = false;
@@ -2070,7 +3420,7 @@ private class JsonHelperTest {
      * @see JsonHelper.writeObjectListAsRootArray
      */
     @IsTest
-    static void writeObjectListAsRootArray() {
+    private static void writeObjectListAsRootArray() {
         String valueOne = 'Value1';
         String valueTwo = 'Value2';
 
@@ -2115,7 +3465,7 @@ private class JsonHelperTest {
      * @see JsonHelper.jsonEquals
      */
     @IsTest
-    static void jsonEqualsPositive() {
+    private static void jsonEqualsPositive() {
         String jsonA = '{"a":1,"b":"test"}';
         String jsonB = '{"b":"test","a":1}'; // different order
 
@@ -2137,7 +3487,7 @@ private class JsonHelperTest {
      * @see JsonHelper.jsonEquals
      */
     @IsTest
-    static void jsonEqualsNegative() {
+    private static void jsonEqualsNegative() {
         String jsonA = '{"a":1,"b":"test"}';
         String jsonB = '{"a":2,"b":"test"}'; // different value for a
 
@@ -2159,7 +3509,7 @@ private class JsonHelperTest {
      * @see JsonHelper.jsonEquals
      */
     @IsTest
-    static void jsonEqualsListOrderMatters() {
+    private static void jsonEqualsListOrderMatters() {
         String jsonA = '["a","b","c"]';
         String jsonB = '["c","b","a"]';
 
@@ -2183,7 +3533,7 @@ private class JsonHelperTest {
      * @see IJsonSerializable
      */
     @IsTest
-    static void roundTripWriteObjectListAsRootArray() {
+    private static void roundTripWriteObjectListAsRootArray() {
         String valueOne = 'Value1';
         String valueTwo = 'Value2';
 
@@ -2228,7 +3578,7 @@ private class JsonHelperTest {
      * @see JsonHelper.jsonEquals
      */
     @IsTest
-    static void jsonEqualsBothNull() {
+    private static void jsonEqualsBothNull() {
         String jsonA = 'null';
         String jsonB = 'null';
 
@@ -2250,7 +3600,7 @@ private class JsonHelperTest {
      * @see JsonHelper.jsonEquals
      */
     @IsTest
-    static void jsonEqualsOneNull() {
+    private static void jsonEqualsOneNull() {
         String jsonA = 'null';
         String jsonB = '{"a":1}';
 
@@ -2272,7 +3622,7 @@ private class JsonHelperTest {
      * @see JsonHelper.jsonEquals
      */
     @IsTest
-    static void jsonEqualsMapsDifferentKeyCounts() {
+    private static void jsonEqualsMapsDifferentKeyCounts() {
         String jsonA = '{"a":1}';
         String jsonB = '{"a":1,"b":2}';
 
@@ -2294,7 +3644,7 @@ private class JsonHelperTest {
      * @see JsonHelper.jsonEquals
      */
     @IsTest
-    static void jsonEqualsNestedMapDifference() {
+    private static void jsonEqualsNestedMapDifference() {
         String jsonA = '{"a":{"b":1}}';
         String jsonB = '{"a":{"b":2}}';
 
@@ -2316,7 +3666,7 @@ private class JsonHelperTest {
      * @see JsonHelper.jsonEquals
      */
     @IsTest
-    static void jsonEqualsListsDifferentSizes() {
+    private static void jsonEqualsListsDifferentSizes() {
         String jsonA = '["a", "b"]';
         String jsonB = '["a"]';
 
@@ -2337,7 +3687,7 @@ private class JsonHelperTest {
      * @since 0.1.0, February 2025
      */
     @IsTest
-    static void jsonEqualsComparingTwoIdenticalPrimitives() {
+    private static void jsonEqualsComparingTwoIdenticalPrimitives() {
         String jsonA = '1';
         String jsonB = '1';
         System.Test.startTest();
@@ -2357,7 +3707,7 @@ private class JsonHelperTest {
      * @see JsonHelper.jsonEquals
      */
     @IsTest
-    static void jsonEqualsComparingTwoDifferentPrimitives() {
+    private static void jsonEqualsComparingTwoDifferentPrimitives() {
         String jsonA = '1';
         String jsonB = '2';
 
@@ -2381,7 +3731,7 @@ private class JsonHelperTest {
      * @see JsonHelper.jsonEquals
      */
     @IsTest
-    static void jsonEqualsMapsWithSameCountButDifferentKeys() {
+    private static void jsonEqualsMapsWithSameCountButDifferentKeys() {
         String jsonA = '{"a":1,"b":2}';
         String jsonB = '{"a":1,"c":2}';
 
@@ -2403,7 +3753,7 @@ private class JsonHelperTest {
      * @since 0.1.0, February 2025
      */
     @IsTest
-    static void jsonEqualsNestedMapValueDifferent() {
+    private static void jsonEqualsNestedMapValueDifferent() {
         String jsonA = '{"a": {"x":1, "y":2}}';
         String jsonB = '{"a": {"x":1, "y":3}}'; // nested value "y" differs
 
@@ -2427,7 +3777,7 @@ private class JsonHelperTest {
      * @see JsonHelper.jsonEquals
      */
     @IsTest
-    static void jsonEqualsListsWithDifferentElements() {
+    private static void jsonEqualsListsWithDifferentElements() {
         String jsonA = '["apple", "banana", "cherry"]';
         String jsonB = '["apple", "blueberry", "cherry"]'; // second element differs
 
@@ -2449,7 +3799,7 @@ private class JsonHelperTest {
      * @see JsonHelper.jsonEquals
      */
     @IsTest
-    static void jsonEqualsIdenticalLists() {
+    private static void jsonEqualsIdenticalLists() {
         String jsonA = '["apple", "banana", "cherry"]';
         String jsonB = '["apple", "banana", "cherry"]';
 
@@ -2470,7 +3820,7 @@ private class JsonHelperTest {
      * @since 0.1.0, March 2025
      */
     @IsTest
-    static void jsonStringIsCaseSensitive() {
+    private static void jsonStringIsCaseSensitive() {
         String jsonA = '"now"';
         String jsonB = '"NOW"';
 
@@ -2491,7 +3841,7 @@ private class JsonHelperTest {
      * @since 0.1.0, March 2025
      */
     @IsTest
-    static void jsonKeyIsCaseSensitive() {
+    private static void jsonKeyIsCaseSensitive() {
         String jsonA = '{"now":"winter"}';
         String jsonB = '{"NOW":"winter"}';
 
@@ -2512,7 +3862,7 @@ private class JsonHelperTest {
      * @since 0.1.0, March 2025
      */
     @IsTest
-    static void jsonDoubleCanEqualInt() {
+    private static void jsonDoubleCanEqualInt() {
         String jsonA = '{"answer": 42.0}';
         String jsonB = '{"answer": 42}';
 

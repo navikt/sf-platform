@@ -368,22 +368,146 @@ public class JsonHelper {
         this.generator.writeNumber(doubleValue);
     }
 
+    /**
+     * @description Writes the specified `Integer` value.
+     * This method is a wrapper for the `JSONGenerator.writeNumber` method.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param integerValue The integer value to write.
+     * @exception JsonHelperException If the generator is closed.
+     * @see JSONGenerator.writeNumber
+     */
     public void writeNumber(Integer integerValue) {
         this.ensureGeneratorOpen();
         this.generator.writeNumber(integerValue);
     }
 
+    /**
+     * @description Writes the specified `Long` value.
+     * This method is a wrapper for the `JSONGenerator.writeNumber` method.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param longValue The long value to write.
+     * @exception JsonHelperException If the generator is closed.
+     * @see JSONGenerator.writeNumber
+     */
     public void writeNumber(Long longValue) {
         this.ensureGeneratorOpen();
         this.generator.writeNumber(longValue);
     }
 
-    //--------------------------------------------------------------------------------
-    // The following methods are not checked against the original JSONGenerator class
-    //--------------------------------------------------------------------------------
+    /**
+     * @description Writes a `field` name and the specified `Decimal` value to the JSON object.
+     * This method is a wrapper for the `JSONGenerator.writeNumberField` method.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param fieldName The field name to write.
+     * @param decimalValue The decimal value to write.
+     * @exception JsonHelperException If the generator is closed.
+     * @see JSONGenerator.writeNumberField
+     */
+    public void writeNumberField(String fieldName, Decimal decimalValue) {
+        this.ensureGeneratorOpen();
+        this.generator.writeNumberField(fieldName, decimalValue);
+    }
 
     /**
-     * @description Writes the start of a JSON object.
+     * @description Writes a `field` name and the specified `Double` value to the JSON object.
+     * This method is a wrapper for the `JSONGenerator.writeNumberField` method.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param fieldName The field name to write.
+     * @param doubleValue The double value to write.
+     * @exception JsonHelperException If the generator is closed.
+     * @see JSONGenerator.writeNumberField
+     */
+    public void writeNumberField(String fieldName, Double doubleValue) {
+        this.ensureGeneratorOpen();
+        this.generator.writeNumberField(fieldName, doubleValue);
+    }
+
+    /**
+     * @description Writes a `field` name and the specified `Integer` value to the JSON object.
+     * This method is a wrapper for the `JSONGenerator.writeNumberField` method.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param fieldName The field name to write.
+     * @param integerValue The integer value to write.
+     * @exception JsonHelperException If the generator is closed.
+     * @see JSONGenerator.writeNumberField
+     */
+    public void writeNumberField(String fieldName, Integer integerValue) {
+        this.ensureGeneratorOpen();
+        this.generator.writeNumberField(fieldName, integerValue);
+    }
+
+    /**
+     * @description Writes a `field` name and the specified `Long` value to the JSON object.
+     * This method is a wrapper for the `JSONGenerator.writeNumberField` method.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param fieldName The field name to write.
+     * @param longValue The long value to write.
+     * @exception JsonHelperException If the generator is closed.
+     * @see JSONGenerator.writeNumberField
+     */
+    public void writeNumberField(String fieldName, Long longValue) {
+        this.ensureGeneratorOpen();
+        this.generator.writeNumberField(fieldName, longValue);
+    }
+
+    /**
+     * @description Writes the specified Apex object in JSON format.
+     * This method is a wrapper for the `JSONGenerator.writeObjectField` method.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param objectValue The object to write.
+     * @exception JsonHelperException If the generator is closed.
+     * @see JSONGenerator.writeObject
+     */
+    public void writeObject(Object objectValue) {
+        this.ensureGeneratorOpen();
+        this.generator.writeObject(objectValue);
+    }
+
+    /**
+     * @description Writes a `field` name and the specified Apex object in JSON format.
+     * This method is a wrapper for the `JSONGenerator.writeObjectField` method.
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, March 2025
+     * @param fieldName The field name to write.
+     * @param objectValue The object to write.
+     * @exception JsonHelperException If the generator is closed.
+     * @see JSONGenerator.writeObjectField
+     */
+    public void writeObjectField(String fieldName, Object objectValue) {
+        this.ensureGeneratorOpen();
+        this.generator.writeObjectField(fieldName, objectValue);
+    }
+
+    /**
+     * @description Writes the starting marker of a JSON array ('[').
+     *
+     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
+     * @since 0.1.0, January 2025
+     * @exception JsonHelperException If the generator is closed.
+     * @see JSONGenerator.writeStartArray
+     */
+    public void writeStartArray() {
+        this.ensureGeneratorOpen();
+        this.generator.writeStartArray();
+    }
+
+    /**
+     * @description Writes the starting marker of a JSON object ('{').
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
      * @since 0.1.0, January 2025
@@ -393,19 +517,6 @@ public class JsonHelper {
     public void writeStartObject() {
         this.ensureGeneratorOpen();
         this.generator.writeStartObject();
-    }
-
-    /**
-     * @description Writes the start of a JSON array.
-     *
-     * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
-     * @since 0.1.0, January 2025
-     * @exception JsonHelperException If the generator is closed.
-     * @see JSONGenerator.writeStartArray
-     */
-    public void writeStartArray() {
-        this.ensureGeneratorOpen();
-        generator.writeStartArray();
     }
 
     /**
@@ -437,6 +548,34 @@ public class JsonHelper {
     }
 
     /**
+     * @description Writes the specified time value in the ISO-8601 format.
+     * This method is a wrapper for the `JSONGenerator.writeTime` method.
+     *
+     * @param timeValue The time value to write.
+     * @exception JsonHelperException If the generator is closed.
+     * @see JSONGenerator.writeTime
+     */
+    public void writeTime(Time timeValue) {
+        this.ensureGeneratorOpen();
+        this.generator.writeTime(timeValue);
+    }
+
+    /**
+     * @description Writes a field name and value pair using the specified field name and time value
+     * in the ISO-8601 format.
+     * This method is a wrapper for the `JSONGenerator.writeTimeField` method.
+     *
+     * @param fieldName The field name to write.
+     * @param timeValue The value to write.
+     * @exception JsonHelperException If the generator is closed.
+     * @see JSONGenerator.writeTimeField
+     */
+    public void writeTimeField(String fieldName, Time timeValue) {
+        this.ensureGeneratorOpen();
+        this.generator.writeTimeField(fieldName, timeValue);
+    }
+
+    /**
      * @description
      *
      * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
@@ -449,15 +588,22 @@ public class JsonHelper {
      */
     private void writeFieldIfNotNull(String fieldName, Object value) {
         if (value != null) {
-            if (value instanceof String) {
+            /*if(value instanceof ){}
+            
+            
+            else if (value instanceof String) {
                 generator.writeStringField(fieldName, (String) value);
             } else if (value instanceof Integer) {
                 generator.writeNumberField(fieldName, (Integer) value);
             } else if (value instanceof Boolean) {
                 generator.writeBooleanField(fieldName, (Boolean) value);
-            }
+            }*/
         }
     }
+
+    //--------------------------------------------------------------------------------
+    // The following methods are not checked against the original JSONGenerator class
+    //--------------------------------------------------------------------------------
 
     /**
      * @description Writes objectA string field to the JSON object if the value is not null.
