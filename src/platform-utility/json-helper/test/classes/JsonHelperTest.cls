@@ -3,6 +3,7 @@
  *
  * @author Kenneth Soerensen <kenneth.sorensen@nav.no>, Nav
  * @since 0.1.0, January 2025
+ * @group JSON Helper
  * @see JsonHelper
  */
 @SuppressWarnings(

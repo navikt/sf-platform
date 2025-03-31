@@ -3,7 +3,7 @@
  *
  * @author Kenneth Soerensen <kenneth.sorensen@nav.com>, Nav
  * @since 0.1.0, January 2025
- * @group Public 360 Integration
+ * @group JSON Helper
  * @see JSON
  * @see JSONGenerator
  * @example
