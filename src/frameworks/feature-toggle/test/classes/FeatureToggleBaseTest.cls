@@ -1,5 +1,7 @@
-@IsTest
-@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
+@IsTest(IsParallel=true)
+@SuppressWarnings(
+    'PMD.ApexUnitTestClassShouldHaveRunAs'
+) // In these tests we don't need to run as a specific user
 private with sharing class FeatureToggleBaseTest {
     @IsTest
     private static void noFeatures() {

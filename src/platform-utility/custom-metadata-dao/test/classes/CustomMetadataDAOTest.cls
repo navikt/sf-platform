@@ -36,6 +36,9 @@
  * }
  */
 @IsTest(IsParallel=true)
+@SuppressWarnings(
+    'PMD.ApexUnitTestClassShouldHaveRunAs'
+) // In these tests we don't need to run as a specific user
 public class CustomMetadataDAOTest {
     /**
      * @description Simple test for the getMetadata method.
