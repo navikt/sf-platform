@@ -14,6 +14,7 @@ jobs:
     uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
     permissions:
       contents: read
+      security-events: write
 
   checkChanges:
     name: Check changes

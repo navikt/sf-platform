@@ -22,6 +22,7 @@ jobs:
     uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
     permissions:
       contents: read
+      security-events: write
 
   detectPackageChanges:
     name: Detect Package Changes
