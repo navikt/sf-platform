@@ -95,7 +95,7 @@ jobs:
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
         uses: forcedotcom/run-code-analyzer@13c0e7699093dc6294eefe19d1106eeda363c898
         with:
-          run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }} --view detail --output-file sfca_results.html --output-file sfca_results.json --output-file code-analyzer-report.sharif
+          run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }} --view detail --output-file sfca_results.html --output-file sfca_results.json --output-file code-analyzer-report.sarif
           results-artifact-name: salesforce-code-analyzer-results
 
       - name: Upload SARIF file
