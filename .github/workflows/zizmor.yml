@@ -4,11 +4,13 @@ on:
   push:
     branches: ["main"]
     paths:
-      - ".github/**"
+      - ".github/actions/**"
+      - ".github/workflows/**"
   pull_request:
     branches: ["**"]
     paths:
-      - ".github/**"
+      - ".github/actions/**"
+      - ".github/workflows/**"
 
 jobs:
   zizmor:
