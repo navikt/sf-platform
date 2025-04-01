@@ -95,7 +95,14 @@ jobs:
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
         uses: forcedotcom/run-code-analyzer@13c0e7699093dc6294eefe19d1106eeda363c898
         with:
-          run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }}
+          run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }} --view detail --output-file sfca_results.html --output-file sfca_results.json --output-file code-analyzer-report.sharif
+          results-artifact-name: salesforce-code-analyzer-results
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@7e3036b9cd87fc26dd06747b7aa4b96c27aaef3a
+        with:
+          sarif_file: code-analyzer-report.sharif
+          category: salesforce-code-analyzer
 
       - name: Check the Salesforce Code Analyzer outputs to determine whether to fail
         if: ${{ !cancelled() && steps.paths.outcome == 'success' && ( steps.run-code-analyzer.outputs.exit-code > 0 || steps.run-code-analyzer.outputs.num-sev1-violations > 0 || steps.run-code-analyzer.outputs.num-violations > 10 ) }}
