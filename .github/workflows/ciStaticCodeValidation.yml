@@ -132,6 +132,9 @@ jobs:
             end
           ' code-analyzer-report.sarif > code-analyzer-report.sarif
           echo "::endgroup::"
+          echo "::group::Print SARIF file"
+          cat code-analyzer-report.sarif
+          echo "::endgroup::"
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@7e3036b9cd87fc26dd06747b7aa4b96c27aaef3a
