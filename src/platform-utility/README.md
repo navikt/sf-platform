@@ -1,17 +1,8 @@
 # platform-utility
 
-Package containing the core platform utilities.
+Gruppering av utility pakker
 
-The package can only contain utilities that are used by the sf-platform, and can be used by any other re.
+## Pakker
 
-## Maintainer
-
-Maintained by Team Platforce.
-
-### Henvendelser
-
-Spørsmål knyttet til koden eller prosjektet kan stilles som issues her på GitHub.
-
-### For NAV-ansatte
-
-Interne henvendelser kan sendes via Slack i kanalen #platforce.
+- [custom-metadata-dao](src/platform-utility/custom-metadata-dao) - Abstraksjon av custom metadata
+- [custom-pemission-helper](src/platform-utility/custom-permission-helper) - Hjelpe funksjoner for custom settings

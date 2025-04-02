@@ -26,7 +26,7 @@ Her kan man velge å bruke enten `customPermission` eller en kombinasjon av `Fea
 
 Ved bruk av bare `customPermission` oppretter man en custom permission og legger den til et Permission Set som tildeles den eller de som trenger tilgangen.
 
-Ved bruk av en kompinasjon så opprettes det et custom permission som tildeles via Permission Set slik som over. I tillegg opprettes det et Feature_Flag**mdt record hvor customPermission api navnet legges til i `Required_Custom_Permission**c`. `Is_Enabled\_\_c` flagget benyttes som vanlig til å toggle featuren av og på.
+Ved bruk av en kombinasjon så opprettes det et custom permission som tildeles via Permission Set slik som over. I tillegg opprettes det et `Feature_Flag__mdt` record hvor customPermission api navnet legges til i `Required_Custom_Permission__c`. `Is_Enabled__c` flagget benyttes som vanlig til å toggle featuren av og på.
 
 **Eksempel på direkte bruk:**
 
@@ -82,3 +82,12 @@ public with sharing MyClass extends FeatureToggleBase {
 
 - [platform-datamodel](src/platform-data-model/feature-flag-custom-metadata) - datamodell
 - [custom-metadata-dao](src/platform-utility/custom-metadata-dao) - Abstraksjon av custom metadata
+
+```mermaid
+---
+title: Pakkeavhengigheter
+---
+graph TD
+    feature-toggle --> platform-datamodel;
+    feature-toggle --> custom-metadata-dao;
+```
