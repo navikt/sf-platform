@@ -99,6 +99,40 @@ jobs:
           run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }} --view detail --output-file sfca_results.html --output-file sfca_results.json --output-file code-analyzer-report.sarif
           results-artifact-name: salesforce-code-analyzer-results
 
+      # Code Analyser generates an empty SARIF file if no violations are found.
+      # In that case this step ensures that the SARIF file is valid and contains a default structure.
+      # This is required for the SARIF file to be uploaded to GitHub.
+      - name: Check SARIF file
+        if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
+        run: |
+          echo "::group::Check SARIF file"
+          jq --arg wd "$GITHUB_WORKSPACE" '
+            if .runs == [] then
+              .runs = [
+                {
+                  "tool": {
+                    "driver": {
+                      "name": "pmd",
+                      "rules": []
+                    }
+                  },
+                  "results": [],
+                  "invocations": [
+                    {
+                      "executionSuccessful": true,
+                      "workingDirectory": {
+                        "uri": $wd
+                      }
+                    }
+                  ]
+                }
+              ]
+            else
+              .
+            end
+          ' code-analyzer-report.sarif > code-analyzer-report.sarif
+          echo "::endgroup::"
+
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@7e3036b9cd87fc26dd06747b7aa4b96c27aaef3a
         if: ${{ !cancelled() && steps.paths.outcome == 'success' && github.ref_name == 'main'  }}
