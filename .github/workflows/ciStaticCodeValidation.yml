@@ -105,6 +105,9 @@ jobs:
       - name: Check SARIF file
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
         run: |
+          echo "::group::Print SARIF file before check"
+          cat code-analyzer-report.sarif
+          echo "::endgroup::"
           echo "::group::Check SARIF file"
           jq --arg wd "$GITHUB_WORKSPACE" '
             if .runs == [] then
@@ -130,9 +133,9 @@ jobs:
             else
               .
             end
-          ' code-analyzer-report.sarif > code-analyzer-report.sarif
+          ' code-analyzer-report.sarif > temp.sarif && mv temp.sarif code-analyzer-report.sarif
           echo "::endgroup::"
-          echo "::group::Print SARIF file"
+          echo "::group::Print SARIF file after check"
           cat code-analyzer-report.sarif
           echo "::endgroup::"
 
