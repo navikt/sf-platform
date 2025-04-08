@@ -40,6 +40,26 @@
     'PMD.ApexUnitTestClassShouldHaveRunAs'
 ) // In these tests we don't need to run as a specific user
 public class CustomMetadataDAOTest {
+    @IsTest
+    private static void getCustomMetadataRecords() {
+        System.Test.startTest();
+        List<SObject> customMetadataRecords = new CustomMetadataDAO()
+            .getCustomMetadataRecords(
+                'SELECT Id ' + 'FROM Account ' + 'LIMIT 1'
+            );
+        System.Test.stopTest();
+
+        System.Assert.isNotNull(
+            customMetadataRecords,
+            'Did not expect any custom metadata records'
+        );
+        System.Assert.areEqual(
+            0,
+            customMetadataRecords.size(),
+            'Expected size should be 0'
+        );
+    }
+
     /**
      * @description Simple test for the getMetadata method.
      */
