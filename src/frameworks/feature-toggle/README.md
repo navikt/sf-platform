@@ -90,4 +90,5 @@ title: Pakkeavhengigheter
 graph TD
     feature-toggle --> platform-datamodel;
     feature-toggle --> custom-metadata-dao;
+    feature-toggle --> custom-pemission-helper
 ```
