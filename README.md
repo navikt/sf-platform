@@ -27,6 +27,7 @@ graph TD
     custom-pemission-helper
     feature-toggle --> platform-datamodel;
     feature-toggle --> custom-metadata-dao;
+    feature-toggle --> custom-pemission-helper;
 ```
 
 ## Komme i gang

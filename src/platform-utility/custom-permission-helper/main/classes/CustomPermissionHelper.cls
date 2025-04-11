@@ -77,12 +77,30 @@ public inherited sharing class CustomPermissionHelper {
             )
         ) {
             throw new CustomPermissionHelperException(
-                'Custom Permission with Developer Name ' +
-                    customPermissionDeveloperName +
-                    ' not found'
+                this.getvalidateCustomPermissionExceptionMessage(
+                    customPermissionDeveloperName
+                )
             );
         }
         return this;
+    }
+
+    /**
+     * @description Get the exception message for a custom permission that does not exist
+     *
+     * @param customPermissionDeveloperName Developer name of the custom permission to validate
+     * @return  `String` containing the exception message
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, April 2025 - created
+     */
+    @TestVisible
+    private String getvalidateCustomPermissionExceptionMessage(
+        String customPermissionDeveloperName
+    ) {
+        return 'Custom Permission with Developer Name ' +
+            customPermissionDeveloperName +
+            ' not found';
     }
 
     /**
@@ -105,7 +123,10 @@ public inherited sharing class CustomPermissionHelper {
      * @return  `Set<String>` containing the developer name of the assigned custom permissions
      */
     public Set<String> getAssignedCustomPermissions(Id userId) {
-        if (!this.usersCustomPermissionsMap.containsKey(userId)) {
+        if (
+            this.usersCustomPermissionsMap == null ||
+            !this.usersCustomPermissionsMap.containsKey(userId)
+        ) {
             setAssignedCustomPermissionsByUser(
                 userId,
                 this.getSetupEntityAccesses(userId)
@@ -118,7 +139,8 @@ public inherited sharing class CustomPermissionHelper {
      * @description Check if the running user has a custom permission
      *
      * @author Tor Håkon Sigurdsen
-     * @since 0.1.0, March 2025
+     * @since 0.1.0, March 2025 - Created
+     *
      * @param customPermissionDeveloperName Developer name of the custom permission to check
      * @return  `Boolean` indicating if the running user has the custom permission
      */
@@ -130,7 +152,9 @@ public inherited sharing class CustomPermissionHelper {
      * @description Check if a user has a custom permission
      *
      * @author Tor Håkon Sigurdsen
-     * @since 0.1.0, March 2025
+     * @since 0.1.0, March 2025 - Created
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, April 2025 - Added check to see if custom permission exists
      * @param userId of the user to check the custom permission for
      * @param customPermissionDeveloperName Developer name of the custom permission to check
      * @return  `Boolean` indicating if the user has the custom permission
@@ -139,7 +163,8 @@ public inherited sharing class CustomPermissionHelper {
         Id userId,
         String customPermissionDeveloperName
     ) {
-        return getAssignedCustomPermissions(userId)
+        return this.validateCustomPermission(customPermissionDeveloperName)
+            .getAssignedCustomPermissions(userId)
             .contains(customPermissionDeveloperName);
     }
 

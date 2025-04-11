@@ -19,13 +19,13 @@ private with sharing class CustomPermissionHelperTest {
     private static void setCustomPermissionMapsWithNull() {
         CustomPermissionHelper customPermissionHelper = new CustomPermissionHelper();
         Exception testException;
-        Test.startTest();
+        System.Test.startTest();
         try {
             customPermissionHelper.setCustomPermissionMaps(null);
         } catch (Exception e) {
             testException = e;
         }
-        Test.stopTest();
+        System.Test.stopTest();
         System.Assert.isInstanceOfType(
             testException,
             NullPointerException.class,
@@ -42,11 +42,11 @@ private with sharing class CustomPermissionHelperTest {
     @IsTest
     private static void setCustomPermissionMapsWithEmptyList() {
         CustomPermissionHelper customPermissionHelper = new CustomPermissionHelper();
-        Test.startTest();
+        System.Test.startTest();
         customPermissionHelper.setCustomPermissionMaps(
             new List<CustomPermission>()
         );
-        Test.stopTest();
+        System.Test.stopTest();
         System.Assert.areEqual(
             0,
             customPermissionHelper.customPermissionMapById.size(),
@@ -76,9 +76,9 @@ private with sharing class CustomPermissionHelperTest {
             CustomPermissionHelperStub.createCustomPermission('2', 'Test2')
         );
 
-        Test.startTest();
+        System.Test.startTest();
         customPermissionHelper.setCustomPermissionMaps(customPermissions);
-        Test.stopTest();
+        System.Test.stopTest();
 
         System.Assert.areEqual(
             2,
@@ -135,13 +135,13 @@ private with sharing class CustomPermissionHelperTest {
         customPermissionHelper.setCustomPermissionMaps(customPermissions);
 
         Exception testException;
-        Test.startTest();
+        System.Test.startTest();
         try {
             customPermissionHelper.validateCustomPermission('Test3');
         } catch (Exception e) {
             testException = e;
         }
-        Test.stopTest();
+        System.Test.stopTest();
         System.Assert.isInstanceOfType(
             testException,
             CustomPermissionHelperException.class,
@@ -163,13 +163,13 @@ private with sharing class CustomPermissionHelperTest {
         );
 
         Exception testException;
-        Test.startTest();
+        System.Test.startTest();
         try {
             customPermissionHelper.validateCustomPermission('Test1');
         } catch (Exception e) {
             testException = e;
         }
-        Test.stopTest();
+        System.Test.stopTest();
         System.Assert.isInstanceOfType(
             testException,
             CustomPermissionHelperException.class,
@@ -196,13 +196,13 @@ private with sharing class CustomPermissionHelperTest {
         customPermissionHelper.setCustomPermissionMaps(customPermissions);
 
         Exception testException;
-        Test.startTest();
+        System.Test.startTest();
         try {
             customPermissionHelper.validateCustomPermission(null);
         } catch (Exception e) {
             testException = e;
         }
-        Test.stopTest();
+        System.Test.stopTest();
         System.Assert.isInstanceOfType(
             testException,
             CustomPermissionHelperException.class,
@@ -229,13 +229,13 @@ private with sharing class CustomPermissionHelperTest {
         customPermissionHelper.setCustomPermissionMaps(customPermissions);
 
         Exception testException;
-        Test.startTest();
+        System.Test.startTest();
         try {
             customPermissionHelper.validateCustomPermission('');
         } catch (Exception e) {
             testException = e;
         }
-        Test.stopTest();
+        System.Test.stopTest();
         System.Assert.isInstanceOfType(
             testException,
             CustomPermissionHelperException.class,
@@ -261,11 +261,11 @@ private with sharing class CustomPermissionHelperTest {
         );
         customPermissionHelper.setCustomPermissionMaps(customPermissions);
 
-        Test.startTest();
+        System.Test.startTest();
         CustomPermissionHelper customPermissionHelper2 = customPermissionHelper.validateCustomPermission(
             'Test1'
         );
-        Test.stopTest();
+        System.Test.stopTest();
         System.Assert.areEqual(
             customPermissionHelper,
             customPermissionHelper2,
@@ -283,10 +283,10 @@ private with sharing class CustomPermissionHelperTest {
     private static void getSetupEntityAccesses() {
         CustomPermissionHelper customPermissionHelper = new CustomPermissionHelper()
             .setCustomPermissionMaps(new List<CustomPermission>());
-        Test.startTest();
+        System.Test.startTest();
         List<SetupEntityAccess> result = customPermissionHelper
             .getSetupEntityAccesses(UserInfo.getUserId());
-        Test.stopTest();
+        System.Test.stopTest();
 
         System.Assert.isNotNull(result, 'The result should not be null');
         System.Assert.areEqual(
@@ -306,10 +306,10 @@ private with sharing class CustomPermissionHelperTest {
     private static void getSetupEntityAccessesNullInput() {
         CustomPermissionHelper customPermissionHelper = new CustomPermissionHelper()
             .setCustomPermissionMaps(new List<CustomPermission>());
-        Test.startTest();
+        System.Test.startTest();
         List<SetupEntityAccess> result = customPermissionHelper
             .getSetupEntityAccesses(null);
-        Test.stopTest();
+        System.Test.stopTest();
         System.Assert.isNotNull(result, 'The result should not be null');
     }
 
@@ -322,10 +322,10 @@ private with sharing class CustomPermissionHelperTest {
      */
     @IsTest
     private static void hasCustomPermission() {
-        Test.startTest();
+        System.Test.startTest();
         Boolean result = new CustomPermissionHelper()
             .hasCustomPermission('Test1');
-        Test.stopTest();
+        System.Test.stopTest();
         System.Assert.isFalse(
             result,
             'Expected false when testing with a non assigned custom permission'
@@ -341,20 +341,27 @@ private with sharing class CustomPermissionHelperTest {
     @IsTest
     private static void hasCustomPermissionWithUserAndNonexistingPermission() {
         CustomPermissionHelper customPermissionHelper = new CustomPermissionHelper();
+        customPermissionHelper.setCustomPermissionMaps();
         customPermissionHelper.setAssignedCustomPermissionsByUser(
             UserInfo.getUserId(),
             new List<SetupEntityAccess>()
         );
 
-        Test.startTest();
-        Boolean result = customPermissionHelper.hasCustomPermission(
-            UserInfo.getUserId(),
-            'Test1'
-        );
-        Test.stopTest();
-        System.Assert.isFalse(
-            result,
-            'Expected false when testing with a non existing custom permission'
+        Exception testException;
+        System.Test.startTest();
+        try {
+            customPermissionHelper.hasCustomPermission(
+                UserInfo.getUserId(),
+                'Test1'
+            );
+        } catch (Exception e) {
+            testException = e;
+        }
+        System.Test.stopTest();
+        System.Assert.isInstanceOfType(
+            testException,
+            CustomPermissionHelperException.class,
+            'Expected a CustomPermissionHelperException'
         );
     }
 
@@ -384,12 +391,12 @@ private with sharing class CustomPermissionHelperTest {
             }
         );
 
-        Test.startTest();
+        System.Test.startTest();
         Boolean result = customPermissionHelper.hasCustomPermission(
             UserInfo.getUserId(),
             'Test1'
         );
-        Test.stopTest();
+        System.Test.stopTest();
         System.Assert.isTrue(
             result,
             'Expected true when testing with an existing custom permission'
@@ -408,7 +415,7 @@ private with sharing class CustomPermissionHelperTest {
 
         Exception testException;
 
-        Test.startTest();
+        System.Test.startTest();
         try {
             customPermissionHelper.setAssignedCustomPermissionsByUser(
                 UserInfo.getUserId(),
@@ -420,12 +427,31 @@ private with sharing class CustomPermissionHelperTest {
         } catch (Exception e) {
             testException = e;
         }
-        Test.stopTest();
+        System.Test.stopTest();
 
         System.Assert.isInstanceOfType(
             testException,
             CustomPermissionHelperException.class,
             'Expected a CustomPermissionHelperException'
         );
+    }
+
+    @IsTest
+    private static void getAssignedCustomPermissions() {
+        CustomPermissionHelper customPermissionHelper = new CustomPermissionHelper();
+        List<CustomPermission> customPermissions = new List<CustomPermission>();
+        customPermissions.add(
+            CustomPermissionHelperStub.createCustomPermission('1', 'Test1')
+        );
+        customPermissions.add(
+            CustomPermissionHelperStub.createCustomPermission('2', 'Test2')
+        );
+        customPermissionHelper.setCustomPermissionMaps(customPermissions);
+
+        System.Test.startTest();
+        Set<String> result = customPermissionHelper.getAssignedCustomPermissions();
+        System.Test.stopTest();
+
+        System.Assert.isNotNull(result, 'The result should not be null');
     }
 }

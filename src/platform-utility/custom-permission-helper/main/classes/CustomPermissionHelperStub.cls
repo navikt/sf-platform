@@ -9,6 +9,8 @@
 @IsTest
 public with sharing class CustomPermissionHelperStub implements System.StubProvider {
     private List<Boolean> hasCustomPermissionList;
+    private List<Boolean> validateCustomPermissionResultList;
+    private CustomPermissionHelper mock;
 
     /**
      * @description Constructor
@@ -17,6 +19,8 @@ public with sharing class CustomPermissionHelperStub implements System.StubProvi
      */
     public CustomPermissionHelperStub() {
         this.hasCustomPermissionList = new List<Boolean>();
+        this.validateCustomPermissionResultList = new List<Boolean>();
+        this.mock = null;
     }
 
     /**
@@ -31,6 +35,21 @@ public with sharing class CustomPermissionHelperStub implements System.StubProvi
         Boolean hasCustomPermission
     ) {
         this.hasCustomPermissionList.add(hasCustomPermission);
+        return this;
+    }
+
+    /**
+     * @description Add wanted stub response from the validateCustomPermission method
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, April 2025 - Created
+     * @param isValid true or false
+     * @return  `CustomPermissionHelperStub`
+     */
+    public CustomPermissionHelperStub addValidateCustomPermissionResult(
+        Boolean isValid
+    ) {
+        this.validateCustomPermissionResultList.add(isValid);
         return this;
     }
 
@@ -61,6 +80,17 @@ public with sharing class CustomPermissionHelperStub implements System.StubProvi
         if (stubbedMethodName == 'hasCustomPermission') {
             return this.hasCustomPermissionList.remove(0);
         }
+        if (stubbedMethodName == 'validateCustomPermission') {
+            if (this.validateCustomPermissionResultList.remove(0)) {
+                return this.mock;
+            }
+            throw new CustomPermissionHelperException(
+                new CustomPermissionHelper()
+                    .getvalidateCustomPermissionExceptionMessage(
+                        (String) listOfArgs[0]
+                    )
+            );
+        }
         return null;
     }
 
@@ -72,10 +102,11 @@ public with sharing class CustomPermissionHelperStub implements System.StubProvi
      * @return The mock object
      */
     public CustomPermissionHelper getMock() {
-        return (CustomPermissionHelper) System.Test.createStub(
+        this.mock = (CustomPermissionHelper) System.Test.createStub(
             CustomPermissionHelper.class,
             this
         );
+        return this.mock;
     }
 
     /**
