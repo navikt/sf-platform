@@ -40,7 +40,7 @@ jobs:
           persist-credentials: false
 
       # Check for changes in the src directory excluding .md files
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@45d5655f12fc14cbd9962c5364757ccc5bc9023e
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@d59523e4cfc9685d57e87c5f4ab2350de9a18bf9
         id: checkChanges
 
   buildAndPublish:
@@ -77,7 +77,7 @@ jobs:
 
       # Sets up Salesforce CLI authentication for the DevHub
       - name: Authenticate DevHub
-        uses: navikt/sf-platform/.github/actions/authenticateOrg@45d5655f12fc14cbd9962c5364757ccc5bc9023e
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@d59523e4cfc9685d57e87c5f4ab2350de9a18bf9
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: "devhub"
@@ -137,7 +137,7 @@ jobs:
       # Upload build artifacts and logs if present
       - name: Upload Artifacts and Logs
         if: steps.build.outputs.artifactsFound == 'true'
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@45d5655f12fc14cbd9962c5364757ccc5bc9023e
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@d59523e4cfc9685d57e87c5f4ab2350de9a18bf9
         with:
           artifactName: "build-artifacts"
           uploadArtifacts: true
