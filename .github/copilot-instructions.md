@@ -1,16 +1,26 @@
 # Instructions for sf-platform
 
-This is a repo for multiple unlocked Salesforce packages
+This is a repo for multiple unlocked Salesforce packages.
 
-We write most of our code in apex and lightning web components
+The code is written in apex and lightning web components
 
-We use the styles outlined in the Prettier file .prettierrc and using Salesforce we prefer single quotes over double quotes
+Do not use SFDX commands only SF commands, sfdx is deprecated.
 
-We use Flxble with the sfp CLI
-We use Salesforce CLI with the sf commands, not the deprecated sfdx commands
+Prettier is used for styling and the settings are described in .prettierrc
 
-When writing comments for classes and methods, use the @description tag
+Code can be found in the src and src-temp folders
 
-Comments should include the @author tag and the name of the developer, xample "@author John Doe" based on the user.name in git Config
+When writing test always include System.Test.startTest(); and System.Test.stopTest();. First we prepare the data. The actual test should be placed in side start and stop test. Then we confirm the test results with asserts.
 
-In comments the since tag should be written like this "@since version, current month current year" example: @since 0.1.0, March 2025
+Tests are defined by the @IsTest annotation.
+
+When writing tests, the class we're testing often has the same filename as the test class except "Test"
+
+When assisting with code, use the sources listed below:
+
+- Apex developer guide: https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_dev_guide.htm
+- Apex reference guide: https://developer.salesforce.com/docs/atlas.en-us.254.0.apexref.meta/apexref/apex_ref_guide.htm
+- Salesforce web component library: https://developer.salesforce.com/docs/component-library/overview
+- Lightning web component developer guide: https://developer.salesforce.com/docs/platform/lwc/guide
+- Salesforce CLI Command reference: https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_top.htm
+- sfp CLI: https://docs.flxbl.io/flxbl/sfp
