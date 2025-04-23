@@ -1,7 +1,18 @@
 mutation (
+    $clientMutationId: String,
     $pullRequestId: ID!
 ) {
-    convertPullRequestToDraftInput(input:{pullRequestId: $pullRequestId}) {
-        pullRequest{id, isDraft}
+    convertPullRequestToDraft(
+        input: {
+            ConvertPullRequestToDraftInput: {
+                clientMutationId: $clientMutationId,
+                pullRequestId: $pullRequestId
+            }
+        }
+    ) {
+        pullRequest{
+        id,
+        isDraft
+        }
     }
 }
