@@ -58,6 +58,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      pull-requests: write
     env:
       POOLS: ${{ vars.DEFAULT_CI_POOL }}
       DEVHUB_ALIAS: "devhub"
