@@ -156,6 +156,8 @@ jobs:
             exit 1
           fi
 
+          echo "JSON payload: $JSON_PAYLOAD"
+
           curl_output=$(curl --silent --show-error -X POST \
             -H "Authorization: token ${GH_AUTH_TOKEN}" \
             -H "Content-Type: application/json" \
@@ -167,6 +169,8 @@ jobs:
             echo "::error title=Failed to set Pull request as draft.::Curl output: $curl_output"
             exit 1
           fi
+
+          echo "GitHub API response: $curl_output"
 
       # Upload build artifacts and logs if present
       # This step is executed regardless of the outcome of the previous steps
