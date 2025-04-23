@@ -149,7 +149,7 @@ jobs:
         run: |
           # Prepare the JSON payload
           if ! JSON_PAYLOAD=$(jq -n \
-            --arg query "$(cat .github/api/convertPullRequestToDraftInput.gql)" \
+            --arg query "$(cat .github/api/convertPullRequestToDraft.gql)" \
             --arg pullRequestId "$PULL_REQUEST_ID" \
             '{query: $query, variables: {pullRequestId: $pullRequestId}}'); then
             echo "::error::Failed to prepare JSON payload."
@@ -165,7 +165,7 @@ jobs:
             https://api.github.com/graphql 2>&1)
 
           # Check if the curl command was successful 
-          if [ $? -ne 0 ] || ! echo "$curl_output" | grep -q '"commit"'; then
+          if [ $? -ne 0 ] || ! echo "$curl_output" | grep -q '"isDraft"'; then
             echo "::error title=Failed to set Pull request as draft.::Curl output: $curl_output"
             exit 1
           fi
