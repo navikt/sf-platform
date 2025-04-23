@@ -69,4 +69,10 @@ private with sharing class FeatureToggleTest {
             'Expected FEATURE_FLAG as second enum value'
         );
     }
+
+    @isTest
+    private static void testFailure() {
+        // This test is intentionally left empty to demonstrate a failure case
+        System.assert(false, 'This test is expected to fail');
+    }
 }
