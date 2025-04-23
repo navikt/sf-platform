@@ -7,6 +7,7 @@ on:
     paths:
       - "src/**"
   pull_request:
+    types: [opened, ready_for_review, reopened]
     paths:
       - "src/**"
   workflow_dispatch:
@@ -63,6 +64,8 @@ jobs:
       COVERAGE_PERCENT: ${{ vars.CODE_COVERAGE_PERCENTAGE }}
       SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
       EVENT: ${{ github.event_name }}
+      GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PULL_REQUEST_ID: ${{ github.event.pull_request.node_id }}
     steps:
       # Checkout the repository
       - name: "Checkout"
@@ -139,6 +142,30 @@ jobs:
         run: |
           if sf org list --json | jq -e '.result[] | select(.isDefaultUsername == true)' > /dev/null; then
             sf org delete scratch --no-prompt
+          fi
+
+      - name: Set pull request to draft
+        if: ${{ failure() && github.event_name == 'pull_request' }}
+        run: |
+          # Prepare the JSON payload
+          if ! JSON_PAYLOAD=$(jq -n \
+            --arg query "$(cat .github/api/convertPullRequestToDraftInput.gql)" \
+            --arg pullRequestId "$PULL_REQUEST_ID" \
+            '{query: $query, variables: {pullRequestId: $pullRequestId}}'); then
+            echo "::error::Failed to prepare JSON payload."
+            exit 1
+          fi
+
+          curl_output=$(curl --silent --show-error -X POST \
+            -H "Authorization: token ${GH_AUTH_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "$JSON_PAYLOAD" \
+            https://api.github.com/graphql 2>&1)
+
+          # Check if the curl command was successful 
+          if [ $? -ne 0 ] || ! echo "$curl_output" | grep -q '"commit"'; then
+            echo "::error title=Failed to set Pull request as draft.::Curl output: $curl_output"
+            exit 1
           fi
 
       # Upload build artifacts and logs if present
