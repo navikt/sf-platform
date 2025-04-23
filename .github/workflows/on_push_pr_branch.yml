@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     permissions:
-      contents: read
+      contents: write
       packages: write
       pull-requests: write
     env:
