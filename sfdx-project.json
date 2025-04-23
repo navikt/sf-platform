@@ -1,7 +1,6 @@
 {
   "sfdcLoginUrl": "https://login.salesforce.com",
   "sourceApiVersion": "63.0",
-
   "packageDirectories": [
     {
       "path": "src-temp",
@@ -11,25 +10,27 @@
       "path": "src/platform-data-model",
       "package": "platform-data-model",
       "versionNumber": "0.1.0.NEXT",
-      "definitionFile": "config/scratch-org-def.json"
+      "definitionFile": "config/scratch-org-def.json",
+      "dependencies": []
     },
     {
-      "path": "src/platform-admin",
-      "package": "platform-admin",
-      "versionNumber": "0.0.0.NEXT",
-      "definitionFile": "config/scratch-org-def.json"
-    },
-    {
-      "versionNumber": "0.1.0.NEXT",
       "path": "src/platform-utility/custom-metadata-dao",
-      "default": false,
       "package": "custom-metadata-dao",
-      "definitionFile": "config/scratch-org-def.json"
+      "versionNumber": "0.1.0.NEXT",
+      "definitionFile": "config/scratch-org-def.json",
+      "dependencies": []
     },
     {
+      "path": "src/platform-utility/custom-permission-helper",
+      "package": "custom-permission-helper",
       "versionNumber": "0.1.0.NEXT",
+      "definitionFile": "config/scratch-org-def.json",
+      "dependencies": []
+    },
+    {
       "path": "src/frameworks/feature-toggle",
       "package": "feature-toggle",
+      "versionNumber": "0.1.0.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": [
         {
@@ -39,20 +40,18 @@
         {
           "package": "custom-metadata-dao",
           "versionNumber": "0.1.0.LATEST"
+        },
+        {
+          "package": "custom-permission-helper",
+          "versionNumber": "0.1.0.LATEST"
         }
       ]
-    },
-    {
-      "versionNumber": "0.1.0.NEXT",
-      "path": "src/platform-utility/custom-permission-helper",
-      "default": false,
-      "package": "custom-permission-helper",
-      "versionDescription": "Custom Permission Helper class used to get access to Custom Permissions, and at the same time make it easier to test the various paths the code can take based on the values in the Custom Permissions."
     }
   ],
   "packageAliases": {
     "platform-data-model": "0HoKB00000000010AA",
     "custom-metadata-dao": "0HoKB000000000B0AQ",
+    "custom-permission-helper": "0HoKB000000000f0AA",
     "feature-toggle": "0HoKB000000000V0AQ"
   }
 }

@@ -4,6 +4,40 @@
 ) // In these tests we don't need to run as a specific user
 private with sharing class FeatureToggleBaseTest {
     @IsTest
+    private static void featureToggleBaseWithNullInput() {
+        Test.startTest();
+        FeatureToggleBase featureToggle = new FeatureToggleBase(null, null);
+        Test.stopTest();
+
+        System.Assert.isNotNull(
+            featureToggle,
+            'Expected FeatureToggleBase to be initialized'
+        );
+    }
+
+    @IsTest
+    private static void getFeatureFlagsThrowException() {
+        CustomMetadataDAOTest.setMetadata(
+            FeatureToggleBase.METADATA_QUERY,
+            null
+        );
+        Exception expectedException = null;
+
+        Test.startTest();
+        try {
+            new FeatureToggleBase().getFeatureFlags();
+        } catch (FeatureToggleException e) {
+            expectedException = e;
+        }
+        Test.stopTest();
+        System.Assert.isInstanceOfType(
+            expectedException,
+            FeatureToggleException.class,
+            'Expected FeatureToggleException to be thrown'
+        );
+    }
+
+    @IsTest
     private static void noFeatures() {
         CustomMetadataDAO.customMetadataRecordsMap.put(
             FeatureToggleBase.METADATA_QUERY,
@@ -23,31 +57,6 @@ private with sharing class FeatureToggleBaseTest {
         System.Assert.isNull(
             featureToggle.getFeatureFlag('Feature1'),
             'Did not expect to get a Feature Flag, only null'
-        );
-    }
-
-    @IsTest
-    private static void getFeatureFlagsException() {
-        CustomMetadataDAO.customMetadataRecordsMap.put(
-            FeatureToggleBase.METADATA_QUERY,
-            new List<Feature_Flag__mdt>()
-        );
-
-        Exception expectedException;
-
-        Test.startTest();
-        FeatureToggleBase featureToggle = new FeatureToggleBase(null);
-        try {
-            featureToggle.isFeatureEnabled('Feature1');
-        } catch (Exception e) {
-            expectedException = e;
-        }
-        Test.stopTest();
-
-        System.Assert.isInstanceOfType(
-            expectedException,
-            FeatureToggleException.class,
-            'Expected a FeatureToggleException.'
         );
     }
 
@@ -333,111 +342,59 @@ private with sharing class FeatureToggleBaseTest {
     }
 
     @IsTest
-    private static void isFeatureEnabledAuraEnabled() {
-        List<Feature_Flag__mdt> featureFlags = new List<Feature_Flag__mdt>();
-        featureFlags.add(
-            new Feature_Flag__mdt(
-                MasterLabel = 'Feature1',
-                DeveloperName = 'Feature1',
-                Is_Enabled__c = true,
-                Description__c = 'Feature 1'
-            )
-        );
-        CustomMetadataDAO.customMetadataRecordsMap.put(
-            FeatureToggleBase.METADATA_QUERY,
-            featureFlags
-        );
+    private static void hasCustomPermissionWithInvalidCustomPermissionAndNoValidation() {
+        System.Test.startTest();
+        Boolean result = new FeatureToggleBase()
+            .hasCustomPermission('Feature1');
+        System.Test.stopTest();
 
-        Test.startTest();
-        System.Assert.isTrue(
-            FeatureToggleBase.isFeatureEnabled('Feature1', 'FEATURE_FLAG'),
-            'Expected Feature1 to be enabled'
-        );
-        System.Assert.isFalse(
-            FeatureToggleBase.isFeatureEnabled('Feature2', 'FEATURE_FLAG'),
-            'Did not expect Feature2 to be enabled'
-        );
-        System.Assert.isFalse(
-            FeatureToggleBase.isFeatureEnabled('Feature1', 'CUSTOM_PERMISSION'),
-            'Did not expect Feature1 to be enabled'
-        );
-        System.Assert.isFalse(
-            FeatureToggleBase.isFeatureEnabled('Feature2', 'CUSTOM_PERMISSION'),
-            'Did not expect Feature2 to be enabled'
-        );
-        Test.stopTest();
+        System.Assert.isFalse(result, 'Expected Feature1 to be disabled');
     }
 
     @IsTest
-    private static void isFeatureEnabledAuraException() {
-        Exception expectedException;
-        Test.startTest();
+    private static void hasCustomPermissionWithInvalidCustomPermissionAndValidation() {
+        Exception expectedException = null;
+        System.Test.startTest();
         try {
-            FeatureToggleBase.isFeatureEnabled('Feature1', 'INVALID');
+            FeatureToggle.setValidateCustomPermissions(true);
+            new FeatureToggleBase().hasCustomPermission('Feature1');
         } catch (Exception e) {
             expectedException = e;
         }
-        Test.stopTest();
-
+        System.Test.stopTest();
         System.Assert.isInstanceOfType(
             expectedException,
-            AuraHandledException.class,
-            'Expected a AuraHandledException.'
+            CustomPermissionHelperException.class,
+            'Expected FeatureToggleException to be thrown'
         );
     }
 
     @IsTest
-    private static void isFeatureEnabledInvokable() {
-        List<Feature_Flag__mdt> featureFlags = new List<Feature_Flag__mdt>();
-        featureFlags.add(
-            new Feature_Flag__mdt(
-                MasterLabel = 'Feature1',
-                DeveloperName = 'Feature1',
-                Is_Enabled__c = true,
-                Description__c = 'Feature 1'
-            )
-        );
-        CustomMetadataDAO.customMetadataRecordsMap.put(
-            FeatureToggleBase.METADATA_QUERY,
-            featureFlags
-        );
+    private static void hasCustomPermissionWithValidCustomPermissionAndValidation() {
+        CustomPermissionHelper customPermissionHelperMock = new CustomPermissionHelperStub()
+            .addHasCustomPermission(true)
+            .addValidateCustomPermissionResult(true)
+            .getMock();
 
-        List<FeatureToggleBase.FeatureToogleResponse> response;
+        System.Test.startTest();
+        FeatureToggle.setValidateCustomPermissions(true);
+        Boolean result = new FeatureToggleBase(null, customPermissionHelperMock)
+            .hasCustomPermission('Feature1');
+        System.Test.stopTest();
 
-        Test.startTest();
-        FeatureToggleBase.FeatureToogleRequest request1 = new FeatureToggleBase.FeatureToogleRequest(
-            'Feature1',
-            'FEATURE_FLAG'
-        );
-        FeatureToggleBase.FeatureToogleRequest request2 = new FeatureToggleBase.FeatureToogleRequest(
-            'Feature2',
-            'CUSTOM_PERMISSION'
-        );
+        System.Assert.isTrue(result, 'Expected Feature1 to be active');
+    }
 
-        response = FeatureToggleBase.isFeatureEnabledInvokable(
-            new List<FeatureToggleBase.FeatureToogleRequest>{
-                request1,
-                request2
-            }
-        );
-        Test.stopTest();
+    @IsTest
+    private static void hasCustomPermissionWithValidCustomPermissionAndNoValidation() {
+        CustomPermissionHelper customPermissionHelperMock = new CustomPermissionHelperStub()
+            .addHasCustomPermission(true)
+            .getMock();
+        System.Test.startTest();
+        Boolean result = new FeatureToggleBase(null, customPermissionHelperMock)
+            .hasCustomPermission('Feature1');
+        System.Test.stopTest();
 
-        System.Assert.isTrue(response.size() == 2, 'Expected 2 responses');
-        System.Assert.isTrue(
-            response[0].featureName == 'Feature1',
-            'Expected Feature1'
-        );
-        System.Assert.isTrue(
-            response[0].featureEnabled,
-            'Expected Feature1 to be enabled'
-        );
-        System.Assert.isTrue(
-            response[1].featureName == 'Feature2',
-            'Expected Feature2'
-        );
-        System.Assert.isFalse(
-            response[1].featureEnabled,
-            'Did not expect Feature2 to be enabled'
-        );
+        System.Assert.isTrue(result, 'Expected Feature1 to be active');
     }
 }
