@@ -130,13 +130,16 @@ jobs:
 
       # Delete the scratch org if the validation fails
       # This step is only executed if the validation fails
-      # It deletes the scratch org to clean up resources
+      # It deletes the default scratch org to clean up resources
       # and prevent stale orgs from accumulating
       # It uses the sf org delete command with the -p flag
       # to delete the scratch org without confirmation
       - name: Delete Stale Validation Org
         if: ${{ failure() }}
-        run: sf org delete scratch -p
+        run: |
+          if sf org list --json | jq -e '.result[] | select(.isDefaultUsername == true)' > /dev/null; then
+            sf org delete scratch --no-prompt
+          fi
 
       # Upload build artifacts and logs if present
       # This step is executed regardless of the outcome of the previous steps
