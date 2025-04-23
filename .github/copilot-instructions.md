@@ -1,16 +1,18 @@
 # Instructions for sf-platform
 
-This is a repo for multiple unlocked Salesforce packages.
+This is a monorepo for multiple unlocked Salesforce packages.
 
-The code is written in apex and lightning web components
+The code inside the src folder is written in apex and lightning web components
 
-Do not use SFDX commands only SF commands, sfdx is deprecated.
+Do not use SFDX CLI commands only SF CLI commands, SFDX CLI is deprecated.
 
-Prettier is used for styling and the settings are described in .prettierrc
+Prettier is used for styling and our prettier settings are described in .prettierrc
 
 Code can be found in the src and src-temp folders
 
 When writing test always include System.Test.startTest(); and System.Test.stopTest();. First we prepare the data. The actual test should be placed in side start and stop test. Then we confirm the test results with asserts.
+
+We use github actions and out action and workflow files can be found in .github
 
 Tests are defined by the @IsTest annotation.
 
