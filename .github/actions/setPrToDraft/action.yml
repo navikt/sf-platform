@@ -1,0 +1,38 @@
+name: "Set Pull Request to Draft"
+description: "Set the pull request to draft"
+inputs:
+  pullRequestId:
+    description: "The ID of the pull request to set as draft"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Set to draft
+      shell: bash
+      env:
+        PULL_REQUEST_ID: ${{ inputs.pullRequestId }}
+      run: |
+        # Prepare the JSON payload
+        if ! JSON_PAYLOAD=$(jq -n \
+          --arg query "$(cat .github/api/convertPullRequestToDraft.gql)" \
+          --arg pullRequestId "$PULL_REQUEST_ID" \
+          '{query: $query, variables: {pullRequestId: $pullRequestId}}'); then
+          echo "::error::Failed to prepare JSON payload."
+          exit 1
+        fi
+
+        echo "JSON payload: $JSON_PAYLOAD"
+
+        curl_output=$(curl --silent --show-error -X POST \
+          -H "Authorization: token ${GH_AUTH_TOKEN}" \
+          -H "Content-Type: application/json" \
+          -d "$JSON_PAYLOAD" \
+          https://api.github.com/graphql 2>&1)
+
+        # Check if the curl command was successful 
+        if [ $? -ne 0 ] || ! echo "$curl_output" | grep -q '"isDraft"'; then
+          echo "::error title=Failed to set Pull request as draft.::Curl output: $curl_output"
+          exit 1
+        fi
+
+        echo "GitHub API response: $curl_output"
