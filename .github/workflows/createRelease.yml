@@ -32,7 +32,8 @@ jobs:
       GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SCOPE: ${{ github.repository_owner }}
       PATH_TO_CONFIG_FILE: "config/releaseConfig.yml"
-      RELEASE_NAME: "sf-platform"
+      RELEASE_NAME_PREFIX: ${{ vars.RELEASE_NAME_PREFIX || 'sf' }}
+      RELEASE_NAME: ""
       GIT_REF: ${{ inputs.gitRef || github.sha }}
       BRANCH_NAME: ${{ github.ref_name }}
       WORKITEM_FILTER: ${{ vars.WORKITEM_FILTER || 'PTCRM-[0-9]' }}
@@ -42,7 +43,7 @@ jobs:
       - name: Set Release Name
         id: createReleaseName
         run: |
-          echo "RELEASE_NAME=sf-platform_$(date +%s%3N)" >> "$GITHUB_ENV"
+          echo "RELEASE_NAME=${{ env.RELEASE_NAME_PREFIX }}_$(date +%s%3N)" >> "$GITHUB_ENV"
 
       - name: Authenticate Node
         uses: actions/setup-node@v4
@@ -57,7 +58,7 @@ jobs:
       # Sets up Salesforce CLI authentication for the DevHub
 
       - name: Authenticate DevHub
-        uses: navikt/sf-platform/.github/actions/authenticateOrg@655e1dc08e58247b5ded00cb96e40f4a415bad85
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@dedb0fe6ba7f5656ae34d5c18acb75ab8228e4ee
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: "${{ env.DEVHUB_ALIAS }}"

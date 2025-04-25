@@ -21,7 +21,8 @@
     "ServiceCloud",
     "ServiceUser",
     "Sites",
-    "SurveyAdvancedFeatures"
+    "SurveyAdvancedFeatures",
+    "LiveMessage"
   ],
   "country": "NO",
   "language": "en_US",
@@ -73,6 +74,9 @@
     },
     "liveAgentSettings": {
       "enableLiveAgent": true
+    },
+    "liveMessageSettings": {
+      "enableLiveMessage": true
     },
     "nameSettings": {
       "enableMiddleName": true

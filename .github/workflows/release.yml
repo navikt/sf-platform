@@ -30,6 +30,7 @@ jobs:
       SCOPE: ${{ github.repository_owner }}
       REPO: ${{ github.repository }}
       RELEASE_TAG: ${{ inputs.release_tag  }}
+      RELEASE_NAME_PREFIX: ${{ vars.RELEASE_NAME_PREFIX || 'sf' }}
     steps:
       - name: Authenticate Node
         uses: actions/setup-node@v4
@@ -38,7 +39,7 @@ jobs:
 
       # Sets up Salesforce CLI authentication for the DevHub
       - name: Authenticate DevHub
-        uses: navikt/sf-platform/.github/actions/authenticateOrg@655e1dc08e58247b5ded00cb96e40f4a415bad85
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@dedb0fe6ba7f5656ae34d5c18acb75ab8228e4ee
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: "devhub"
@@ -46,7 +47,7 @@ jobs:
 
       # Sets up Salesforce CLI authentication for the DevHub
       - name: Authenticate Target Org
-        uses: navikt/sf-platform/.github/actions/authenticateOrg@655e1dc08e58247b5ded00cb96e40f4a415bad85
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@dedb0fe6ba7f5656ae34d5c18acb75ab8228e4ee
         with:
           auth-url: ${{ secrets.TARGET_ORG_URL }}
           alias: "targetorg"
@@ -61,7 +62,20 @@ jobs:
               -H "X-GitHub-Api-Version: 2022-11-28" \
               https://api.github.com/repos/${REPO}/releases/latest \
             | jq -r '.tag_name')
-            echo "RELEASE_TAG=$latest_tag" >> $GITHUB_ENV
+            
+            echo "Latest release tag: $latest_tag"
+
+            if [ -z "$latest_tag" ]; then
+              echo "::error::No latest release found for repository ${REPO}"
+              exit 1
+            fi
+
+            if [[ ! "$latest_tag" =~ ^$RELEASE_NAME_PREFIX_[0-9]{13,14}$ ]]; then
+              echo "::error::Invalid release name format: $latest_tag. Expected format: $RELEASE_NAME_PREFIX_<timestamp>"
+              exit 1
+            fi
+
+            echo "RELEASE_TAG=$(echo "$latest_tag" | tr -d '\n')" >> $GITHUB_ENV
           fi
 
       - name: Checkout

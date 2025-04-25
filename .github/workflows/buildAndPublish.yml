@@ -22,6 +22,7 @@ jobs:
     uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
     permissions:
       contents: read
+      security-events: write
 
   detectPackageChanges:
     name: Detect Package Changes
@@ -39,7 +40,7 @@ jobs:
           persist-credentials: false
 
       # Check for changes in the src directory excluding .md files
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@655e1dc08e58247b5ded00cb96e40f4a415bad85
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@dedb0fe6ba7f5656ae34d5c18acb75ab8228e4ee
         id: checkChanges
 
   buildAndPublish:
@@ -76,7 +77,7 @@ jobs:
 
       # Sets up Salesforce CLI authentication for the DevHub
       - name: Authenticate DevHub
-        uses: navikt/sf-platform/.github/actions/authenticateOrg@655e1dc08e58247b5ded00cb96e40f4a415bad85
+        uses: navikt/sf-platform/.github/actions/authenticateOrg@dedb0fe6ba7f5656ae34d5c18acb75ab8228e4ee
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: "devhub"
@@ -136,7 +137,7 @@ jobs:
       # Upload build artifacts and logs if present
       - name: Upload Artifacts and Logs
         if: steps.build.outputs.artifactsFound == 'true'
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@655e1dc08e58247b5ded00cb96e40f4a415bad85
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@dedb0fe6ba7f5656ae34d5c18acb75ab8228e4ee
         with:
           artifactName: "build-artifacts"
           uploadArtifacts: true

@@ -24,29 +24,33 @@ runs:
 
         echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
         echo "${yellow}${bold}Check changes since last commit in src folder${reset}"
-        echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"
+        echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}${newLine}"
+
+        echo "${yellow}Check if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}${newLine}"
+
+        echo "${yellow}Running git diff...${reset}${newLine}"
+
 
         if [ "${EVENT_NAME}" = "pull_request" ]; then
-          changes=$(git diff "${PR_BASE_SHA}".."${PR_HEAD_SHA}" --ignore-all-space --name-only -- src/)
+            changes=$(git diff "${PR_BASE_SHA}".."${PR_HEAD_SHA}" --ignore-all-space --name-only -- src/)
         else
-          # Fetch the parent commit SHA dynamically, ensuring we're always looking at the immediate predecessor.
-          changes=$(git diff $(git rev-parse "${REF_NAME}^") "${REF_NAME}" --ignore-all-space --name-only -- src/)
+            # Fetch the parent commit SHA dynamically, ensuring we're always looking at the immediate predecessor.
+            changes=$(git diff $(git rev-parse "${REF_NAME}^") "${REF_NAME}" --ignore-all-space --name-only -- src/)
         fi
 
-
-        echo "${yellow}Checking if there has been changes to source code by running git diff on the src folder excluding markdown files${reset}"
-
         if [ -n "$changes" ]; then
-          nonMarkdownChanges=$(echo $changes  | grep -v '\.md$')
+            echo "${yellow}There are changes in the src folder:${reset}${newLine}$changes${newLine}"
 
-          if [ -n "$nonMarkdownChanges" ]; then
-            echo "${green}${bold}There have been changes to non-Markdown files!${reset}"
-            hasSrcChanges=true
-          else
-            echo "${yellow}No changes to non-Markdown files detected.${reset}"
-          fi
+            nonMarkdownChanges=$(echo $changes  | grep -v '\.md$')
+
+            if [ -n "$nonMarkdownChanges" ]; then
+                echo "${green}${bold}There have been changes to non-Markdown files:${reset}${newLine}$nonMarkdownChanges"
+                hasSrcChanges=true
+            else
+                echo "${yellow}No changes to non-Markdown files detected.${reset}"
+            fi
         else
-          echo "${yellow}No changes to files in src folder.${reset}"
+            echo "${yellow}No changes to files in src folder.${reset}"
         fi
 
         echo "${yellow}${bold}------------------------------------------------------------------------------------------${reset}"

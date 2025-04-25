@@ -13,6 +13,7 @@ jobs:
     permissions:
       contents: write
       packages: write
+      security-events: write
     secrets:
       SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
   create_release:

@@ -1,6 +1,6 @@
 # sf-platform
 
-Monorepo for NAVs Salesforce Platform core. Maintained by Team Platforce.
+Monorepo for NAVs Salesforce Platform core. Vedlikeholdt av Team Platforce.
 
 [Platforce Documentation](https://navikt.github.io/platforce-doc/)
 
@@ -10,19 +10,33 @@ For å se avhengigheter mellom pakkene se [sfdx-project.json](sfdx-project.json)
 
 - [platform-datamodel](src/platform-data-model/feature-flag-custom-metadata) - datamodell
 
-### Frameworks
+### [Frameworks](src/frameworks)
 
 - [feature-toggle](src/frameworks/feature-toggle/README.md) rammeverk for feaure toggling i salesforce
 
-### Platform Utility
+### [Platform Utility](src/platform-utility)
 
 - [custom-metadata-dao](src/platform-utility/custom-metadata-dao) - Abstraksjon av custom metadata
+- [custom-pemission-helper](src/platform-utility/custom-permission-helper) - Hjelpe funksjoner for custom settings
+
+```mermaid
+---
+title: Pakkeavhengigheter
+---
+graph TD
+    custom-pemission-helper
+    feature-toggle --> platform-datamodel;
+    feature-toggle --> custom-metadata-dao;
+    feature-toggle --> custom-pemission-helper;
+```
 
 ## Komme i gang
 
-Hvordan bygge, teste og kjøre koden viss aktuelt.
+For å sette opp utviklingsmiljøet se [Platforce Docs - Developer environment](https://navikt.github.io/platforce-doc/how-to-guides/dev-environment/)
 
-For detaljer ang. utvikling eller bruk av en pakke, se pakke beskrivelsen.
+For detaljer rundt utvikling eller bruk av en spesifikk pakke, se pakke beskrivelsen for nærmere beskrivelser.
+
+For å spinne opp en scratch org så kan man ta utgangspunkt i scratch org definition filen som ligger her: `config/project-scratch-def.json`
 
 ---
 

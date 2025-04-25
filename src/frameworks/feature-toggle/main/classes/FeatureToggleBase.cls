@@ -2,8 +2,13 @@
  * @description Base class for managing feature toggles.
  * Supports checking, enabling and disabling features via custom metadata (Feature_Flag__mdt) and custom permissions.
  *
+ * @group Feature Toggle
+ *
  * @author Tor Håkon Sigurdsen
- * @since 2025-03-07
+ * @since 0.1.0, March 2025 - Created
+ *
+ * @author Tor Håkon Sigurdsen
+ * @since 0.1.0, April 2025 - Added custom permission helper, moved invokable and aura methods to separate classes
  */
 public virtual class FeatureToggleBase implements IFeatureToggle {
     /**
@@ -11,11 +16,15 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
      * Retrieves MasterLabel, DeveloperName, Is_Enabled__c, and Description__c.
      *
      * @see CustomMetadataDAO
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, March 2025 - Created
      */
     @TestVisible
     private final static String METADATA_QUERY = 'SELECT MasterLabel, DeveloperName, Is_Enabled__c, Description__c, Required_Custom_Permission__c FROM Feature_Flag__mdt';
 
     private CustomMetadataDAO dao;
+    private CustomPermissionHelper customPermissionHelper;
 
     private Map<String, Feature_Flag__mdt> featureFlagMap {
         get {
@@ -27,83 +36,40 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
 
     /**
      * @description Default constructor.
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, March 2025 - Created
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, April 2025 - Added custom permission helper
      */
     public FeatureToggleBase() {
-        this(new CustomMetadataDAO());
+        this(new CustomMetadataDAO(), new CustomPermissionHelper());
     }
 
     /**
      * @description Constructor with dependency injection.
      *
-     * @param dao
-     */
-    public FeatureToggleBase(CustomMetadataDAO dao) {
-        this.dao = dao;
-    }
-
-    /**
-     * @description Checks if a feature is enabled for a specific toggle type.
+     * @param dao The DAO for custom metadata operations.
+     * @param customPermissionHelper The helper for custom permission operations.
+     * @see CustomMetadataDAO
+     * @see CustomPermissionHelper
      *
-     * @param featureName The feature name.
-     * @param toggleType The type (FEATURE_FLAG or CUSTOM_PERMISSION).
-     * @return `true` if enabled, `false` otherwise.
-     */
-
-    /**
-     * @description Checks if a feature is enabled for a specific toggle type.
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, March 2025 - Created
      *
-     * @param featureName The feature name.
-     * @param toogleType The type (FEATURE_FLAG or CUSTOM_PERMISSION).
-     * @return `true` if enabled, `false` otherwise.
-     *
-     * @exception throws `AuraHandledException` if something goes wrong.
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, April 2025 - Added custom permission helper
      */
-    @AuraEnabled(cacheable=true)
-    public static Boolean isFeatureEnabled(
-        String featureName,
-        String toogleType
+    public FeatureToggleBase(
+        CustomMetadataDAO dao,
+        CustomPermissionHelper customPermissionHelper
     ) {
-        try {
-            return new FeatureToggleBase()
-                .isFeatureEnabled(
-                    featureName,
-                    FeatureToggleType.valueOf(toogleType)
-                );
-        } catch (Exception e) {
-            throw new AuraHandledException(
-                String.format(
-                    'Something went wrong when checking the feature {0}',
-                    new List<String>{ e.getMessage() }
-                )
-            );
-        }
-    }
+        this.dao = dao ?? new CustomMetadataDAO();
+        this.customPermissionHelper = customPermissionHelper ??
+            new CustomPermissionHelper();
 
-    /**
-     * @description Checks if a feature is enabled for a specific toggle type.
-     *
-     * @param requests A list of `FeatureToogleRequest` objects with the feature name and type.
-     * @return A list of `FeatureToogleResponse` objects with the feature name and if it is enabled or not.
-     */
-    @InvocableMethod(
-        label='Enable Feature'
-        description='Enables a feature for the current user.'
-    )
-    public static List<FeatureToogleResponse> isFeatureEnabledInvokable(
-        List<FeatureToogleRequest> requests
-    ) {
-        List<FeatureToogleResponse> responses = new List<FeatureToogleResponse>();
-        for (FeatureToogleRequest request : requests) {
-            FeatureToogleResponse response = new FeatureToogleResponse();
-            response.featureName = request.featureName;
-            response.featureEnabled = new FeatureToggleBase()
-                .isFeatureEnabled(
-                    request.featureName,
-                    FeatureToggleType.valueOf(request.featureType)
-                );
-            responses.add(response);
-        }
-        return responses;
+        this.customPermissionHelper.setCustomPermissionMaps();
     }
 
     /**
@@ -112,7 +78,11 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
      * @return Map of feature flags keyed by DeveloperName.
      *
      * @see CustomMetadataDAO
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, March 2025 - Created
      */
+    @TestVisible
     private Map<String, Feature_Flag__mdt> getFeatureFlags() {
         // Initialize the feature flag map.
         featureFlagMap = new Map<String, Feature_Flag__mdt>();
@@ -139,6 +109,9 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
      *
      * @param featureName The feature's DeveloperName.
      * @return The `Feature_Flag__mdt` record or null if not found.
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, March 2025 - Created
      */
     public Feature_Flag__mdt getFeatureFlag(String featureName) {
         return featureFlagMap.get(featureName);
@@ -150,10 +123,19 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
      *
      * @param featureName The feature name.
      * @return `true` if enabled, `false` otherwise.
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, March 2025 - Created
      */
     public virtual Boolean isFeatureEnabled(String featureName) {
-        return isFeatureEnabled(featureName, FeatureToggleType.FEATURE_FLAG) ||
-            isFeatureEnabled(featureName, FeatureToggleType.CUSTOM_PERMISSION);
+        return isFeatureEnabled(
+                featureName,
+                FeatureToggle.ToggleType.FEATURE_FLAG
+            ) ||
+            isFeatureEnabled(
+                featureName,
+                FeatureToggle.ToggleType.CUSTOM_PERMISSION
+            );
     }
 
     /**
@@ -162,17 +144,20 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
      * @param featureName The feature name.
      * @param toggleType The type (FEATURE_FLAG or CUSTOM_PERMISSION).
      * @return `true` if enabled, `false` otherwise.
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, March 2025 - Created
      */
     public virtual Boolean isFeatureEnabled(
         String featureName,
-        FeatureToggleType toggleType
+        FeatureToggle.ToggleType toggleType
     ) {
-        if (toggleType == FeatureToggleType.CUSTOM_PERMISSION) {
+        if (toggleType == FeatureToggle.ToggleType.CUSTOM_PERMISSION) {
             // Evaluate based on custom permissions.
             return hasCustomPermission(featureName);
         }
 
-        if (toggleType == FeatureToggleType.FEATURE_FLAG) {
+        if (toggleType == FeatureToggle.ToggleType.FEATURE_FLAG) {
             // Evaluate using the feature flag status.
             if (
                 featureFlagMap.containsKey(featureName) &&
@@ -185,7 +170,7 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
                     isFeatureEnabled(
                         featureFlagMap.get(featureName)
                             .Required_Custom_Permission__c,
-                        FeatureToggleType.CUSTOM_PERMISSION
+                        FeatureToggle.ToggleType.CUSTOM_PERMISSION
                     );
             }
 
@@ -201,6 +186,9 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
      *
      * @param featureName The feature to enable.
      * @return This instance for chaining.
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, March 2025 - Created
      */
     public virtual FeatureToggleBase enableFeature(String featureName) {
         if (getFeatureFlag(featureName) != null) {
@@ -221,6 +209,9 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
      *
      * @param featureName The feature to disable.
      * @return This instance for chaining.
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, March 2025 - Created
      */
     public virtual FeatureToggleBase disableFeature(String featureName) {
         if (getFeatureFlag(featureName) != null) {
@@ -233,6 +224,9 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
      * @description Resets caches, forcing reload on next access.
      *
      * @return This instance for chaining
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, March 2025 - Created
      */
     public virtual FeatureToggleBase resetFeatureFlags() {
         featureFlagMap = null;
@@ -242,55 +236,23 @@ public virtual class FeatureToggleBase implements IFeatureToggle {
     /**
      * @description Checks if a custom permission is granted.+
      *
-     * @param customPermissionName The permission name.
+     * @param customPermissionDeveloperName The permission name.
      * @return `true` if granted, `false` otherwise.
+     *
+     * @author Tor Håkon Sigurdsen
+     * @since 0.1.0, March 2025 - Created
      */
-    public virtual Boolean hasCustomPermission(String customPermissionName) {
-        return System.FeatureManagement.checkPermission(customPermissionName);
-    }
-
-    /**
-     * @description Invocable request for enabling a feature.
-     */
-    public class FeatureToogleRequest {
-        @InvocableVariable(
-            label='Feature Name'
-            description='The name of the feature.'
-            required=true
-        )
-        public String featureName;
-        @InvocableVariable(
-            label='Feature Type'
-            description='The type of the feature to enable.'
-            required=true
-        )
-        public String featureType;
-
-        /**
-         * @description Constructor with parameters.
-         *
-         * @param featureName The feature name.
-         * @param featureType The feature type.
-         */
-        public FeatureToogleRequest(String featureName, String featureType) {
-            this.featureName = featureName;
-            this.featureType = featureType;
+    public virtual Boolean hasCustomPermission(
+        String customPermissionDeveloperName
+    ) {
+        if (FeatureToggle.shouldValidateCustomPermissions()) {
+            return customPermissionHelper.validateCustomPermission(
+                    customPermissionDeveloperName
+                )
+                .hasCustomPermission(customPermissionDeveloperName);
         }
-    }
-
-    /**
-     * @description Invocable response for enabling a feature.
-     */
-    public class FeatureToogleResponse {
-        @InvocableVariable(
-            label='Feature Name'
-            description='Name of the feature.'
-        )
-        public String featureName;
-        @InvocableVariable(
-            label='Is Enabled'
-            description='If the feature is enabled or not.'
-        )
-        public Boolean featureEnabled;
+        return customPermissionHelper.hasCustomPermission(
+            customPermissionDeveloperName
+        );
     }
 }

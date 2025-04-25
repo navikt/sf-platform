@@ -25,12 +25,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      security-events: write
     defaults:
       run:
         shell: "bash"
     steps:
       - name: "Install SF CLI"
-        uses: navikt/sf-platform/.github/actions/installSfCli@655e1dc08e58247b5ded00cb96e40f4a415bad85
+        uses: navikt/sf-platform/.github/actions/installSfCli@dedb0fe6ba7f5656ae34d5c18acb75ab8228e4ee
         with:
           version: ${{ vars.SF_CLI_VERSION }}
 
@@ -80,13 +81,13 @@ jobs:
 
       - name: Prettier Check
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: navikt/sf-platform/.github/actions/prettierCheck@655e1dc08e58247b5ded00cb96e40f4a415bad85
+        uses: navikt/sf-platform/.github/actions/prettierCheck@dedb0fe6ba7f5656ae34d5c18acb75ab8228e4ee
         with:
           pathToValidate: ${{ steps.paths.outputs.prettierPathsToValidate }}
 
       - name: Eslint check
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: navikt/sf-platform/.github/actions/eslintCheck@655e1dc08e58247b5ded00cb96e40f4a415bad85
+        uses: navikt/sf-platform/.github/actions/eslintCheck@dedb0fe6ba7f5656ae34d5c18acb75ab8228e4ee
         with:
           pathToValidate: ${{ steps.paths.outputs.eslintPathsToValidate }}
 
@@ -95,7 +96,55 @@ jobs:
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
         uses: forcedotcom/run-code-analyzer@13c0e7699093dc6294eefe19d1106eeda363c898
         with:
-          run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }}
+          run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }} --view detail --output-file sfca_results.html --output-file sfca_results.json --output-file code-analyzer-report.sarif
+          results-artifact-name: salesforce-code-analyzer-results
+
+      # Code Analyser generates an empty SARIF file if no violations are found.
+      # In that case this step ensures that the SARIF file is valid and contains a default structure.
+      # This is required for the SARIF file to be uploaded to GitHub.
+      - name: Check SARIF file
+        if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
+        run: |
+          echo "::group::Print SARIF file before check"
+          cat code-analyzer-report.sarif
+          echo "::endgroup::"
+          echo "::group::Check SARIF file"
+          jq --arg wd "$GITHUB_WORKSPACE" '
+            if .runs == [] then
+              .runs = [
+                {
+                  "tool": {
+                    "driver": {
+                      "name": "pmd",
+                      "rules": []
+                    }
+                  },
+                  "results": [],
+                  "invocations": [
+                    {
+                      "executionSuccessful": true,
+                      "workingDirectory": {
+                        "uri": $wd
+                      }
+                    }
+                  ]
+                }
+              ]
+            else
+              .
+            end
+          ' code-analyzer-report.sarif > temp.sarif && mv temp.sarif code-analyzer-report.sarif
+          echo "::endgroup::"
+          echo "::group::Print SARIF file after check"
+          cat code-analyzer-report.sarif
+          echo "::endgroup::"
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@7e3036b9cd87fc26dd06747b7aa4b96c27aaef3a
+        if: ${{ !cancelled() && steps.paths.outcome == 'success' && github.ref_name == 'main'  }}
+        with:
+          sarif_file: code-analyzer-report.sarif
+          category: salesforce-code-analyzer
 
       - name: Check the Salesforce Code Analyzer outputs to determine whether to fail
         if: ${{ !cancelled() && steps.paths.outcome == 'success' && ( steps.run-code-analyzer.outputs.exit-code > 0 || steps.run-code-analyzer.outputs.num-sev1-violations > 0 || steps.run-code-analyzer.outputs.num-violations > 10 ) }}

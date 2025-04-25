@@ -1,10 +1,9 @@
 name: "[PR] Validate package changes"
 on:
   pull_request:
-  workflow_call:
-    secrets:
-      SF_DEVHUB_URL:
-        required: true
+    types: [opened, ready_for_review, reopened]
+    paths:
+      - "src/**"
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
@@ -14,6 +13,7 @@ jobs:
     uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@main
     permissions:
       contents: read
+      security-events: write
 
   checkChanges:
     name: Check changes
@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@655e1dc08e58247b5ded00cb96e40f4a415bad85
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@dedb0fe6ba7f5656ae34d5c18acb75ab8228e4ee
         id: checkChanges
 
   validateChanges:
@@ -41,15 +41,23 @@ jobs:
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     permissions:
       contents: read
+    env:
+      POOLS: ${{ vars.DEFAULT_CI_POOL }}
+      DEVHUB_ALIAS: "devhub"
+      COVERAGE_PERCENT: ${{ vars.CODE_COVERAGE_PERCENTAGE }}
+      SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
+      EVENT: ${{ github.event_name }}
+      GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PULL_REQUEST_ID: ${{ github.event.pull_request.node_id }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: false
 
       - name: Authenticate DevHub
-        uses: navikt/sf-platform/.github/actions/authenticateOrg@655e1dc08e58247b5ded00cb96e40f4a415bad85
+        uses: navikt/sf-gha-authenticateOrg@da2f995ee865e05111574719abfc5ba12b459f0c
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: "devhub"
@@ -84,15 +92,28 @@ jobs:
           echo "Executing command: ${command[*]}"
           "${command[@]}"
         env:
-          POOLS: ${{ vars.DEFAULT_CI_POOL }}
-          DEVHUB_ALIAS: "devhub"
-          COVERAGE_PERCENT: ${{ vars.CODE_COVERAGE_PERCENTAGE }}
           MODE: "thorough"
           REF: ${{ github.event.pull_request.head.sha }}
           BASE_REF: ${{ github.event.pull_request.base.sha }}
           DELETE_SCRATCH: "true"
-          SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
 
       - name: Delete Stale Validation Org
         if: ${{ failure() }}
-        run: sf org delete scratch -p
+        run: |
+          if sf org list --json | jq -e '.result[] | select(.isDefaultUsername == true)' > /dev/null; then
+            sf org delete scratch --no-prompt
+          fi
+
+  setPullRequestToDraft:
+    name: Set pull request to draft
+    needs: validateChanges
+    if: ${{ needs.validateChanges.result == 'failure' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Set pull request to draft
+        uses: navikt/sf-platform/.github/actions/setPrToDraft@9beb6f0b918e4ecb8c1856d785b91749e7d48215
+        with:
+          pullRequestId: ${{ github.event.pull_request.node_id }}
