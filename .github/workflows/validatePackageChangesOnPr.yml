@@ -57,7 +57,7 @@ jobs:
           persist-credentials: false
 
       - name: Authenticate DevHub
-        uses: navikt/sf-platform/.github/actions/authenticateOrg@dedb0fe6ba7f5656ae34d5c18acb75ab8228e4ee
+        uses: navikt/sf-gha-authenticateOrg@da2f995ee865e05111574719abfc5ba12b459f0c
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: "devhub"
