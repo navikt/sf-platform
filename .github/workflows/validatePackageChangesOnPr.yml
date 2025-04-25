@@ -40,8 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
     env:
       POOLS: ${{ vars.DEFAULT_CI_POOL }}
       DEVHUB_ALIAS: "devhub"
@@ -105,8 +104,16 @@ jobs:
             sf org delete scratch --no-prompt
           fi
 
+  setPullRequestToDraft:
+    name: Set pull request to draft
+    needs: validateChanges
+    if: ${{ needs.validateChanges.result == 'failure' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
       - name: Set pull request to draft
-        if: ${{ failure() && github.event_name == 'pull_request' }}
         uses: navikt/sf-platform/.github/actions/setPrToDraft@9beb6f0b918e4ecb8c1856d785b91749e7d48215
         with:
           pullRequestId: ${{ github.event.pull_request.node_id }}
