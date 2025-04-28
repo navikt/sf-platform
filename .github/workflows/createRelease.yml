@@ -43,7 +43,7 @@ jobs:
       - name: Set Release Name
         id: createReleaseName
         run: |
-          echo "RELEASE_NAME=${{ env.RELEASE_NAME_PREFIX }}_$(date +%s%3N)" >> "$GITHUB_ENV"
+          echo "RELEASE_NAME=${RELEASE_NAME_PREFIX}_$(date +%s%3N)" >> "$GITHUB_ENV"
 
       - name: Authenticate Node
         uses: actions/setup-node@v4
