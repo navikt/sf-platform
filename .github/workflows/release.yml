@@ -29,7 +29,7 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SCOPE: ${{ github.repository_owner }}
       REPO: ${{ github.repository }}
-      RELEASE_TAG: ${{ inputs.release_tag  }}
+      INPUT_RELEASE_TAG: ${{ inputs.release_tag  }}
       RELEASE_NAME_PREFIX: ${{ vars.RELEASE_NAME_PREFIX || 'sf' }}
     steps:
       - name: Authenticate Node
@@ -55,7 +55,7 @@ jobs:
       - name: Determine release tag
         id: release
         run: |
-          if [ -z "${RELEASE_TAG}" ]; then
+          if [ -z "${INPUT_RELEASE_TAG}" ]; then
             latest_tag=$(curl -s \
               -H "Accept: application/vnd.github+json" \
               -H "Authorization: token ${GH_AUTH_TOKEN}" \
@@ -64,24 +64,28 @@ jobs:
             | jq -r '.tag_name')
             
             echo "Latest release tag: $latest_tag"
-
-            if [ -z "$latest_tag" ]; then
-              echo "::error::No latest release found for repository ${REPO}"
-              exit 1
-            fi
-
-            if [[ ! "$latest_tag" =~ ^$RELEASE_NAME_PREFIX_[0-9]{13,14}$ ]]; then
-              echo "::error::Invalid release name format: $latest_tag. Expected format: $RELEASE_NAME_PREFIX_<timestamp>"
-              exit 1
-            fi
-
-            echo "RELEASE_TAG=$(echo "$latest_tag" | tr -d '\n')" >> $GITHUB_ENV
+          else
+            latest_tag=${INPUT_RELEASE_TAG}
           fi
+
+          if [ -z "$latest_tag" ]; then
+            echo "::error::No latest release found for repository ${REPO}"
+            exit 1
+          fi
+
+          latest_tag=$(echo "$latest_tag" | tr -d '\n')
+
+          if [[ ! "$latest_tag" =~ ^$RELEASE_NAME_PREFIX_[0-9]{13,14}$ ]]; then
+            echo "::error::Invalid release name format: $latest_tag. Expected format: $RELEASE_NAME_PREFIX_<timestamp>"
+            exit 1
+          fi
+
+          echo "releaseTag="$latest_tag" >> $GITHUB_OUTPUT
 
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: ${{ env.RELEASE_TAG }}
+          ref: ${{ steps.release.outputs.releaseTag }}
           persist-credentials: false
 
       - name: Get release asset URL
@@ -101,6 +105,8 @@ jobs:
             exit 1
           fi
           echo "url=$asset_url" >> $GITHUB_OUTPUT
+        env:
+          RELEASE_TAG: "${{ steps.release.outputs.releaseTag }}"
 
       - name: Download release asset
         run: |
@@ -114,6 +120,7 @@ jobs:
           cat release_file.yml
         env:
           ASSET_URL: "${{ steps.asset.outputs.url }}"
+          RELEASE_TAG: "${{ steps.release.outputs.releaseTag }}"
 
       - name: Release to Org
         run: |
