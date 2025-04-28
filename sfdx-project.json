@@ -10,28 +10,28 @@
       "path": "src/platform-data-model",
       "package": "platform-data-model",
       "versionNumber": "0.1.0.NEXT",
-      "definitionFile": "config/scratch-org-def.json",
+      "definitionFile": "config/scratch-def.json",
       "dependencies": []
     },
     {
       "path": "src/platform-utility/custom-metadata-dao",
       "package": "custom-metadata-dao",
       "versionNumber": "0.1.0.NEXT",
-      "definitionFile": "config/scratch-org-def.json",
+      "definitionFile": "config/scratch-def.json",
       "dependencies": []
     },
     {
       "path": "src/platform-utility/custom-permission-helper",
       "package": "custom-permission-helper",
       "versionNumber": "0.1.0.NEXT",
-      "definitionFile": "config/scratch-org-def.json",
+      "definitionFile": "config/scratch-def.json",
       "dependencies": []
     },
     {
       "path": "src/frameworks/feature-toggle",
       "package": "feature-toggle",
       "versionNumber": "0.1.0.NEXT",
-      "definitionFile": "config/scratch-org-def.json",
+      "definitionFile": "config/scratch-def.json",
       "dependencies": [
         {
           "package": "platform-data-model",
@@ -46,12 +46,31 @@
           "versionNumber": "0.1.0.LATEST"
         }
       ]
+    },
+    {
+      "path": "src/platform-utility/platform-interfaces",
+      "package": "platform-interfaces",
+      "versionNumber": "0.1.0.NEXT"
+    },
+    {
+      "path": "src/platform-utility/json-helper",
+      "package": "json-helper",
+      "versionNumber": "0.1.0.NEXT",
+      "definitionFile": "config/scratch-def.json",
+      "dependencies": [
+        {
+          "package": "platform-interfaces",
+          "versionNumber": "0.1.0.LATEST"
+        }
+      ]
     }
   ],
   "packageAliases": {
     "platform-data-model": "0HoKB00000000010AA",
     "custom-metadata-dao": "0HoKB000000000B0AQ",
     "custom-permission-helper": "0HoKB000000000f0AA",
-    "feature-toggle": "0HoKB000000000V0AQ"
+    "feature-toggle": "0HoKB000000000V0AQ",
+    "platform-interfaces": "0HoKB000000000Q0AQ",
+    "json-helper": "0HoKB000000000L0AQ"
   }
 }
