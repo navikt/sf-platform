@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@157da2591934750237f41cc7a069b8908d10a120
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@620c810c35684e2f515acec0f67211e8c756a98a
         id: checkChanges
 
   validateChanges:
@@ -114,6 +114,6 @@ jobs:
       pull-requests: write
     steps:
       - name: Set pull request to draft
-        uses: navikt/sf-platform/.github/actions/setPrToDraft@157da2591934750237f41cc7a069b8908d10a120
+        uses: navikt/sf-platform/.github/actions/setPrToDraft@620c810c35684e2f515acec0f67211e8c756a98a
         with:
           pullRequestId: ${{ github.event.pull_request.node_id }}
