@@ -3,6 +3,7 @@
 pool: ciPlatform
 releasedefinitionProperties:
   skipIfAlreadyInstalled: true
+  promotePackagesBeforeDeploymentToOrg: prod
   changelog:
     workItemFilters:
       - PTCRM-[0-9]

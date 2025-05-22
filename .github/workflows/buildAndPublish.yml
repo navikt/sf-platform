@@ -111,10 +111,10 @@ jobs:
           fi
           echo "::endgroup::"
 
-      - name: Promote Artifacts
-        if: steps.build.outputs.artifactsFound == 'true'
-        run: |
-          sfp artifacts promote --targetdevhubusername devhub --loglevel="${SFP_LOG_LEVEL}"
+      # - name: Promote Artifacts
+      #   if: steps.build.outputs.artifactsFound == 'true'
+      #   run: |
+      #     sfp artifacts promote --targetdevhubusername devhub --loglevel="${SFP_LOG_LEVEL}"
 
       - name: Publish Artifacts
         if: steps.build.outputs.artifactsFound == 'true'

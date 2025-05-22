@@ -10,12 +10,29 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
 jobs:
   release:
-    uses: navikt/sf-platform/.github/workflows/release.yml@main
-    with:
-      release_tag: ${{ github.event.inputs.release_tag }}
-    secrets:
-      SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
-      TARGET_ORG_URL: ${{ secrets.SF_DEVHUB_URL }}
+    name: Release to Production
+    runs-on: ubuntu-latest
+    container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION || 'latest' }}
     permissions:
       contents: read
       packages: read
+    steps:
+      - name: Authenticate Node
+        uses: actions/setup-node@v4
+        with:
+          registry-url: "https://npm.pkg.github.com"
+
+      # Sets up Salesforce CLI authentication for the DevHub
+      - name: Authenticate Production
+        uses: navikt/sf-gha-authenticateOrg@da2f995ee865e05111574719abfc5ba12b459f0c
+        with:
+          auth-url: ${{ secrets.SF_DEVHUB_URL }}
+          alias: "prod"
+
+      - name: Release to Production
+        uses: navikt/sf-gha-release@44e428cf23f621cfccbd7d4a7946b98e53883ca6
+        with:
+          release_tag: ${{ github.event.inputs.release_tag }}
+          target_org_alias: "prod"
+          devhub_alias: "prod"
+          releaseNamePrefix: "sf"
