@@ -5,6 +5,17 @@
  * CustomPermissionHelper class for testing
  * @author Tor Håkon Sigurdsen
  * @since 0.1.0, March 2025
+ * @group Custom Permission Helper
+ * @example
+ * ```
+ * CustomPermissionHelperStub stub = new CustomPermissionHelperStub();
+ * stub.addHasCustomPermission(true);
+ * stub.addValidateCustomPermissionResult(true);
+ * CustomPermissionHelper mock = stub.getMock();
+ * CustomPermissionHelper cph = new CustomPermissionHelper();
+ * cph.hasCustomPermission('MyCustomPermission');
+ * cph.validateCustomPermission('MyCustomPermission');
+ * ```
  */
 @IsTest
 public with sharing class CustomPermissionHelperStub implements System.StubProvider {

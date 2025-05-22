@@ -10,7 +10,6 @@
  * @since 0.1.0, March 2025
  * @group Custom Permission Helper
  * @example
- * Eksempel på bruk:
  * ```
  * Set<String> myCustomPermissionsSet = new CustomPermissionHelper().setCustomPermissionMaps().getAssignedCustomPermissions();
  * ```
