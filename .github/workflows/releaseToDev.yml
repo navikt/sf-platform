@@ -21,8 +21,8 @@ on:
         description: "Log level"
         required: false
         type: choice
+        default: "INFO"
         options:
-          - " "
           - "TRACE"
           - "DEBUG"
           - "INFO"
@@ -64,5 +64,5 @@ jobs:
           release_tag: ${{ github.event.inputs.release_tag }}
           target_org_alias: "dev"
           devhub_alias: "devhub"
-          releaseNamePrefix: "sf"
+          releaseNamePrefix: ${{ vars.RELEASE_NAME_PREFIX }}
           auth_token: ${{ secrets.GITHUB_TOKEN }}
