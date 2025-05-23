@@ -30,7 +30,7 @@ jobs:
           alias: "prod"
 
       - name: Release to Production
-        uses: navikt/sf-gha-release@ef432846d08e6685a76c21c388b48652445ee0a7
+        uses: navikt/sf-gha-release@a97c935220209a3957923eb261ebb14e0660979a
         with:
           release_tag: ${{ github.event.inputs.release_tag }}
           target_org_alias: "prod"
