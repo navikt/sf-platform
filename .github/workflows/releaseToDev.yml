@@ -59,7 +59,7 @@ jobs:
           alias: "dev"
 
       - name: Release to Dev
-        uses: navikt/sf-gha-release@a4a6e4ac0e9dc21e8705467748d36108cfea4c70
+        uses: navikt/sf-gha-release@df95e80b483931aeacd5ed61291da46fdab994f4
         with:
           release_tag: ${{ github.event.inputs.release_tag }}
           target_org_alias: "dev"
