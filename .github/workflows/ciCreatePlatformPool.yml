@@ -110,6 +110,7 @@ jobs:
             group_by(.tag, .status)[] |
             "scratch_org_status{instance=\"devhub\",tag=\"\(.[0].tag)\",status=\"\(.[0].status)\"} \(length)"')
           echo "got some stats: $msg"
+          sig=$(printf %s "$msg" | openssl dgst -sha256 -sign "$keyfile" -out - | base64 -w0)
           jq --compact-output --null-input \
             --arg msg "$msg" \
             --arg runner sf-platform \
