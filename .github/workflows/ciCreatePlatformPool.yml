@@ -79,6 +79,27 @@ jobs:
             echo "::warning title=To many active Scratch Orgs::Max active scratch orgs: $maxActiveScratchOrgs. Remaining scratch orgs: $remainingActiveScratchOrgs. Threshold: ${POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT}."
             echo "canReplenishPool=false" >> "$GITHUB_OUTPUT"
           fi
+
+  pushMetrics:
+    runs-on: ubuntu-latest
+    container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
+    timeout-minutes: 720 #Set to Maximum Time out
+    permissions:
+      contents: read
+      packages: read
+    env:
+      METRICSKEY: ${{ secrets.METRICS_KEYS }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ inputs.gitRef }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: "Authenticate Dev Hub"
+        uses: navikt/sf-gha-authenticateOrg@da2f995ee865e05111574719abfc5ba12b459f0c
+        with:
+          auth-url: ${{ secrets.SF_DEVHUB_URL }}
+          alias: devhub
       - name: Push metrics
         id: pushMetrics
         run: |
@@ -94,11 +115,9 @@ jobs:
             --arg runner utah \
             --arg sig "$sig" \
             '{"runner":$runner,"metrics":$msg,"signature":$sig}' |
-            curl -D- -H 'Content-Type: application/json' --data-binary @- \
-              https://sf-github-metrics.ekstern.dev.nav.no/measures/job/sfplatform
+            tee >(curl -D- -H 'Content-Type: application/json' --data-binary @- \
+              https://sf-github-metrics.ekstern.dev.nav.no/measures/job/sfplatform)
         env:
-          POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT: ${{ vars.POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT }}
-          POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT: ${{ vars.POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT }}
           METRICSKEY: ${{ secrets.METRICS_KEYS }}
 
   prepareMatrix:
