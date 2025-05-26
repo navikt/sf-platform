@@ -148,7 +148,7 @@ jobs:
           pooltag=$(jq --raw-output '.tag' ${{ matrix.pool.poolConfigPath }})
           echo "POOL_TAG=$pooltag" >> $GITHUB_ENV
 
-      - name: Print Vaules
+      - name: Print Values
         run: |
           echo Pool Tag: "$POOL_TAG"
           echo Pool Config Path: ${{ matrix.pool.poolConfigPath }}
