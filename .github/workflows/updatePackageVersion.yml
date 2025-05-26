@@ -54,3 +54,10 @@ jobs:
           git add sfdx-project.json
           git commit -m "Update package version to $VERSION_NUMBER for $PACKAGE_NAME"
           git push origin $REF_NAME
+
+      - name: Debug commit signature
+        if: failure() # Run only if previous steps fail
+        run: |
+          git log --show-signature -1
+          echo "Git config:"
+          git config --global --list
