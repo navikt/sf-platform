@@ -6,6 +6,18 @@ on:
         description: "Release tag"
         required: false
         default: ""
+      loglevel:
+        description: "Log level"
+        required: false
+        type: choice
+        default: "INFO"
+        options:
+          - "TRACE"
+          - "DEBUG"
+          - "INFO"
+          - "WARN"
+          - "ERROR"
+          - "FATAL"
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
 jobs:
