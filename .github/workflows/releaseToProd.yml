@@ -16,6 +16,8 @@ jobs:
     permissions:
       contents: read
       packages: read
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Authenticate Node
         uses: actions/setup-node@v4
