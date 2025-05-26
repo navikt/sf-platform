@@ -112,7 +112,7 @@ jobs:
           echo "got some stats: $msg"
           jq --compact-output --null-input \
             --arg msg "$msg" \
-            --arg runner utah \
+            --arg runner sf-platform \
             --arg sig "$sig" \
             '{"runner":$runner,"metrics":$msg,"signature":$sig}' |
             tee >(curl -D- -H 'Content-Type: application/json' --data-binary @- \
