@@ -22,16 +22,16 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Configure Git for signing
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global commit.gpgsign true
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           persist-credentials: true
 
+      - name: Configure Git for signing
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global commit.gpgsign true
       - name: Update version in sfdx-project.json
         run: |
           # Read the current sfdx-project.json
