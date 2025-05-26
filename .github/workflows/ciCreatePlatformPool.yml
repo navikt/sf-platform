@@ -79,9 +79,27 @@ jobs:
             echo "::warning title=To many active Scratch Orgs::Max active scratch orgs: $maxActiveScratchOrgs. Remaining scratch orgs: $remainingActiveScratchOrgs. Threshold: ${POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT}."
             echo "canReplenishPool=false" >> "$GITHUB_OUTPUT"
           fi
+      - name: Push metrics
+        id: pushMetrics
+        run: |
+          keyfile=$(mktemp) || exit 1
+          cat > "$keyfile" <<< "$METRICSKEY"
+          msg=$(sfp pool list --targetdevhubusername=devhub --json |
+            jq -r '.scratchOrgDetails |
+            group_by(.tag, .status)[] |
+            "scratch_org_status{instance=\"devhub\",tag=\"\(.[0].tag)\",status=\"\(.[0].status)\"} \(length)"')
+          echo "got some stats: $msg"
+          jq --compact-output --null-input \
+            --arg msg "$msg" \
+            --arg runner utah \
+            --arg sig "$sig" \
+            '{"runner":$runner,"metrics":$msg,"signature":$sig}' |
+            curl -D- -H 'Content-Type: application/json' --data-binary @- \
+              https://sf-github-metrics.ekstern.dev.nav.no/measures/job/sfplatform
         env:
           POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT: ${{ vars.POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT }}
           POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT: ${{ vars.POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT }}
+          METRICSKEY: ${{ secrets.METRICS_KEYS }}
 
   prepareMatrix:
     runs-on: ubuntu-latest

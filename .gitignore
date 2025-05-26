@@ -49,3 +49,9 @@ $RECYCLE.BIN/
 mdapi/
 /.idea/
 .pmdCache
+
+# misc
+.*.sw?
+*.vim
+TAGS
+tags
