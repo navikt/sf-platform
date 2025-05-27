@@ -9,7 +9,7 @@
     {
       "path": "src/platform-data-model",
       "package": "platform-data-model",
-      "versionNumber": "0.1.0.NEXT",
+      "versionNumber": "1.2.3.4",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": []
     },
@@ -35,7 +35,7 @@
       "dependencies": [
         {
           "package": "platform-data-model",
-          "versionNumber": "0.1.0.LATEST"
+          "versionNumber": "1.2.3.4"
         },
         {
           "package": "custom-metadata-dao",
