@@ -27,6 +27,10 @@ jobs:
         with:
           persist-credentials: true
 
+      - name: Debug GITHUB_TOKEN
+        run: |
+          echo "GITHUB_TOKEN is set: ${{ secrets.GITHUB_TOKEN != '' }}"
+
       - name: Configure Git for signing
         run: |
           git config --global user.name "github-actions[bot]"
@@ -49,11 +53,17 @@ jobs:
             "$input_file" > tmp.json && mv tmp.json "$input_file"
 
       # Create a signed commit
-      - name: Create signed commit
-        run: |
-          git add sfdx-project.json
-          git commit -m "Update package version to $VERSION_NUMBER for $PACKAGE_NAME"
-          git push origin $REF_NAME
+      # - name: Create signed commit
+      #   run: |
+      #     git add sfdx-project.json
+      #     git commit -m "Update package version to $VERSION_NUMBER for $PACKAGE_NAME"
+      #     git push origin $REF_NAME
+
+      - uses: navikt/sf-platform/.github/actions/commitFiles@main
+        with:
+          files: sfdx-project.json
+          commitMessage: "Update package version to $VERSION_NUMBER for $PACKAGE_NAME"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Debug commit signature
         if: failure() # Run only if previous steps fail
