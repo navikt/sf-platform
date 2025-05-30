@@ -105,6 +105,7 @@ jobs:
         run: |
           keyfile=$(mktemp) || exit 1
           cat > "$keyfile" <<< "$METRICSKEY"
+          wc "$keyfile"
           msg=$(sfp pool list --targetdevhubusername=devhub --json |
             jq -r '.scratchOrgDetails |
             group_by(.tag, .status)[] |
