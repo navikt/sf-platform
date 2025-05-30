@@ -16,6 +16,8 @@ on:
         required: true
         type: boolean
     secrets:
+      METRICS_KEYS:
+        required: true
       SF_DEVHUB_URL:
         required: true
 
@@ -87,8 +89,6 @@ jobs:
     permissions:
       contents: read
       packages: read
-    env:
-      METRICSKEY: ${{ secrets.METRICS_KEYS }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -103,6 +103,7 @@ jobs:
       - name: Push metrics
         id: pushMetrics
         run: |
+          echo "METRICSKEY len: ${#METRICSKEY}"
           keyfile=$(mktemp) || exit 1
           cat > "$keyfile" <<< "$METRICSKEY"
           msg=$(sfp pool list --targetdevhubusername=devhub --json |
