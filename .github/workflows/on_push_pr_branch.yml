@@ -40,7 +40,7 @@ jobs:
           persist-credentials: false
 
       # Check for changes in the src directory excluding .md files
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@4b2f5e4eda528319b65a8be572a3dfef0b254fbf
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@b93a12cb04037762a2c6b2ae2a40ad9e3d00aec2
         id: checkChanges
 
   # Validate changes
@@ -181,7 +181,7 @@ jobs:
       # The logs are uploaded with the name "build-logs"
       - name: Upload artifacts and logs
         if: always()
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@4b2f5e4eda528319b65a8be572a3dfef0b254fbf
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@b93a12cb04037762a2c6b2ae2a40ad9e3d00aec2
         with:
           artifactName: "build-artifacts"
           uploadArtifacts: true
