@@ -196,6 +196,7 @@ jobs:
 
       - name: "Create Pool"
         run: |
+          export SFPOWERSCRIPTS_STATSD=true
           sfp pool prepare --poolconfig "${{ matrix.pool.poolConfigPath }}" --targetdevhubusername devhub
           ls -la .sfpowerscripts/logs/
         env:
