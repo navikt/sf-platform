@@ -197,6 +197,7 @@ jobs:
       - name: "Create Pool"
         run: |
           sfp pool prepare --poolconfig "${{ matrix.pool.poolConfigPath }}" --targetdevhubusername devhub
+          ls -la .sfpowerscripts/logs/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
