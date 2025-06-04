@@ -197,6 +197,8 @@ jobs:
       - name: "Create Pool"
         run: |
           export SFPOWERSCRIPTS_STATSD=true
+          echo "statsd: $SFPOWERSCRIPTS_STATSD"
+          bash -c 'echo "statsd: $SFPOWERSCRIPTS_STATSD"'
           sfp pool prepare --poolconfig "${{ matrix.pool.poolConfigPath }}" --targetdevhubusername devhub
           ls -la .sfpowerscripts/logs/
         env:
