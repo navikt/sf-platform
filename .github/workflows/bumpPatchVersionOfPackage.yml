@@ -78,9 +78,9 @@ jobs:
             IFS='.' read -r major minor patch build <<< "$version_number"
 
             patch=$((patch + 1))
-            
+
             version_number="$major.$minor.$patch"
-            
+
             if [ -z "$build" ]; then
               version_number_next="$version_number"
               dependency_version_number="$version_number"
@@ -91,7 +91,7 @@ jobs:
 
             # Update versionNumber for the specified package
             jq --arg pkg "$PACKAGE_NAME" --arg ver "$version_number_next" --arg dep_ver "$dependency_version_number" \
-              '(.packageDirectories[] | select(.package == $pkg) | .versionNumber) |= $ver | 
+              '(.packageDirectories[] | select(.package == $pkg) | .versionNumber) |= $ver |
               (.packageDirectories[].dependencies?[]? | select(.package == $pkg) | .versionNumber) |= $dep_ver' \
               "$INPUT_FILE" > tmp.json && mv tmp.json "$INPUT_FILE"
             echo "Updated versionNumber for package $PACKAGE_NAME to $version_number_next in $INPUT_FILE"
