@@ -7,6 +7,7 @@ on:
 jobs:
   update_version:
     runs-on: ubuntu-latest
+    container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION || 'latest' }}
     permissions:
       contents: write
     steps:
@@ -29,6 +30,7 @@ jobs:
         run: |
           sfp impact package --basebranch main
           impacted_packages=$(jq -r 'join(",")' impacted-package.json)
+          echo "impacted_packages=$impacted_packages"
           echo "impacted_packages=$impacted_packages" >> "$GITHUB_OUTPUT"
 
       - uses: navikt/sf-gha-bump-patch-version@main
