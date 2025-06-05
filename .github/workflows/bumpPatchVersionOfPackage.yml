@@ -1,0 +1,110 @@
+name: Bump Patch Version of Packages
+description: Bump the patch version of specified packages in sfdx-project.json and commit the changes.
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_names:
+        description: "Names of the packages to update"
+        required: true
+        default: ""
+
+jobs:
+  update_version:
+    runs-on: ubuntu-latest
+    env:
+      PACKAGE_NAMES: ${{ github.event.inputs.package_names }}
+      REF_NAME: ${{ github.ref_name }}
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Debug GITHUB_TOKEN
+        run: |
+          echo "GITHUB_TOKEN is set: ${{ secrets.GITHUB_TOKEN != '' }}"
+
+      - name: Configure Git for signing
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Update version in sfdx-project.json
+        run: |
+          # Read the current sfdx-project.json
+          INPUT_FILE="sfdx-project.json"
+
+          NEXT="NEXT"
+          LATEST="LATEST"
+
+          # Validate inputs
+          if [ -z "$PACKAGE_NAMES" ]; then
+            echo "::error::Package names are required"
+            exit 1
+          fi
+
+          # Split the package names into an array
+          IFS=',' read -ra PACKAGE_NAMES_ARRAY <<< "$PACKAGE_NAMES"
+          # Check if the package names are valid
+          if [ ${#PACKAGE_NAMES_ARRAY[@]} -eq 0 ]; then
+            echo "::error::No valid package names provided"
+            exit 1
+          fi
+
+          # Check if the input file exists
+          if [ ! -f "$INPUT_FILE" ]; then
+            echo "::error::Input file $INPUT_FILE does not exist"
+            exit 1
+          fi
+
+          # Check if jq is installed
+          if ! command -v jq &> /dev/null; then
+            echo "::error::jq is not installed. Please install jq to run this action."
+            exit 1
+          fi
+
+          # Loop through each package name and update the version
+          for PACKAGE_NAME in "${PACKAGE_NAMES_ARRAY[@]}"; do
+            # Check if the package exists in the sfdx-project.json
+            if ! jq -e --arg pkg "$PACKAGE_NAME" '.packageDirectories[] | select(.package == $pkg)' "$INPUT_FILE" > /dev/null; then
+              echo "::error::Package $PACKAGE_NAME not found in $INPUT_FILE"
+              continue;
+            fi
+
+            version_number=$(jq -r --arg pkg "$PACKAGE_NAME" '(.packageDirectories[] | select(.package == $pkg) | .versionNumber)' "$INPUT_FILE")
+
+            IFS='.' read -r major minor patch build <<< "$version_number"
+
+            patch=$((patch + 1))
+            
+            version_number="$major.$minor.$patch"
+            
+            if [ -z "$build" ]; then
+              version_number_next="$version_number"
+              dependency_version_number="$version_number"
+            else
+              version_number_next="$version_number.$NEXT"
+              dependency_version_number="$version_number.$LATEST"
+            fi
+
+            # Update versionNumber for the specified package
+            jq --arg pkg "$PACKAGE_NAME" --arg ver "$version_number_next" --arg dep_ver "$dependency_version_number" \
+              '(.packageDirectories[] | select(.package == $pkg) | .versionNumber) |= $ver | 
+              (.packageDirectories[].dependencies?[]? | select(.package == $pkg) | .versionNumber) |= $dep_ver' \
+              "$INPUT_FILE" > tmp.json && mv tmp.json "$INPUT_FILE"
+            echo "Updated versionNumber for package $PACKAGE_NAME to $version_number_next in $INPUT_FILE"
+          done
+      - uses: navikt/sf-platform/.github/actions/commitFiles@main
+        with:
+          files: sfdx-project.json
+          commitMessage: "Update package version to $VERSION_NUMBER for $PACKAGE_NAME"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Debug commit signature
+        if: failure() # Run only if previous steps fail
+        run: |
+          git log --show-signature -1
+          echo "Git config:"
+          git config --global --list¨
