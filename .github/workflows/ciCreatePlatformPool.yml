@@ -208,6 +208,8 @@ jobs:
             [
                 .[] | select(.value != null)
             ] |
+                # just keep the last value
+                reverse | unique_by(.metric, .tags) |
                 group_by(.type)[][] |
                 (
                     if .type == "count" then "counter"
