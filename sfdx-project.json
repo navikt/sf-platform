@@ -9,7 +9,7 @@
     {
       "path": "src/platform-data-model",
       "package": "platform-data-model",
-      "versionNumber": "0.1.0.NEXT",
+      "versionNumber": "0.1.1.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": []
     },
