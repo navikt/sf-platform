@@ -1,5 +1,4 @@
 name: Bump Patch Version of Packages
-description: Bump the patch version of specified packages in sfdx-project.json and commit the changes.
 
 on:
   workflow_dispatch:
@@ -29,9 +28,9 @@ jobs:
         id: get_modified_packages
         run: |
           sfp impact package --basebranch main
-          impacted_packages=$(jq -r 'join(",")' impacted-package.json)
-          echo "impacted_packages=$impacted_packages"
-          echo "impacted_packages=$impacted_packages" >> "$GITHUB_OUTPUT"
+          packages=$(jq -r 'join(",")' impacted-package.json)
+          echo "impacted_packages=$packages"
+          echo "impacted_packages=$packages" >> "$GITHUB_OUTPUT"
 
       - uses: navikt/sf-gha-bump-patch-version@main
         if: steps.get_modified_packages.outputs.impacted_packages != ''
@@ -46,8 +45,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Debug commit signature
-        if: failure() # Run only if previous steps fail
+        if: steps.get_modified_packages.outputs.impacted_packages != '' && failure() # Run only if previous steps fail
         run: |
           git log --show-signature -1
           echo "Git config:"
-          git config --global --list¨
+          git config --global --list
