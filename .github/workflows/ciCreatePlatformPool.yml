@@ -221,7 +221,7 @@ jobs:
                 # only allow alpha and _ in metrics name
                 (.metric | gsub("[^a-z]"; "_")) as $metric |
                 # transform tags into prometheus
-                (.tags | to_entries | map(.key + "=\"" + .value + "\"") | join(",")) as $tags |
+                (.tags // {} | to_entries | map(.key + "=\"" + .value + "\"") | join(",")) as $tags |
                 # put it all together. one line with description, one line with metric.
                 "# TYPE \($metric) \($type)\n\($metric){\($tags)} \(.value)"
             ' .sfpowerscripts/logs/metrics.log | awk '/^# TYPE / && a[$3]++ {next}; 1')
