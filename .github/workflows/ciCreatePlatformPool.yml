@@ -194,7 +194,7 @@ jobs:
           deleteJobType: ${{ matrix.pool.deleteJobType }}
           isCiPool: ${{ matrix.pool.isCiPool }}
 
-      - name: "Create Pool"
+      - name: "Create Pool, push metrics"
         run: |
           export SFPOWERSCRIPTS_STATSD=true
           echo "statsd: $SFPOWERSCRIPTS_STATSD"
@@ -202,6 +202,8 @@ jobs:
           sfp pool prepare --poolconfig "${{ matrix.pool.poolConfigPath }}" --targetdevhubusername devhub
           if [[ -f .sfpowerscripts/logs/metrics.log ]]; then
             # send some stats whilst we're at it
+            echo Metrics file found.
+            nl .sfpowerscripts/logs/metrics.log
             metrics=$(jq --slurp --raw-output '
             [
                 .[] | select(.value != null)
@@ -236,6 +238,7 @@ jobs:
                 https://sf-github-metrics.ekstern.dev.nav.no/measures/job/sfplatform)
           else
             echo No metrics file this time.
+            ls -laR .sfpowerscripts
           fi
         env:
           METRICSKEY: ${{ secrets.METRICS_KEYS }}
