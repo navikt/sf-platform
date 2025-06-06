@@ -124,11 +124,6 @@ jobs:
           fi
           echo "::endgroup::"
 
-      # - name: Promote Artifacts
-      #   if: steps.build.outputs.artifactsFound == 'true'
-      #   run: |
-      #     sfp artifacts promote --targetdevhubusername devhub --loglevel="${SFP_LOG_LEVEL}"
-
       - name: Commit changes
         uses: navikt/sf-platform/.github/actions/commitFiles@70d64ece7f145c50a1d6de12f6089b12c28f8e36
         if: steps.build.outputs.artifactsFound == 'true'
