@@ -19,8 +19,9 @@ public with sharing class FeatureToggleInvokable {
      * @since 0.1.0, April 2025 - Moved from FeatureToggleBase
      */
     @InvocableMethod(
-        label='Enable Feature'
-        description='Enables a feature for the current user.'
+        label='Is Feature Enabled'
+        description='Checks if a feature is enabled for the current user.'
+        category='Platform Utility'
     )
     public static List<FeatureToogleResponse> isFeatureEnabledInvokable(
         List<FeatureToogleRequest> requests
