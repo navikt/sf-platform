@@ -15,10 +15,6 @@ jobs:
         with:
           persist-credentials: true
 
-      - name: Debug GITHUB_TOKEN
-        run: |
-          echo "GITHUB_TOKEN is set: ${{ secrets.GITHUB_TOKEN != '' }}"
-
       - name: Configure Git for signing
         run: |
           git config --global user.name "github-actions[bot]"
@@ -29,7 +25,6 @@ jobs:
         run: |
           sfp impact package --basebranch main
           packages=$(jq -r 'join(",")' impacted-package.json)
-          echo "impacted_packages=$packages"
           echo "impacted_packages=$packages" >> "$GITHUB_OUTPUT"
 
       - uses: navikt/sf-gha-bump-patch-version@main
@@ -43,10 +38,3 @@ jobs:
           files: sfdx-project.json
           commitMessage: "Update package version to $VERSION_NUMBER for $PACKAGE_NAME"
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Debug commit signature
-        if: steps.get_modified_packages.outputs.impacted_packages != '' && failure() # Run only if previous steps fail
-        run: |
-          git log --show-signature -1
-          echo "Git config:"
-          git config --global --list
