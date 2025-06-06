@@ -82,7 +82,7 @@ jobs:
             echo "canReplenishPool=false" >> "$GITHUB_OUTPUT"
           fi
 
-  pushMetrics:
+  pushPoolListMetrics:
     runs-on: ubuntu-latest
     container: ghcr.io/flxbl-io/sfp:${{ vars.SFP_CONTAINER_VERSION }}
     timeout-minutes: 720 #Set to Maximum Time out
@@ -100,8 +100,8 @@ jobs:
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: devhub
-      - name: Push metrics
-        id: pushMetrics
+      - name: Push pool list metrics
+        id: pushPoolListMetrics
         run: |
           echo "METRICSKEY len: ${#METRICSKEY}"
           keyfile=$(mktemp) || exit 1
