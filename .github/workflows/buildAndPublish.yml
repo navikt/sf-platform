@@ -83,6 +83,19 @@ jobs:
           alias: "devhub"
           setDefaultDevhubUsername: "true"
 
+      - name: Get modified package names
+        id: get_modified_packages
+        run: |
+          sfp impact package --basebranch main
+          impacted_packages=$(jq -r 'join(",")' impacted-package.json)
+          echo "impacted_packages=$impacted_packages" >> "$GITHUB_OUTPUT"
+
+      - name: Bump Patch version
+        if: steps.get_modified_packages.outputs.impacted_packages != ''
+        uses: navikt/sf-gha-bump-patch-version@2ff3d7e48182b58a3f464562f2f342a9fd271b54
+        with:
+          package_names: ${{ steps.get_modified_packages.outputs.impacted_packages }}
+
       - name: Build
         id: build
         run: |
@@ -115,6 +128,14 @@ jobs:
       #   if: steps.build.outputs.artifactsFound == 'true'
       #   run: |
       #     sfp artifacts promote --targetdevhubusername devhub --loglevel="${SFP_LOG_LEVEL}"
+
+      - name: Commit changes
+        uses: navikt/sf-platform/.github/actions/commitFiles@70d64ece7f145c50a1d6de12f6089b12c28f8e36
+        if: steps.build.outputs.artifactsFound == 'true'
+        with:
+          files: sfdx-project.json
+          commitMessage: "Update package versions for impacted packages"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish Artifacts
         if: steps.build.outputs.artifactsFound == 'true'
