@@ -9,6 +9,8 @@ on:
         description: "Whether new artifacts were generated during the build step."
         value: ${{ jobs.buildAndPublish.outputs.artifactsFound || false}}
     secrets:
+      METRICS_KEYS:
+        required: true
       SF_DEVHUB_URL:
         required: true
         description: "Salesforce DevHub authentication URL"
@@ -149,6 +151,11 @@ jobs:
           || { echo "::error::Publish failed"; exit 1; }
 
           echo "::endgroup::"
+
+      - name: Push logged metrics
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@main
+        with:
+          metricsKey: ${{ secrets.METRICS_KEYS }}
 
       # Upload build artifacts and logs if present
       - name: Upload Artifacts and Logs
