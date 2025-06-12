@@ -40,7 +40,7 @@ jobs:
           persist-credentials: false
 
       # Check for changes in the src directory excluding .md files
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@b93a12cb04037762a2c6b2ae2a40ad9e3d00aec2
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@cdc0fe1ab477cdf5c025f6591f9da7601e3914f1
         id: checkChanges
 
   buildAndPublish:
