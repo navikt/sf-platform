@@ -201,7 +201,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push logged metrics
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@main
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@e8c32a1ccbfe20b367525b7121bfbdde5629def0
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
 

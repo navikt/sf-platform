@@ -39,12 +39,12 @@ jobs:
           impacted_packages=$(jq -r 'join(",")' impacted-package.json)
           echo "impacted_packages=$impacted_packages" >> "$GITHUB_OUTPUT"
 
-      - uses: navikt/sf-gha-bump-patch-version@main
+      - uses: navikt/sf-gha-bump-patch-version@2ff3d7e48182b58a3f464562f2f342a9fd271b54
         if: steps.get_modified_packages.outputs.impacted_packages != ''
         with:
           package_names: ${{ steps.get_modified_packages.outputs.impacted_packages }}
 
-      - uses: navikt/sf-platform/.github/actions/commitFiles@main
+      - uses: navikt/sf-platform/.github/actions/commitFiles@e8c32a1ccbfe20b367525b7121bfbdde5629def0
         if: steps.get_modified_packages.outputs.impacted_packages != ''
         with:
           files: sfdx-project.json
