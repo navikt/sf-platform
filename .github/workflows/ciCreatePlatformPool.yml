@@ -34,7 +34,7 @@ on:
       clearPools:
         description: "If checked, clear unused scratches in the pools"
         required: true
-        default: false
+        default: "false"
 
 jobs:
   checkScratchLimitsThreshold:
