@@ -2,15 +2,15 @@ name: zizmor GitHub Actions Security Analysis
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
     paths:
-      - ".github/actions/**"
-      - ".github/workflows/**"
+      - .github/actions/**
+      - .github/workflows/**
   pull_request:
     branches: ["**"]
     paths:
-      - ".github/actions/**"
-      - ".github/workflows/**"
+      - .github/actions/**
+      - .github/workflows/**
 
 jobs:
   zizmor:

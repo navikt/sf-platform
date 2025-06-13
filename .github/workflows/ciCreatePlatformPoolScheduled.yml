@@ -1,4 +1,4 @@
-name: "SHEDULED Replenish platform pools"
+name: SHEDULED Replenish platform pools
 on:
   # Det er satt opp skedulering for når poolet oppdateres.
   # Det er ikke behov for å kjøre denne jobber 24/7 og det er derfor satt opp noen skeduleringer (husk at tid er UTC)

@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [opened, ready_for_review, reopened]
     paths:
-      - "src/**"
+      - src/**
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
@@ -24,7 +24,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: "Checkout"
+      - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
@@ -43,14 +43,14 @@ jobs:
       contents: read
     env:
       POOLS: ${{ vars.DEFAULT_CI_POOL }}
-      DEVHUB_ALIAS: "devhub"
+      DEVHUB_ALIAS: devhub
       COVERAGE_PERCENT: ${{ vars.CODE_COVERAGE_PERCENTAGE }}
       SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL }}
       EVENT: ${{ github.event_name }}
       GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PULL_REQUEST_ID: ${{ github.event.pull_request.node_id }}
     steps:
-      - name: "Checkout"
+      - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
@@ -60,39 +60,39 @@ jobs:
         uses: navikt/sf-gha-authenticateOrg@da2f995ee865e05111574719abfc5ba12b459f0c
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
-          alias: "devhub"
+          alias: devhub
           setDefaultDevhubUsername: "true"
 
       - name: Validate against CI Pool
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          command=("sfp" "validate" "pool")
-          command+=("--pools" "${POOLS}")
-          command+=("--targetdevhubusername" "${DEVHUB_ALIAS}")
-          command+=("--mode" "${MODE}")
-          command+=("--logsgroupsymbol" "::group::,::endgroup::")
-          command+=("--loglevel" "${SFP_LOG_LEVEL}")
+          command=(sfp validate pool
+            --pools "$POOLS"
+            --targetdevhubusername "$DEVHUB_ALIAS"
+            --mode "$MODE"
+            --logsgroupsymbol "::group::,::endgroup::"
+            --loglevel "$SFP_LOG_LEVEL")
 
-          if [ "${COVERAGE_PERCENT}" ]; then
-            command+=("--coveragepercent" "${COVERAGE_PERCENT}")
+          if [ "$COVERAGE_PERCENT" ]; then
+            command+=(--coveragepercent "$COVERAGE_PERCENT")
           fi
 
-          if [ "${REF}" ]; then
-            command+=( "--ref" "${REF}" )
+          if [ "$REF" ]; then
+            command+=(--ref "$REF" )
           fi
 
-          if [ "${BASE_REF}" ]; then
-            command+=( "--baseRef" "${BASE_REF}" )
+          if [ "$BASE_REF" ]; then
+            command+=(--baseRef "$BASE_REF" )
           fi
 
-          if [ "${DELETE_SCRATCH}" == "true" ]; then
-            command+=("--deletescratchorg")
+          if [ "$DELETE_SCRATCH" == "true" ]; then
+            command+=(--deletescratchorg)
           fi
 
           echo "Executing command: ${command[*]}"
           "${command[@]}"
         env:
-          MODE: "thorough"
+          MODE: thorough
           REF: ${{ github.event.pull_request.head.sha }}
           BASE_REF: ${{ github.event.pull_request.base.sha }}
           DELETE_SCRATCH: "true"
