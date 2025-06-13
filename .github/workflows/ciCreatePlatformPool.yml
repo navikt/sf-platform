@@ -200,14 +200,14 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push logged metrics
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@main
-        with:
-          metricsKey: ${{ secrets.METRICS_KEYS }}
-
       - name: "Delete orphans"
         uses: navikt/sf-gha-deleteScratchPool@1f0986d2312a2969e658946acb496f6dcd7d4032
         with:
           devhub: "devhub"
           deleteJobType: orphans
           isCiPool: ${{ matrix.pool.isCiPool }}
+
+      - name: Push logged metrics
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@b1e3711068f7dda59fc14a8fd44f6cee1b859915
+        with:
+          metricsKey: ${{ secrets.METRICS_KEYS }}
