@@ -1,19 +1,19 @@
 # Workflow: Build and Publish
 # Purpose: Builds Salesforce packages and publishes artifacts.
 # Triggers: Manual (workflow_dispatch) or workflow call.
-name: "Build and Publish"
+name: Build and Publish
 on:
   workflow_call:
     outputs:
       hasNewArtifacts:
-        description: "Whether new artifacts were generated during the build step."
+        description: Whether new artifacts were generated during the build step.
         value: ${{ jobs.buildAndPublish.outputs.artifactsFound || false}}
     secrets:
       METRICS_KEYS:
         required: true
       SF_DEVHUB_URL:
         required: true
-        description: "Salesforce DevHub authentication URL"
+        description: Salesforce DevHub authentication URL
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
@@ -82,7 +82,7 @@ jobs:
         uses: navikt/sf-gha-authenticateOrg@da2f995ee865e05111574719abfc5ba12b459f0c
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
-          alias: "devhub"
+          alias: devhub
           setDefaultDevhubUsername: "true"
 
       - name: Get modified package names
@@ -105,12 +105,12 @@ jobs:
           if sfp build \
             --devhubalias devhub \
             --diffcheck \
-            --buildnumber "${GITHUB_RUN_ID}" \
+            --buildnumber "$GITHUB_RUN_ID" \
             --branch main \
-            --releaseconfig "${PATH_TO_CONFIG_FILE}" \
-            --loglevel "${SFP_LOG_LEVEL}" \
+            --releaseconfig "$PATH_TO_CONFIG_FILE" \
+            --loglevel "$SFP_LOG_LEVEL" \
             2>&1; then
-            
+
             # Check if artifacts were generated
             if [ -d "artifacts" ] && [ -n "$(ls -A artifacts)" ]; then
               echo "Artifacts found"
@@ -131,7 +131,7 @@ jobs:
         if: steps.build.outputs.artifactsFound == 'true'
         with:
           files: sfdx-project.json
-          commitMessage: "Update package versions for impacted packages"
+          commitMessage: Update package versions for impacted packages
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish Artifacts
@@ -142,9 +142,9 @@ jobs:
           sfp publish \
             --artifactdir artifacts \
             --npm \
-            --scope "@${SCOPE}" \
+            --scope "@$SCOPE" \
             --devhubalias devhub \
-            --loglevel "${SFP_LOG_LEVEL}" \
+            --loglevel "$SFP_LOG_LEVEL" \
             --gittag \
             --pushgittag \
             --logsgroupsymbol ::group::,::endgroup:: \
@@ -162,7 +162,7 @@ jobs:
         if: steps.build.outputs.artifactsFound == 'true'
         uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@2587bfd49c2659fb02009a3329618e7069915f5d
         with:
-          artifactName: "build-artifacts"
+          artifactName: build-artifacts
           uploadArtifacts: true
-          logName: "build-logs"
+          logName: build-logs
           publishLogs: true

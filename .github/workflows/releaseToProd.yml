@@ -3,21 +3,21 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: "Release tag"
+        description: Release tag
         required: false
         default: ""
       loglevel:
-        description: "Log level"
+        description: Log level
         required: false
         type: choice
-        default: "INFO"
+        default: INFO
         options:
-          - "TRACE"
-          - "DEBUG"
-          - "INFO"
-          - "WARN"
-          - "ERROR"
-          - "FATAL"
+          - TRACE
+          - DEBUG
+          - INFO
+          - WARN
+          - ERROR
+          - FATAL
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
 jobs:
@@ -34,22 +34,22 @@ jobs:
       - name: Authenticate Node
         uses: actions/setup-node@v4
         with:
-          registry-url: "https://npm.pkg.github.com"
+          registry-url: https://npm.pkg.github.com
 
       # Sets up Salesforce CLI authentication for the DevHub
       - name: Authenticate Production
         uses: navikt/sf-gha-authenticateOrg@da2f995ee865e05111574719abfc5ba12b459f0c
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
-          alias: "prod"
+          alias: prod
 
       - name: Release to Production
         uses: navikt/sf-gha-release@a97c935220209a3957923eb261ebb14e0660979a
         with:
           release_tag: ${{ github.event.inputs.release_tag }}
           loglevel: ${{ github.event.inputs.loglevel }}
-          target_org_alias: "prod"
-          devhub_alias: "prod"
+          target_org_alias: prod
+          devhub_alias: prod
           releaseNamePrefix: ${{ vars.RELEASE_NAME_PREFIX }}
           auth_token: ${{ secrets.GITHUB_TOKEN }}
 
