@@ -7,6 +7,8 @@ on:
         required: false
         type: string
     secrets:
+      METRICS_KEYS:
+        required: true
       SF_DEVHUB_URL:
         required: true
       SF_DEV_URL:
@@ -69,3 +71,8 @@ jobs:
           devhub_alias: "devhub"
           releaseNamePrefix: ${{ vars.RELEASE_NAME_PREFIX }}
           auth_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push logged metrics
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@b1e3711068f7dda59fc14a8fd44f6cee1b859915
+        with:
+          metricsKey: ${{ secrets.METRICS_KEYS }}

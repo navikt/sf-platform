@@ -16,6 +16,7 @@ jobs:
       security-events: write
     secrets:
       SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
+      METRICS_KEYS: ${{ secrets.METRICS_KEYS }}
   create_release:
     needs: build
     if: needs.build.outputs.hasNewArtifacts == 'true'
@@ -24,6 +25,7 @@ jobs:
       contents: write
       packages: read
     secrets:
+      METRICS_KEYS: ${{ secrets.METRICS_KEYS }}
       SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
   release_to_dev:
     needs: create_release
@@ -33,5 +35,6 @@ jobs:
       contents: read
       packages: read
     secrets:
+      METRICS_KEYS: ${{ secrets.METRICS_KEYS }}
       SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
       SF_DEV_URL: ${{ secrets.SF_DEV_URL }}

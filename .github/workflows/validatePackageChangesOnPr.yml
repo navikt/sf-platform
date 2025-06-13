@@ -104,6 +104,11 @@ jobs:
             sf org delete scratch --no-prompt
           fi
 
+      - name: Push logged metrics
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@b1e3711068f7dda59fc14a8fd44f6cee1b859915
+        with:
+          metricsKey: ${{ secrets.METRICS_KEYS }}
+
   setPullRequestToDraft:
     name: Set pull request to draft
     needs: validateChanges
