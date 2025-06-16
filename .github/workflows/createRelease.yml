@@ -78,6 +78,7 @@ jobs:
           mkdir -p "releases/$RELEASE_NAME"
 
           echo "::group::Generating release definition"
+          export SFPOWERSCRIPTS_NOCOLOR=true
           releaseDefinitionOutput=$(sfp releasedefinition generate \
             --gitref "$GIT_REF" \
             --configfile "$PATH_TO_CONFIG_FILE" \
@@ -87,11 +88,9 @@ jobs:
             --nopush)
           echo "$releaseDefinitionOutput"
 
-          # Extract YAML content (lines starting with a space) and remove ANSI color codes
-          echo "$releaseDefinitionOutput" |
-            sed 's/\x1b[[0-9;]*m//g' |
-            awk '/^release:/,/^$/' |
-            sed '/^$/d' > "releases/$RELEASE_NAME/$RELEASE_NAME.yml"
+          # Extract YAML content (second paragraph)
+          awk -v RS='\n\n' 'NR==2' <<< "$releaseDefinitionOutput" \
+            > "releases/$RELEASE_NAME/$RELEASE_NAME.yml"
 
           # Verify the file was created and has content
           if [ -s "releases/$RELEASE_NAME/$RELEASE_NAME.yml" ]; then
