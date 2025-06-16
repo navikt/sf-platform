@@ -1,18 +1,18 @@
-name: "Replenish platform pools"
+name: Replenish platform pools
 on:
   workflow_call:
     inputs:
       gitRef:
-        description: "Commit Id from where the pools should be created"
+        description: Commit Id from where the pools should be created
         required: false
-        default: "main"
+        default: main
         type: string
       poolMatrixDefPath:
-        description: "Path to the file describing the pools to create"
+        description: Path to the file describing the pools to create
         required: true
         type: string
       clearPools:
-        description: "If checked, clear unused scratches in the pools"
+        description: If checked, clear unused scratches in the pools
         required: true
         type: boolean
     secrets:
@@ -24,21 +24,21 @@ on:
   workflow_dispatch:
     inputs:
       gitRef:
-        description: "Commit Id from where the pools should be created"
+        description: Commit Id from where the pools should be created
         required: false
-        default: "main"
+        default: main
       poolMatrixDefPath:
-        description: "Path to the file describing the pools to create"
+        description: Path to the file describing the pools to create
         required: true
-        default: "config/poolMatrixdef.json"
+        default: config/poolMatrixdef.json
       clearPools:
-        description: "If checked, clear unused scratches in the pools"
+        description: If checked, clear unused scratches in the pools
         required: true
         default: "false"
 
 jobs:
   checkScratchLimitsThreshold:
-    name: "Check Scratch limits"
+    name: Check Scratch limits
     runs-on: ubuntu-latest
     permissions: {}
     outputs:
@@ -49,13 +49,13 @@ jobs:
         with:
           version: ${{ vars.SF_CLI_VERSION }}
 
-      - name: "Authenticate Dev Hub"
+      - name: Authenticate Dev Hub
         uses: navikt/sf-gha-authenticateOrg@da2f995ee865e05111574719abfc5ba12b459f0c
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: devhub
 
-      - name: "Check scratch org limits"
+      - name: Check scratch org limits
         id: checkLimits
         run: |
           printf 'get org limits...\n' >&2
@@ -71,14 +71,14 @@ jobs:
           echo "canReplenishPool=true" >> "$GITHUB_OUTPUT"
 
           printf 'Check remaining daily scratch orgs\n' >&2
-          if [ $remainingDailyScratchOrgs -lt ${POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT} ]; then
-            echo "::warning title=To few remaining daily scratch orgs::Max daily scatch orgs: $maxDailyScratchOrgs. Remaining daily scratch orgs: $remainingDailyScratchOrgs. Threshold: ${POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT}."
+          if [ $remainingDailyScratchOrgs -lt $POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT ]; then
+            echo "::warning title=Too few remaining daily scratch orgs::Max daily scatch orgs: $maxDailyScratchOrgs. Remaining daily scratch orgs: $remainingDailyScratchOrgs. Threshold: $POOL_REMAINING_DAILY_SCRATCH_ORG_LIMIT."
             echo "canReplenishPool=false" >> "$GITHUB_OUTPUT"
           fi
 
           printf 'Check remaining active scratch orgs\n' >&2
-          if [ $remainingActiveScratchOrgs -lt ${POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT} ]; then
-            echo "::warning title=To many active Scratch Orgs::Max active scratch orgs: $maxActiveScratchOrgs. Remaining scratch orgs: $remainingActiveScratchOrgs. Threshold: ${POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT}."
+          if [ $remainingActiveScratchOrgs -lt $POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT ]; then
+            echo "::warning title=Too many active Scratch Orgs::Max active scratch orgs: $maxActiveScratchOrgs. Remaining scratch orgs: $remainingActiveScratchOrgs. Threshold: $POOL_REMAINING_ACTIVE_SCRATCH_ORG_LIMIT."
             echo "canReplenishPool=false" >> "$GITHUB_OUTPUT"
           fi
 
@@ -95,7 +95,7 @@ jobs:
           ref: ${{ inputs.gitRef }}
           fetch-depth: 0
           persist-credentials: false
-      - name: "Authenticate Dev Hub"
+      - name: Authenticate Dev Hub
         uses: navikt/sf-gha-authenticateOrg@da2f995ee865e05111574719abfc5ba12b459f0c
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
@@ -136,13 +136,13 @@ jobs:
 
       - id: getMatrix
         run: |
-          content=$(jq --compact-output '.' "${POOL_MATRIX_DEF_PATH}")  
+          content=$(jq --compact-output '.' "$POOL_MATRIX_DEF_PATH")
           echo "matrixJson=$content" >> "$GITHUB_OUTPUT"
         env:
           POOL_MATRIX_DEF_PATH: ${{ inputs.poolMatrixDefPath }}
 
   createPool:
-    name: "Replenish Pool"
+    name: Replenish Pool
     needs: [prepareMatrix, checkScratchLimitsThreshold]
     if: needs.checkScratchLimitsThreshold.outputs.canReplenishPool
     runs-on: ubuntu-latest
@@ -174,36 +174,36 @@ jobs:
           echo Pool Tag: "$POOL_TAG"
           echo Pool Config Path: ${{ matrix.pool.poolConfigPath }}
           echo Pool Delete Job Type: ${{ matrix.pool.deleteJobType }}
-          echo Clear unused scratch orgs: ${CLEAR_POOLS}
+          echo Clear unused scratch orgs: "$CLEAR_POOLS"
         env:
           CLEAR_POOLS: ${{ inputs.clearPools }}
 
-      - name: "Authenticate Dev Hub"
+      - name: Authenticate Dev Hub
         uses: navikt/sf-gha-authenticateOrg@da2f995ee865e05111574719abfc5ba12b459f0c
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: devhub
 
-      - name: "Clear pool"
+      - name: Clear pool
         id: clearPool
         if: ${{ inputs.clearPools }}
         uses: navikt/sf-gha-deleteScratchPool@1f0986d2312a2969e658946acb496f6dcd7d4032
         with:
-          devhub: "devhub"
+          devhub: devhub
           poolTag: ${{ env.POOL_TAG }}
           deleteJobType: ${{ matrix.pool.deleteJobType }}
           isCiPool: ${{ matrix.pool.isCiPool }}
 
-      - name: "Create Pool"
+      - name: Create Pool
         run: |
           sfp pool prepare --poolconfig "${{ matrix.pool.poolConfigPath }}" --targetdevhubusername devhub
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "Delete orphans"
+      - name: Delete orphans
         uses: navikt/sf-gha-deleteScratchPool@1f0986d2312a2969e658946acb496f6dcd7d4032
         with:
-          devhub: "devhub"
+          devhub: devhub
           deleteJobType: orphans
           isCiPool: ${{ matrix.pool.isCiPool }}
 

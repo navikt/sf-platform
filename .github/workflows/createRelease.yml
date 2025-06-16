@@ -1,23 +1,23 @@
-name: "Create Release"
+name: Create Release
 on:
   workflow_call:
     inputs:
       gitRef:
         required: false
         type: string
-        description: "The git reference to create the release from"
+        description: The git reference to create the release from
     secrets:
       METRICS_KEYS:
         required: true
       SF_DEVHUB_URL:
         required: true
-        description: "Salesforce DevHub authentication URL"
+        description: Salesforce DevHub authentication URL
   workflow_dispatch:
     inputs:
       gitRef:
         required: false
         type: string
-        description: "The git reference to create the release from"
+        description: The git reference to create the release from
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
 
@@ -33,37 +33,37 @@ jobs:
       SFP_LOG_LEVEL: ${{ vars.SFP_LOG_LEVEL || 'INFO' }}
       GH_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SCOPE: ${{ github.repository_owner }}
-      PATH_TO_CONFIG_FILE: "config/releaseConfig.yml"
+      PATH_TO_CONFIG_FILE: config/releaseConfig.yml
       RELEASE_NAME_PREFIX: ${{ vars.RELEASE_NAME_PREFIX || 'sf' }}
       RELEASE_NAME: ""
       GIT_REF: ${{ inputs.gitRef || github.sha }}
       BRANCH_NAME: ${{ github.ref_name }}
       WORKITEM_FILTER: ${{ vars.WORKITEM_FILTER || 'PTCRM-[0-9]' }}
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      DEVHUB_ALIAS: "devhub"
+      DEVHUB_ALIAS: devhub
     steps:
       - name: Set Release Name
         id: createReleaseName
         run: |
-          echo "RELEASE_NAME=${RELEASE_NAME_PREFIX}$(date +%s%3N)" >> "$GITHUB_ENV"
+          printf 'RELEASE_NAME=%q%s' "$RELEASE_NAME_PREFIX" "$(date +%s%3N)" >> "$GITHUB_ENV"
 
       - name: Authenticate Node
         uses: actions/setup-node@v4
         with:
-          registry-url: "https://npm.pkg.github.com"
+          registry-url: https://npm.pkg.github.com
 
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0 # Full history for release definition and changelog
           persist-credentials: true
-      # Sets up Salesforce CLI authentication for the DevHub
 
+      # Sets up Salesforce CLI authentication for the DevHub
       - name: Authenticate DevHub
         uses: navikt/sf-gha-authenticateOrg@da2f995ee865e05111574719abfc5ba12b459f0c
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
-          alias: "${{ env.DEVHUB_ALIAS }}"
+          alias: ${{ env.DEVHUB_ALIAS }}
           setDefaultDevhubUsername: "true"
 
       - name: Generate Release Definition and Changelog
@@ -75,29 +75,29 @@ jobs:
           printf -v bold '\033[1m'
           printf -v reset '\033[0m'
 
-          mkdir -p "releases/${RELEASE_NAME}"
+          mkdir -p "releases/$RELEASE_NAME"
 
           echo "::group::Generating release definition"
           releaseDefinitionOutput=$(sfp releasedefinition generate \
-            --gitref "${GIT_REF}" \
-            --configfile "${PATH_TO_CONFIG_FILE}" \
-            --releasename "${RELEASE_NAME}" \
-            --branchname "${BRANCH_NAME}" \
-            --loglevel "${SFP_LOG_LEVEL}" \
+            --gitref "$GIT_REF" \
+            --configfile "$PATH_TO_CONFIG_FILE" \
+            --releasename "$RELEASE_NAME" \
+            --branchname "$BRANCH_NAME" \
+            --loglevel "$SFP_LOG_LEVEL" \
             --nopush)
           echo "$releaseDefinitionOutput"
 
           # Extract YAML content (lines starting with a space) and remove ANSI color codes
-          echo "$releaseDefinitionOutput" \
-          | sed 's/\x1b[[0-9;]*m//g' \
-          | awk '/^release:/,/^$/' \
-          | sed '/^$/d' > "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml"
+          echo "$releaseDefinitionOutput" |
+            sed 's/\x1b[[0-9;]*m//g' |
+            awk '/^release:/,/^$/' |
+            sed '/^$/d' > "releases/$RELEASE_NAME/$RELEASE_NAME.yml"
 
           # Verify the file was created and has content
-          if [ -s "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml" ]; then
-              echo "Release definition file created at releases/${RELEASE_NAME}/${RELEASE_NAME}.yml"
+          if [ -s "releases/$RELEASE_NAME/$RELEASE_NAME.yml" ]; then
+              echo "Release definition file created at releases/$RELEASE_NAME/$RELEASE_NAME.yml"
               echo "File content:"
-              cat "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml"
+              cat "releases/$RELEASE_NAME/$RELEASE_NAME.yml"
           else
               echo "::error::Failed to create release definition file."
               exit 1
@@ -107,15 +107,15 @@ jobs:
           echo "::group::Generating changelog"
 
           sfp artifacts fetch \
-            --releasedefinition "releases/${RELEASE_NAME}/${RELEASE_NAME}.yml" \
+            --releasedefinition "releases/$RELEASE_NAME/$RELEASE_NAME.yml" \
             --npm \
-            --scope "${SCOPE}" \
-            --loglevel "${SFP_LOG_LEVEL}"
+            --scope "$SCOPE" \
+            --loglevel "$SFP_LOG_LEVEL"
 
           changelogOutput=$(sfp changelog generate \
             --branchname main \
-            --releasename "${RELEASE_NAME}" \
-            --workitemfilter "${WORKITEM_FILTER}" \
+            --releasename "$RELEASE_NAME" \
+            --workitemfilter "$WORKITEM_FILTER" \
             --directory changelog \
             --nopush 2>&1)
           echo "$changelogOutput"
@@ -127,7 +127,7 @@ jobs:
             IFS=',' read -ra file_paths <<< "$paths"
             for file in "${file_paths[@]}"; do
               if [ -f "$file" ]; then
-                cp "$file" "releases/${RELEASE_NAME}/"
+                cp "$file" "releases/$RELEASE_NAME/"
               else
                 echo "::warning::File not found: $file"
               fi
@@ -149,14 +149,14 @@ jobs:
 
           echo "::group::Creating GitHub Release"
 
-          changelog_file="releases/${RELEASE_NAME}/Release-Changelog.md"
+          changelog_file="releases/$RELEASE_NAME/Release-Changelog.md"
 
           # Use the changelog file as the release body if it exists and is not empty, if not just add the release name as the body
           if [ -f "$changelog_file" ] && [ -s "$changelog_file" ]; then
             body=$(jq -R -s '.' < "$changelog_file")
           else
             echo "::warning::Changelog file $changelog_file is missing or empty, using default body"
-            body=$(jq -R -s '.' <<< "Release ${RELEASE_NAME}")
+            body=$(jq -R -s '.' <<< "Release $RELEASE_NAME")
           fi
 
           json_payload=$(jq -n \
@@ -169,7 +169,7 @@ jobs:
           response=$(curl -s -w "\n%{http_code}" \
             -X POST \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: token ${GH_AUTH_TOKEN}" \
+            -H "Authorization: token $GH_AUTH_TOKEN" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -d "$json_payload" \
             https://api.github.com/repos/${{ github.repository }}/releases)
@@ -199,17 +199,17 @@ jobs:
           failure_count=0
           max_retries=2 # Number of times to retry uploading a file
 
-          for file in releases/${RELEASE_NAME}/*; do
+          for file in "releases/$RELEASE_NAME"/*; do
             if [ -f "$file" ]; then
               filename=$(basename "$file")
               echo "${yellow}Uploading $filename${reset}"
-              
+
               # Skip files larger than 10MB
               if [ $(stat -c %s "$file") -gt 10485760 ]; then
                 echo "::warning::File $filename is larger than 10MB, skipping upload"
                 continue;
               fi
-              
+
               attempt=0
               success=false
 
@@ -219,7 +219,7 @@ jobs:
                 upload_response=$(curl -s -w "\n%{http_code}" \
                   -X POST \
                   -H "Accept: application/vnd.github+json" \
-                  -H "Authorization: token ${GH_AUTH_TOKEN}" \
+                  -H "Authorization: token $GH_AUTH_TOKEN" \
                   -H "X-GitHub-Api-Version: 2022-11-28" \
                   -H "Content-Type: application/octet-stream" \
                   --data-binary @"$file" \
