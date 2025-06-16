@@ -42,7 +42,7 @@ jobs:
           persist-credentials: false
 
       # Check for changes in the src directory excluding .md files
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@cdc0fe1ab477cdf5c025f6591f9da7601e3914f1
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@323e0dca12f97267450e9982864d2db1b8d73395
         id: checkChanges
 
   buildAndPublish:
@@ -127,7 +127,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Commit changes
-        uses: navikt/sf-platform/.github/actions/commitFiles@70d64ece7f145c50a1d6de12f6089b12c28f8e36
+        uses: navikt/sf-platform/.github/actions/commitFiles@323e0dca12f97267450e9982864d2db1b8d73395
         if: steps.build.outputs.artifactsFound == 'true'
         with:
           files: sfdx-project.json
@@ -153,14 +153,14 @@ jobs:
           echo "::endgroup::"
 
       - name: Push logged metrics
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@b1e3711068f7dda59fc14a8fd44f6cee1b859915
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@323e0dca12f97267450e9982864d2db1b8d73395
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
 
       # Upload build artifacts and logs if present
       - name: Upload Artifacts and Logs
         if: steps.build.outputs.artifactsFound == 'true'
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@2587bfd49c2659fb02009a3329618e7069915f5d
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@323e0dca12f97267450e9982864d2db1b8d73395
         with:
           artifactName: build-artifacts
           uploadArtifacts: true

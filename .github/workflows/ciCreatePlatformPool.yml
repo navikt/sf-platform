@@ -45,7 +45,7 @@ jobs:
       canReplenishPool: ${{ steps.checkLimits.outputs.canReplenishPool }}
     steps:
       - name: Setup SF CLI
-        uses: navikt/sf-platform/.github/actions/installSfCli@cdc0fe1ab477cdf5c025f6591f9da7601e3914f1
+        uses: navikt/sf-platform/.github/actions/installSfCli@323e0dca12f97267450e9982864d2db1b8d73395
         with:
           version: ${{ vars.SF_CLI_VERSION }}
 
@@ -208,6 +208,6 @@ jobs:
           isCiPool: ${{ matrix.pool.isCiPool }}
 
       - name: Push logged metrics
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@b1e3711068f7dda59fc14a8fd44f6cee1b859915
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@323e0dca12f97267450e9982864d2db1b8d73395
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
