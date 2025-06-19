@@ -66,7 +66,7 @@ jobs:
         uses: navikt/sf-gha-release@a97c935220209a3957923eb261ebb14e0660979a
         with:
           release_tag: ${{ github.event.inputs.release_tag }}
-          loglevel: ${{ github.event.inputs.loglevel }}
+          loglevel: ${{ github.event.inputs.loglevel || vars.SFP_LOG_LEVEL || 'INFO' }}
           target_org_alias: dev
           devhub_alias: devhub
           releaseNamePrefix: ${{ vars.RELEASE_NAME_PREFIX }}
