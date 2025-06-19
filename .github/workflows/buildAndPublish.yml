@@ -153,6 +153,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Push logged metrics
+        if: always() # Always push metrics regardless of build success
         uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@323e0dca12f97267450e9982864d2db1b8d73395
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
