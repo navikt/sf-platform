@@ -105,7 +105,7 @@ jobs:
           fi
 
       - name: Push logged metrics
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@7bc720106cdadde69c31f5d7d8ff1f8d6b790d54
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@master
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
 

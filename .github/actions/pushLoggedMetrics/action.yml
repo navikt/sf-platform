@@ -16,27 +16,32 @@ runs:
           echo Metrics file found.
           nl .sfpowerscripts/logs/metrics.log
           metrics=$(jq --slurp --raw-output '
-          [
-              .[] | select(.value != null)
-          ] |
-              # just keep the last value
-              reverse | unique_by(.metric, .tags) |
-              group_by(.type)[][] |
-              (
-                  if .type == "count" then "counter"
-                  # note the spelling
-                  elif .type == "guage" then "gauge"
-                  # statsd-timers are always in ms. prometheus has no such type, so just
-                  # use a gauge
-                  elif .type == "timers" then "gauge"
-                  # anything else, handle it when the time comes
-                  else "unknown" end) as $type |
-              # only allow alpha and _ in metrics name
-              (.metric | gsub("[^a-z]"; "_")) as $metric |
-              # transform tags into prometheus
-              (.tags // {} | to_entries | map(.key + "=\"" + .value + "\"") | join(",")) as $tags |
-              # put it all together. one line with description, one line with metric.
-              "# TYPE \($metric) \($type)\n\($metric){\($tags)} \(.value)"
+            # just keep the last value
+            reverse | unique_by(.metric, .tags) | reverse | .[] |
+            (
+                if .type == "count" then "counter"
+                # note the spelling
+                elif .type == "guage" then "gauge"
+                # statsd-timers are always in ms. prometheus has no such type, so just
+                # use a gauge
+                elif .type == "timers" then "gauge"
+                # anything else, handle it when the time comes
+                else "unknown" end
+            ) as $type |
+            # assume counters with no value given are 1
+            (
+                if .value == null and $type == "counter" then 1
+                elif $type == "gauge" then .value
+                else null
+                end
+            ) as $value |
+            select($value != null) |
+            # only allow alpha and _ in metrics name
+            (.metric | gsub("[^a-z]"; "_")) as $metric |
+            # transform tags into prometheus
+            (.tags // {} | to_entries | map(.key + "=\"" + .value + "\"") | join(",")) as $tags |
+            # put it all together. one line with description, one line with metric.
+            "# TYPE \($metric) \($type)\n\($metric){\($tags)} \($value)"
           ' .sfpowerscripts/logs/metrics.log | awk '/^# TYPE / && a[$3]++ {next}; 1')
           echo "METRICSKEY len: ${#METRICSKEY}"
           keyfile=$(mktemp) || exit 1
