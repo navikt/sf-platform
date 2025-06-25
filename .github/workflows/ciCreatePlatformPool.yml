@@ -208,6 +208,6 @@ jobs:
           isCiPool: ${{ matrix.pool.isCiPool }}
 
       - name: Push logged metrics
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@master
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@main
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
