@@ -35,11 +35,17 @@ runs:
                 else null
                 end
             ) as $value |
+            # accumulate counters
+            (
+                if $type == "counter" then {"instance":.timestamp}
+                else {}
+                end
+            ) as $instance |
             select($value != null) |
             # only allow alpha and _ in metrics name
             (.metric | gsub("[^a-z]"; "_")) as $metric |
             # transform tags into prometheus
-            (.tags // {} | to_entries | map(.key + "=\"" + .value + "\"") | join(",")) as $tags |
+            ($instance * .tags // {} | to_entries | map(.key + "=\"" + (.value | tostring) + "\"") | join(",")) as $tags |
             # put it all together. one line with description, one line with metric.
             "# TYPE \($metric) \($type)\n\($metric){\($tags)} \($value)"
           ' .sfpowerscripts/logs/metrics.log | awk '/^# TYPE / && a[$3]++ {next}; 1')
@@ -53,7 +59,7 @@ runs:
             --arg sig "$sig" \
             '{"runner":$runner,"metrics":$metrics,"signature":$sig}' |
             tee >(curl -D- -H 'Content-Type: application/json' --data-binary @- \
-              "https://sf-github-metrics.ekstern.dev.nav.no/measures/job/sfplatform/instance/${{github.run_id}}")
+              https://sf-github-metrics.ekstern.dev.nav.no/measures/job/sfplatform)
         else
           echo No metrics file this time.
           ls -laR .sfpowerscripts
