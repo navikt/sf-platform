@@ -37,15 +37,15 @@ runs:
             ) as $value |
             # accumulate counters
             (
-                if $type == "counter" then {"instance":.timestamp}
+                if $type == "counter" then {"acctime":.timestamp}
                 else {}
                 end
-            ) as $instance |
+            ) as $acctime |
             select($value != null) |
             # only allow alpha and _ in metrics name
             (.metric | gsub("[^a-z]"; "_")) as $metric |
             # transform tags into prometheus
-            ($instance * .tags // {} | to_entries | map(.key + "=\"" + (.value | tostring) + "\"") | join(",")) as $tags |
+            ($acctime * .tags // {} | to_entries | map(.key + "=\"" + (.value | tostring) + "\"") | join(",")) as $tags |
             # put it all together. one line with description, one line with metric.
             "# TYPE \($metric) \($type)\n\($metric){\($tags)} \($value)"
           ' .sfpowerscripts/logs/metrics.log | awk '/^# TYPE / && a[$3]++ {next}; 1')
