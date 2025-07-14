@@ -31,7 +31,7 @@ jobs:
         shell: bash
     steps:
       - name: Install SF CLI
-        uses: navikt/sf-platform/.github/actions/installSfCli@7bc720106cdadde69c31f5d7d8ff1f8d6b790d54
+        uses: navikt/sf-platform/.github/actions/installSfCli@b612c5c4a649dc7cf4aeb6d1d6d81933f02cb7b4
         with:
           version: ${{ vars.SF_CLI_VERSION }}
 
@@ -77,7 +77,7 @@ jobs:
 
       - name: Prettier Check
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: navikt/sf-platform/.github/actions/prettierCheck@7bc720106cdadde69c31f5d7d8ff1f8d6b790d54
+        uses: navikt/sf-platform/.github/actions/prettierCheck@b612c5c4a649dc7cf4aeb6d1d6d81933f02cb7b4
         with:
           pathToValidate: ${{ steps.paths.outputs.prettierPathsToValidate }}
 
