@@ -9,41 +9,41 @@
     {
       "path": "src/platform-data-model",
       "package": "platform-data-model",
-      "versionNumber": "0.1.19.NEXT",
+      "versionNumber": "0.1.20.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": []
     },
     {
       "path": "src/platform-utility/custom-metadata-dao",
       "package": "custom-metadata-dao",
-      "versionNumber": "0.1.19.NEXT",
+      "versionNumber": "0.1.20.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": []
     },
     {
       "path": "src/platform-utility/custom-permission-helper",
       "package": "custom-permission-helper",
-      "versionNumber": "0.1.19.NEXT",
+      "versionNumber": "0.1.20.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": []
     },
     {
       "path": "src/frameworks/feature-toggle",
       "package": "feature-toggle",
-      "versionNumber": "0.1.20.NEXT",
+      "versionNumber": "0.1.21.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": [
         {
           "package": "platform-data-model",
-          "versionNumber": "0.1.19.LATEST"
+          "versionNumber": "0.1.20.LATEST"
         },
         {
           "package": "custom-metadata-dao",
-          "versionNumber": "0.1.19.LATEST"
+          "versionNumber": "0.1.20.LATEST"
         },
         {
           "package": "custom-permission-helper",
-          "versionNumber": "0.1.19.LATEST"
+          "versionNumber": "0.1.20.LATEST"
         }
       ]
     }
