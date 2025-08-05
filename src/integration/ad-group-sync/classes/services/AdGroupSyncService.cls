@@ -157,15 +157,6 @@ public without sharing class AdGroupSyncService {
                 ];
                 delete assignmentToRemove;
             }
-
-            if (
-                currentUser.accessToThemesFromAdGroups &&
-                (membershipsToInsert.size() > 0 ||
-                groupMemberIdsToRemove.size() > 0)
-            ) {
-                new SensitiveThemeGroupService()
-                    .updateSensitiveThemeGroups(currentUser);
-            }
         } catch (Exception e) {
             logger.errorAndPublish(
                 'AD group sync faild due to: ' + e.getMessage()
