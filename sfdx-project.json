@@ -47,12 +47,23 @@
         }
       ]
     },
+     {
+      "path": "src/integration/microsoft-graph-integration",
+      "package": "microsoft-graph-integration",
+      "versionNumber": "0.1.0.NEXT",
+      "definitionFile": "config/scratch-org-def.json",
+      "dependencies": []
+    },
     {
       "path": "src/login-flow",
       "package": "login-flow",
       "versionNumber": "0.1.0.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": [
+        {
+          "package": "microsoft-graph-integration",
+          "versionNumber": "0.1.0.LATEST"
+        },
         {
           "package": "platform-data-model",
           "versionNumber": "0.1.25.LATEST"
