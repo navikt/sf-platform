@@ -8,6 +8,7 @@ public without sharing class DefaultLoginFlowController {
         'LoginFlow'
     );
     UserDomain currentUser = new UserRepository().fetchCurrentUser();
+    OauthCodeFlowService oauthCodeFlowService = new OauthCodeFlowService();
     private String refreshToken;
 
     public PageReference redirect() {
@@ -139,7 +140,7 @@ public without sharing class DefaultLoginFlowController {
             .setCookies(
                 new List<Cookie>{ stateCookie, retUrlCookie, retryCookie }
             );
-        String initiateUrl = OauthCodeFlowService.generateAuthorizationUrl(
+        String initiateUrl = oauthCodeFlowService.generateAuthorizationUrl(
             state
         );
 
@@ -148,7 +149,7 @@ public without sharing class DefaultLoginFlowController {
     }
 
     private String getAccessTokenForSalesforceAzureApp(String code) {
-        Map<String, String> tokenByType = OauthCodeFlowService.getTokensFromAuthorizationCode(
+        Map<String, String> tokenByType = oauthCodeFlowService.getTokensFromAuthorizationCode(
             code
         );
         // "access", "refresh"
