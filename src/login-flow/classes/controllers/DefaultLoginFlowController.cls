@@ -9,6 +9,7 @@ public without sharing class DefaultLoginFlowController {
     );
     UserDomain currentUser = new UserRepository().fetchCurrentUser();
     OauthCodeFlowService oauthCodeFlowService = new OauthCodeFlowService();
+    RefreshTokenService refreshTokenService = new RefreshTokenService();
     private String refreshToken;
 
     public PageReference redirect() {
@@ -96,7 +97,7 @@ public without sharing class DefaultLoginFlowController {
                 System.enqueueJob(new AvvikAccess(currentUser.navId));
             }
 
-            RefreshTokenHandler.saveRefreshToken(refreshToken);
+            refreshTokenService.saveRefreshToken(refreshToken);
 
             //finnish login flow
             retUrlCookie = ApexPages.currentPage().getCookies().get('retUrl');
