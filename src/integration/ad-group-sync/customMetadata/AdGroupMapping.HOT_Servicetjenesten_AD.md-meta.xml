@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>HOT Servicetjenesten AD</label>
+    <protected>false</protected>
+    <values>
+        <field>AccessType__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>AdGroupIdPreprod__c</field>
+        <value xsi:type="xsd:string">935227c1-146c-475b-8dac-da60813e4107</value>
+    </values>
+    <values>
+        <field>AdGroupIdProd__c</field>
+        <value xsi:type="xsd:string">caa01edf-58e0-4553-b6b8-be2d2b81e685</value>
+    </values>
+    <values>
+        <field>PermissionSetGroup__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>PermissionSet__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>SalesforceGroupDeveloperName__c</field>
+        <value xsi:type="xsd:string">HOT_Servicetjenesten_AD</value>
+    </values>
+</CustomMetadata>

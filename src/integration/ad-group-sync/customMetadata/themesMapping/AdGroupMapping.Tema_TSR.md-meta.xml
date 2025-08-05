@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Tema TSR</label>
+    <protected>false</protected>
+    <values>
+        <field>AccessType__c</field>
+        <value xsi:type="xsd:string">Tema</value>
+    </values>
+    <values>
+        <field>AdGroupIdPreprod__c</field>
+        <value xsi:type="xsd:string">340e2f58-3cef-47a3-af21-4b37e3b91b95</value>
+    </values>
+    <values>
+        <field>AdGroupIdProd__c</field>
+        <value xsi:type="xsd:string">da504b07-a536-4c88-8fb2-f016a2d461bb</value>
+    </values>
+    <values>
+        <field>PermissionSet__c</field>
+        <value xsi:nil="true" />
+    </values>
+    <values>
+        <field>SalesforceGroupDeveloperName__c</field>
+        <value xsi:type="xsd:string">Tema_TSR</value>
+    </values>
+</CustomMetadata>

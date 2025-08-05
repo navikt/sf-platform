@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Skjermede Personer</label>
+    <protected>false</protected>
+    <values>
+        <field>AccessType__c</field>
+        <value xsi:type="xsd:string">Skjermet</value>
+    </values>
+    <values>
+        <field>AdGroupIdPreprod__c</field>
+        <value xsi:type="xsd:string">dbe4ad45-320b-4e9a-aaa1-73cca4ee124d</value>
+    </values>
+    <values>
+        <field>AdGroupIdProd__c</field>
+        <value xsi:type="xsd:string">e750ceb5-b70b-4d94-b4fa-9d22467b786b</value>
+    </values>
+    <values>
+        <field>PermissionSetGroup__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>PermissionSet__c</field>
+        <value xsi:type="xsd:string">CRM_NavEmployees</value>
+    </values>
+    <values>
+        <field>SalesforceGroupDeveloperName__c</field>
+        <value xsi:type="xsd:string">NKS_Skjermede_Personer_AD</value>
+    </values>
+</CustomMetadata>

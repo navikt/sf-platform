@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Skjermet IND</label>
+    <protected>false</protected>
+    <values>
+        <field>AccessType__c</field>
+        <value xsi:type="xsd:string">Tema</value>
+    </values>
+    <values>
+        <field>AdGroupIdPreprod__c</field>
+        <value xsi:type="xsd:string">878181b8-ebf6-4e31-a446-23318b3cde21,dbe4ad45-320b-4e9a-aaa1-73cca4ee124d</value>
+    </values>
+    <values>
+        <field>AdGroupIdProd__c</field>
+        <value xsi:type="xsd:string">335140f8-154f-4641-b9d4-7f7567fd2347,e750ceb5-b70b-4d94-b4fa-9d22467b786b</value>
+    </values>
+    <values>
+        <field>PermissionSet__c</field>
+        <value xsi:nil="true" />
+    </values>
+    <values>
+        <field>SalesforceGroupDeveloperName__c</field>
+        <value xsi:type="xsd:string">Skjermet_IND</value>
+    </values>
+</CustomMetadata>

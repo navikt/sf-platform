@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>HOT Servicetjenesten Fortrolig AD</label>
+    <protected>false</protected>
+    <values>
+        <field>AccessType__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>AdGroupIdPreprod__c</field>
+        <value xsi:type="xsd:string">935227c1-146c-475b-8dac-da60813e4107,ea930b6b-9397-44d9-b9e6-f4cf527a632a</value>
+    </values>
+    <values>
+        <field>AdGroupIdProd__c</field>
+        <value xsi:type="xsd:string">caa01edf-58e0-4553-b6b8-be2d2b81e685,9ec6487d-f37a-4aad-a027-cd221c1ac32b</value>
+    </values>
+    <values>
+        <field>PermissionSetGroup__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>PermissionSet__c</field>
+        <value xsi:type="xsd:string">HOT_Fortrolig</value>
+    </values>
+    <values>
+        <field>SalesforceGroupDeveloperName__c</field>
+        <value xsi:type="xsd:string">HOT_Servicetjenesten_Fortrolig_AD</value>
+    </values>
+</CustomMetadata>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Fortrolig Skjermet AAR</label>
+    <protected>false</protected>
+    <values>
+        <field>AccessType__c</field>
+        <value xsi:type="xsd:string">Tema</value>
+    </values>
+    <values>
+        <field>AdGroupIdPreprod__c</field>
+        <value xsi:type="xsd:string">9b30104c-b2a5-43d4-9ad8-742dbd497b5d,ea930b6b-9397-44d9-b9e6-f4cf527a632a,dbe4ad45-320b-4e9a-aaa1-73cca4ee124d</value>
+    </values>
+    <values>
+        <field>AdGroupIdProd__c</field>
+        <value xsi:type="xsd:string">e615c9eb-1306-44de-86a7-e2de0020a924,9ec6487d-f37a-4aad-a027-cd221c1ac32b,e750ceb5-b70b-4d94-b4fa-9d22467b786b</value>
+    </values>
+    <values>
+        <field>PermissionSet__c</field>
+        <value xsi:nil="true" />
+    </values>
+    <values>
+        <field>SalesforceGroupDeveloperName__c</field>
+        <value xsi:type="xsd:string">Fortrolig_Skjermet_AAR</value>
+    </values>
+</CustomMetadata>
