@@ -14,6 +14,30 @@
       "dependencies": []
     },
     {
+      "path": "src/platform-domain",
+      "package": "platform-domain",
+      "versionNumber": "0.1.0.NEXT",
+      "definitionFile": "config/scratch-org-def.json",
+      "dependencies": [
+        {
+          "package": "platform-data-model",
+          "versionNumber": "0.1.25.LATEST"
+        }
+      ]
+    },
+    {
+      "path": "src/platform-repository",
+      "package": "platform-repository",
+      "versionNumber": "0.1.0.NEXT",
+      "definitionFile": "config/scratch-org-def.json",
+      "dependencies": [
+        {
+          "package": "platform-domain",
+          "versionNumber": "0.1.25.LATEST"
+        }
+      ]
+    },
+    {
       "path": "src/platform-utility/custom-metadata-dao",
       "package": "custom-metadata-dao",
       "versionNumber": "0.1.25.NEXT",
