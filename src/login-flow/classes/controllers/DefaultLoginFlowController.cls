@@ -62,41 +62,17 @@ public without sharing class DefaultLoginFlowController {
                 microsoftGraphResponse.groupIds
             );
 
+            
             if (Test.isRunningTest() && currentUser.navId == null) {
                 currentUser.navId = '12345';
             }
 
-            //Users should only get access from Axsys if the feaature flag Access to themes from AD Groups is disabled and current user's profile should have access to Axsys
-            if (
-                String.isNotBlank(currentUser.navId) &&
-                checkAxsysAccess() &&
-                !currentUser.accessToThemesFromAdGroups
-            ) {
-                UserAccessUtil.AxsysAccess axsysAccess = new UserAccessUtil.AxsysAccess();
-                axsysAccess = new UserAccessUtil()
-                    .getThemesAndUnitsFromAxsys(
-                        currentUser.navId,
-                        accessTokenForSalesforceAzureApp
-                    );
-
-                new ThemesAccessService(
-                        axsysAccess,
-                        currentUser.hasAccessToFortrolig,
-                        currentUser.hasAccessToSkjermet
-                    )
-                    .updateGroups();
-            }
             System.enqueueJob(
                 new AdGroupSyncQueueable(
                     microsoftGraphResponse.groupIds,
                     currentUser
                 )
             );
-
-            if (String.isNotBlank(currentUser.navId)) {
-                System.enqueueJob(new AvvikAccess(currentUser.navId));
-            }
-
             refreshTokenService.saveRefreshToken(refreshToken);
 
             //finnish login flow
@@ -201,24 +177,5 @@ public without sharing class DefaultLoginFlowController {
             return true;
         }
         return false;
-    }
-
-    @TestVisible
-    private Boolean checkAxsysAccess() {
-        //Only designated profiles should synchronize groups with Axsys
-        Id currentUsersProfileId = UserInfo.getProfileId();
-        String profileName = [
-            SELECT Name
-            FROM Profile
-            WHERE Id = :currentUsersProfileId
-            LIMIT 1
-        ]
-        .Name;
-        List<AxsysProfile__mdt> profilesAllowedForAxsys = [
-            SELECT Label
-            FROM AxsysProfile__mdt
-            WHERE Label = :profileName
-        ];
-        return profilesAllowedForAxsys.size() == 1;
     }
 }

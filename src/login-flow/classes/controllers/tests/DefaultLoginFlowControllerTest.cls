@@ -81,29 +81,6 @@ private class DefaultLoginFlowControllerTest {
     }
 
     @IsTest
-    private static void shouldHaveAccessToAxsysWhenProfileIsSystemAdministrator() {
-        Boolean result = new DefaultLoginFlowController().checkAxsysAccess();
-        Assert.isTrue(result);
-    }
-
-    @IsTest
-    private static void shouldNotHaveAccessToAxsysWhenProfileIsStandardPlatformUser() {
-        User standardUser = TestDataFactory.getUsers(
-            1,
-            'Standard Platform User',
-            false,
-            true
-        )[0];
-
-        System.runAs(standardUser) {
-            Boolean result = new DefaultLoginFlowController()
-                .checkAxsysAccess();
-            Assert.isFalse(result);
-        }
-
-    }
-
-    @IsTest
     private static void shouldInitiateNewAuthorizationCodeUrlWhenStatesAreInvalid() {
         Pagereference pageRef = Page.DefaultLoginFlow;
         //set cookies
