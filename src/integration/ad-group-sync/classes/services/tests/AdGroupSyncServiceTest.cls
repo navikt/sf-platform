@@ -41,7 +41,7 @@ private class AdGroupSyncServiceTest {
         adGroupsInTest.add(adGroupIds[0]);
         adGroupsInTest.add(adGroupIds[1]);
 
-        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213');
+        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213', 'Standard Profile');
 
         //Act
         Test.startTest();
@@ -109,7 +109,7 @@ private class AdGroupSyncServiceTest {
         List<String> adGroupsInTest = new List<String>();
         adGroupsInTest.add('597b2345-5846-4c9c-ba9d-15323preprod');
 
-        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213');
+        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213', 'Standard Profile');
 
         //Act
         Test.startTest();
@@ -178,7 +178,7 @@ private class AdGroupSyncServiceTest {
         );
 
         List<String> adGroupsInTest = new List<String>();
-        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213');
+        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213', 'Standard Profile');
 
         //Act
         Test.startTest();
@@ -264,7 +264,7 @@ private class AdGroupSyncServiceTest {
         List<String> adGroupsInTest = new List<String>();
         adGroupsInTest.add(adGroupIds[0]);
 
-        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213');
+        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213', 'Standard Profile');
 
         //Act
         Test.startTest();
@@ -352,7 +352,7 @@ private class AdGroupSyncServiceTest {
         adGroupsInTest.add(adGroupIds[0]);
         adGroupsInTest.add(adGroupIds[1]);
 
-        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213');
+        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213', 'Standard Profile');
 
         //Act
         Test.startTest();
@@ -447,7 +447,7 @@ private class AdGroupSyncServiceTest {
         adGroupsInTest.add(adGroupIds[2]);
         adGroupsInTest.add(adGroupIds[3]);
 
-        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213');
+        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213', 'Standard Profile');
 
         //Act
         Test.startTest();
@@ -528,7 +528,7 @@ private class AdGroupSyncServiceTest {
         List<String> adGroupsInTest = new List<String>();
         adGroupsInTest.add('597b2345-5846-4c9c-ba9d-15323preprod');
 
-        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213');
+        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A33213', 'Standard Profile');
 
         //Act
         Test.startTest();

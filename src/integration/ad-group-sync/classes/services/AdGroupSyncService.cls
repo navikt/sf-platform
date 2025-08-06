@@ -11,7 +11,7 @@ public without sharing class AdGroupSyncService {
         try {
             //get public groups with id mapped to ad group
             Map<Id, AdGroup> adGroupBySalesforceGroupId = getAdGroupBySalesforceGroupId(
-                currentUser.accessToThemesFromAdGroups
+                currentUser.hasAccessToThemes
             );
             Set<Id> usersSalesforceMembership = getUsersSalesforceMemberships(
                 currentUser.recordId,
