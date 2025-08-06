@@ -62,10 +62,7 @@ public without sharing class DefaultLoginFlowController {
                 microsoftGraphResponse.groupIds
             );
 
-            
-            if (Test.isRunningTest() && currentUser.navId == null) {
-                currentUser.navId = '12345';
-            }
+        
 
             System.enqueueJob(
                 new AdGroupSyncQueueable(
@@ -74,6 +71,10 @@ public without sharing class DefaultLoginFlowController {
                 )
             );
             refreshTokenService.saveRefreshToken(refreshToken);
+
+             if (String.isNotBlank(currentUser.navId)) {
+                System.enqueueJob(new AvvikAccess(currentUser.navId));
+            }
 
             //finnish login flow
             retUrlCookie = ApexPages.currentPage().getCookies().get('retUrl');
