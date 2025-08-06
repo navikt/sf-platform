@@ -24,7 +24,7 @@
           "versionNumber": "0.1.25.LATEST"
         },
         {
-          "package": "custom-permission-helper",
+          "package": "custom-metadata-dao",
           "versionNumber": "0.1.25.LATEST"
         }
       ]

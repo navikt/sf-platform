@@ -25,9 +25,10 @@ private with sharing class UserDomainTest {
     }
 
     @IsTest
-    private static void shouldHaveAccessToThemesWhenUsersProfileIsIn() {
-        Boolean result = false;
-        Assert.isTrue(result);
+    private static void shouldHaveAccessToThemesWhenUsersProfileIsInThemeMappingProfile() {
+        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A123456', 'Profile with THeme Access');
+        
+        Assert.isTrue(false);
     }
 
 

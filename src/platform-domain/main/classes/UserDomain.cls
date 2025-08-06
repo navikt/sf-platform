@@ -7,6 +7,10 @@ public with sharing class UserDomain {
     public Boolean hasAccessToSkjermet = false;
     public Boolean hasAccessToStrengtFortrolig = false;
 
+    @TestVisible
+    private final String PROFILES_METADATA_QUERY = 'SELECT MasterLabel, DeveloperName FROM ThemeMappingProfile__mdt';
+    private CustomMetadataDAO dao;
+
    
     public UserDomain(
         Id recordId,
