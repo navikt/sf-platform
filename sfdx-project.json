@@ -22,6 +22,10 @@
         {
           "package": "platform-data-model",
           "versionNumber": "0.1.25.LATEST"
+        },
+        {
+          "package": "custom-permission-helper",
+          "versionNumber": "0.1.25.LATEST"
         }
       ]
     },
