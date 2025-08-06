@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+
+    <classAccesses>
+        <apexClass>DefaultLoginFlowController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <description>Access login flow to get tokens from Azure, and integration to Microsoft Graph</description>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Log__c.CRM_Payload__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Log__c.CRM_Type__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>CRM - Login Flow</label>
+    <pageAccesses>
+        <apexPage>DefaultLoginFlow</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+</PermissionSet>
