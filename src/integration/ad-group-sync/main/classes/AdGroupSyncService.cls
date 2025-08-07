@@ -1,4 +1,5 @@
 public without sharing class AdGroupSyncService {
+    private UserRepository userRepository = new UserRepository();
     public void addRemoveGroupsAndPerms(
         UserDomain currentUser,
         List<String> adGroupIds
@@ -8,9 +9,12 @@ public without sharing class AdGroupSyncService {
             'LoginFlow'
         );
         try {
+            Boolean hasAccessToThemes = userRepository.checkUserThemeAccess(
+                currentUser
+            );
             //get public groups with id mapped to ad group
             Map<Id, AdGroup> adGroupBySalesforceGroupId = getAdGroupBySalesforceGroupId(
-                currentUser.hasAccessToThemes
+                hasAccessToThemes
             );
             Set<Id> usersSalesforceMembership = getUsersSalesforceMemberships(
                 currentUser.recordId,

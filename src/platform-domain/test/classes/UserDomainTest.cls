@@ -10,7 +10,11 @@ private with sharing class UserDomainTest {
             'ea930b6b-9397-44d9-b9e6-f4cf527a632a'
         };
 
-        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A123456', 'Standard Profile');
+        UserDomain user = new UserDomain(
+            UserInfo.getUserId(),
+            'A123456',
+            'Standard Profile'
+        );
         Assert.isFalse(user.hasAccessToFortrolig);
         Assert.isFalse(user.hasAccessToSkjermet);
 
@@ -23,13 +27,4 @@ private with sharing class UserDomainTest {
         Assert.isTrue(user.hasAccessToFortrolig);
         Assert.isTrue(user.hasAccessToSkjermet);
     }
-
-    @IsTest
-    private static void shouldHaveAccessToThemesWhenUsersProfileIsInThemeMappingProfile() {
-        UserDomain user = new UserDomain(UserInfo.getUserId(), 'A123456', 'Profile with THeme Access');
-        
-        Assert.isTrue(false);
-    }
-
-
 }

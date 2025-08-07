@@ -2,21 +2,11 @@ public with sharing class UserDomain {
     public Id recordId;
     public String navId;
     public String profileName;
-    public Boolean hasAccessToThemes = false;
     public Boolean hasAccessToFortrolig = false;
     public Boolean hasAccessToSkjermet = false;
     public Boolean hasAccessToStrengtFortrolig = false;
 
-    @TestVisible
-    private final String PROFILES_METADATA_QUERY = 'SELECT MasterLabel, DeveloperName FROM ThemeMappingProfile__mdt';
-    private CustomMetadataDAO dao;
-
-   
-    public UserDomain(
-        Id recordId,
-        String navId,
-        String profileName
-    ) {
+    public UserDomain(Id recordId, String navId, String profileName) {
         this.recordId = recordId;
         this.navId = navId;
         this.profileName = profileName;
