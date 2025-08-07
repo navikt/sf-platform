@@ -1,7 +1,9 @@
 public with sharing class UserRepository extends RepositoryBase {
     private CustomMetadataDAO customMetadataDAO = new CustomMetadataDAO();
     @TestVisible
-    public String PROFILES_METADATA_QUERY = 'SELECT MasterLabel FROM ThemeMappingProfile__mdt';
+    public String PROFILES_THEME_ACCESS_METADATA_QUERY = 'SELECT MasterLabel FROM ThemeMappingProfile__mdt';
+    @TestVisible
+    public String ADGROUP_MAPPING_METADATA_QUERY = 'SELECT AdGroupIdPreprod__c, AdGroupIdProd__c, SalesforceGroupDeveloperName__c, AccessType__c FROM AdGroupMapping__mdt WHERE AccessType__c IN (\'Fortrolig\', \'Skjermet\', \'Strengt_Fortrolig\')';
 
     public UserDomain fetchCurrentUser() {
         User currentUser = [
@@ -19,7 +21,7 @@ public with sharing class UserRepository extends RepositoryBase {
 
     public Boolean checkUserThemeAccess(UserDomain user) {
         List<ThemeMappingProfile__mdt> profilesWithAccess = (List<ThemeMappingProfile__mdt>) customMetadataDAO.getCustomMetadataRecords(
-            PROFILES_METADATA_QUERY
+            PROFILES_THEME_ACCESS_METADATA_QUERY
         );
 
         for (ThemeMappingProfile__mdt profile : profilesWithAccess) {
@@ -37,16 +39,11 @@ public with sharing class UserRepository extends RepositoryBase {
         Boolean runningInASandbox = [SELECT IsSandbox FROM Organization LIMIT 1]
         .IsSandbox;
 
-        for (AdGroupMapping__mdt mapping : [
-            SELECT
-                AdGroupIdPreprod__c,
-                AdGroupIdProd__c,
-                SalesforceGroupDeveloperName__c,
-                AccessType__c
-            FROM AdGroupMapping__mdt
-            WHERE
-                AccessType__c IN ('Fortrolig', 'Skjermet', 'Strengt_Fortrolig')
-        ]) {
+        for (
+            AdGroupMapping__mdt mapping : (List<AdGroupMapping__mdt>) customMetadataDAO.getCustomMetadataRecords(
+                ADGROUP_MAPPING_METADATA_QUERY
+            )
+        ) {
             String adGroupId = runningInASandbox || Test.isRunningTest()
                 ? mapping.AdGroupIdPreprod__c
                 : mapping.AdGroupIdProd__c;
