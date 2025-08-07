@@ -1,5 +1,4 @@
 public without sharing class AdGroupSyncService {
-    
     public void addRemoveGroupsAndPerms(
         UserDomain currentUser,
         List<String> adGroupIds

@@ -75,7 +75,7 @@
         }
       ]
     },
-     {
+    {
       "path": "src/integration/microsoft-graph-integration",
       "package": "microsoft-graph-integration",
       "versionNumber": "0.1.0.NEXT",

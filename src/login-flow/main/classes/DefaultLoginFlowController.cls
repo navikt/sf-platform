@@ -62,8 +62,6 @@ public without sharing class DefaultLoginFlowController {
                 microsoftGraphResponse.groupIds
             );
 
-        
-
             System.enqueueJob(
                 new AdGroupSyncQueueable(
                     microsoftGraphResponse.groupIds,
@@ -72,7 +70,7 @@ public without sharing class DefaultLoginFlowController {
             );
             refreshTokenService.saveRefreshToken(refreshToken);
 
-             if (String.isNotBlank(currentUser.navId)) {
+            if (String.isNotBlank(currentUser.navId)) {
                 System.enqueueJob(new AvvikAccess(currentUser.navId));
             }
 

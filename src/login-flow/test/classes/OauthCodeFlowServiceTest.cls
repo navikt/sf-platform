@@ -20,11 +20,10 @@ private class OauthCodeFlowServiceTest {
             'https://auth.url?client_id=testKey&response_type=code&redirect_uri=https://redirect.url&response_mode=query' +
             '&scope=offline_access%20user.read&state=testState';
 
-        //Acct    
+        //Acct
         System.Test.startTest();
-        String actualUrl = new OauthCodeFlowService().generateAuthorizationUrl(
-            'testState'
-        );
+        String actualUrl = new OauthCodeFlowService()
+            .generateAuthorizationUrl('testState');
 
         //Assert
         System.Test.stopTest();
@@ -41,9 +40,8 @@ private class OauthCodeFlowServiceTest {
 
         //Act
         Test.startTest();
-        Map<String, String> tokenByType = new OauthCodeFlowService().getTokensFromAuthorizationCode(
-            'code'
-        );
+        Map<String, String> tokenByType = new OauthCodeFlowService()
+            .getTokensFromAuthorizationCode('code');
         Test.stopTest();
 
         //Assert

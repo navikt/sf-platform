@@ -1,103 +1,101 @@
 @IsTest
 private class AdGroupSyncQueueableTest {
-    
-
     @IsTest
     private static void testExecuteWithValidParameters() {
         //Arrange
         UserDomain currentUser = new UserDomain(
             UserInfo.getUserId(),
-            'test123', 
-            true
+            'test123',
+            'Standard Profile'
         );
-        
+
         List<String> adGroupIds = new List<String>{
             'test-ad-group-1',
             'test-ad-group-2'
         };
-        
+
         AdGroupSyncQueueable queueable = new AdGroupSyncQueueable(
-            adGroupIds, 
+            adGroupIds,
             currentUser
         );
-        
+
         //Act
         System.Test.startTest();
-        System.enqueueJob(queueable); 
+        System.enqueueJob(queueable);
         System.Test.stopTest();
-        
+
         // Assert
         List<AsyncApexJob> jobs = [
-            SELECT Id, Status, JobType 
-            FROM AsyncApexJob 
+            SELECT Id, Status, JobType
+            FROM AsyncApexJob
             WHERE JobType = 'Queueable'
         ];
-        
+
         Assert.isTrue(
-            jobs.size() > 0, 
+            jobs.size() > 0,
             'Expected at least one queueable job to be enqueued'
         );
     }
 
     @IsTest
     private static void testExecuteWithEmptyAdGroupList() {
-         //Arrange
+        //Arrange
         UserDomain currentUser = new UserDomain(
             UserInfo.getUserId(),
-            'test123', 
-            true
+            'test123',
+            'Standard Profile'
         );
-        
+
         List<String> emptyAdGroupIds = new List<String>();
-        
+
         AdGroupSyncQueueable queueable = new AdGroupSyncQueueable(
-            emptyAdGroupIds, 
+            emptyAdGroupIds,
             currentUser
         );
-        
+
         //Act
         System.Test.startTest();
-        System.enqueueJob(queueable); 
+        System.enqueueJob(queueable);
         System.Test.stopTest();
-        
+
         // Assert
         List<AsyncApexJob> jobs = [
-            SELECT Id, Status, JobType 
-            FROM AsyncApexJob 
+            SELECT Id, Status, JobType
+            FROM AsyncApexJob
             WHERE JobType = 'Queueable'
         ];
-        
+
         Assert.isTrue(
-            jobs.size() > 0, 
+            jobs.size() > 0,
             'Expected at least one queueable job to be enqueued'
         );
     }
-    
+
     @IsTest
     private static void testConstructorSetsPropertiesCorrectly() {
-       //Arrange
+        //Arrange
         UserDomain currentUser = new UserDomain(
             UserInfo.getUserId(),
-            'test123', 
-            true
+            'test123',
+            'Standard Profile'
         );
-        
+
         List<String> adGroupIds = new List<String>{
             'test-ad-group-1',
             'test-ad-group-2'
         };
-        
+
         // Act
         System.Test.startTest();
         AdGroupSyncQueueable queueable = new AdGroupSyncQueueable(
-            adGroupIds, 
+            adGroupIds,
             currentUser
         );
         System.Test.stopTest();
-        
+
         //Assert
         Assert.isNotNull(
-            queueable, 
+            queueable,
             'Expected queueable instance to be created'
         );
     }

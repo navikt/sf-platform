@@ -19,9 +19,7 @@ public with sharing class OauthCodeFlowService {
             state;
     }
 
-    public Map<String, String> getTokensFromAuthorizationCode(
-        String code
-    ) {
+    public Map<String, String> getTokensFromAuthorizationCode(String code) {
         Map<String, String> tokenByType = new Map<String, String>();
         AzureAdAuthorizationCode__c azureAdConfig = AzureAdAuthorizationCode__c.getOrgDefaults();
         String scope = azureAdConfig.Scope__c;
