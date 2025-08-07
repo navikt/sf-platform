@@ -1,6 +1,8 @@
-# feature-toggle
+# application-monitoring
 
-Denne pakken inneholder et rammeverk for feature toggling som kan brukes som det er eller extendes.
+## Application Log
+
+Logger rammeverk som publiserer logger til Application_Log\_\_c
 
 Datamodellen ligger i pakken [platform-data-model](src/platform-data-model/README.md)
 

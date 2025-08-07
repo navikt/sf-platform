@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApexTestSuite xmlns="http://soap.sforce.com/2006/04/metadata">
-    <testClassName>FeatureToggleAuraTest</testClassName>
-    <testClassName>FeatureToggleBaseTest</testClassName>
-    <testClassName>FeatureToggleInvokableTest</testClassName>
-    <testClassName>FeatureToggleTest</testClassName>
+    <testClassName>ApplicationLogPublisher_Test</testClassName>
+    <testClassName>CRM_DatabaseOperations_Test</testClassName>
+    <testClassName>LoggerUtility_Test</testClassName>
 </ApexTestSuite>
