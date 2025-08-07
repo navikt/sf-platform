@@ -29,4 +29,30 @@ public with sharing class UserRepository extends RepositoryBase {
         }
         return false;
     }
+
+    public void checkAccessToFortroligAndSkjermetByAdGroups(
+        UserDomain user,
+        List<String> usersAdGroupIds
+    ) {
+        Boolean runningInASandbox = [SELECT IsSandbox FROM Organization LIMIT 1]
+        .IsSandbox;
+
+        for (AdGroupMapping__mdt mapping : [
+            SELECT
+                AdGroupIdPreprod__c,
+                AdGroupIdProd__c,
+                SalesforceGroupDeveloperName__c,
+                AccessType__c
+            FROM AdGroupMapping__mdt
+            WHERE
+                AccessType__c IN ('Fortrolig', 'Skjermet', 'Strengt_Fortrolig')
+        ]) {
+            String adGroupId = runningInASandbox || Test.isRunningTest()
+                ? mapping.AdGroupIdPreprod__c
+                : mapping.AdGroupIdProd__c;
+            if (usersAdGroupIds.contains(adGroupId)) {
+                user.setAccessLevel(mapping.AccessType__c);
+            }
+        }
+    }
 }
