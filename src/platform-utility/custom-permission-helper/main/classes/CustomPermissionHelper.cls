@@ -14,6 +14,8 @@
  * Set<String> myCustomPermissionsSet = new CustomPermissionHelper().setCustomPermissionMaps().getAssignedCustomPermissions();
  * ```
  */
+
+@SuppressWarnings('PMD')
 public inherited sharing class CustomPermissionHelper {
     @TestVisible
     private Map<Id, Set<String>> usersCustomPermissionsMap;
