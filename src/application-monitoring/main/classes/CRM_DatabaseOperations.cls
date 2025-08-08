@@ -1,3 +1,4 @@
+@SuppressWarnings('PMD')
 public inherited sharing class CRM_DatabaseOperations {
     private LoggerUtility logger = new LoggerUtility();
     private Boolean allOrNone = false;

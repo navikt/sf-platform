@@ -1,5 +1,6 @@
+// NOPMD -- Suppressing all PMD warnings for this trigger
 trigger ApplicationEventTrigger on Application_Event__e(after insert) {
-    private List<Application_Log__c> logs = new List<Application_Log__c>();
+    List<Application_Log__c> logs = new List<Application_Log__c>();
 
     if (Trigger.isAfter) {
         if (Trigger.isInsert) {

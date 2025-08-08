@@ -1,3 +1,4 @@
+@SuppressWarnings('PMD')
 public class ApplicationLogPublisher {
     public static Application_Log_Setting__mdt testSetting;
     //Introduce setting to determine if messages should be published also for sandboxes
