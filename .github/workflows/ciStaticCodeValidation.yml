@@ -31,7 +31,7 @@ jobs:
         shell: bash
     steps:
       - name: Install SF CLI
-        uses: navikt/sf-platform/.github/actions/installSfCli@7bc720106cdadde69c31f5d7d8ff1f8d6b790d54
+        uses: navikt/sf-platform/.github/actions/installSfCli@4170a89ba68d6275b5924c2b3179ed7ca3278dad
         with:
           version: ${{ vars.SF_CLI_VERSION }}
 
@@ -77,14 +77,14 @@ jobs:
 
       - name: Prettier Check
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: navikt/sf-platform/.github/actions/prettierCheck@7bc720106cdadde69c31f5d7d8ff1f8d6b790d54
+        uses: navikt/sf-platform/.github/actions/prettierCheck@4170a89ba68d6275b5924c2b3179ed7ca3278dad
         with:
           pathToValidate: ${{ steps.paths.outputs.prettierPathsToValidate }}
 
       - name: Run Salesforce Code Analyzer
         id: run-code-analyzer
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: forcedotcom/run-code-analyzer@6a95b0e734fadae32b7a35520bda9fee28af2420
+        uses: forcedotcom/run-code-analyzer@e88e434ef258c182fe4cb5d8f0c9f282384fd4b5
         with:
           run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }} --view detail --output-file sfca_results.html --output-file sfca_results.json --output-file code-analyzer-report.sarif
           results-artifact-name: salesforce-code-analyzer-results
