@@ -1,3 +1,4 @@
+@SuppressWarnings('PMD')
 global class SlackMessage {
     global List<Block> blocks;
 

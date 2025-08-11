@@ -1,3 +1,4 @@
+@SuppressWarnings('PMD')
 @isTest
 public class ApplicationLogPublisher_Test {
     private static final String category = 'TEST CATEGORY';
