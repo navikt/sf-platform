@@ -1,6 +1,7 @@
 /**
  * @description Unit tests for the LoggerUtility class.
  */
+@SuppressWarnings('PMD')
 @IsTest(isParallel=true)
 public class LoggerUtility_Test {
     @IsTest
