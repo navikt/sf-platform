@@ -1,3 +1,4 @@
+@SuppressWarnings('PMD')
 public without sharing class LoggerUtility extends CRM_ApplicationDomain {
     public enum LogLevel {
         INFO,
