@@ -3,6 +3,7 @@
  * @author Tor Håkon Sigurdsen
  * @since 0.1.0, April 2025 - Created
  */
+@SuppressWarnings('PMD')
 public with sharing class FeatureToggle {
     public enum ToggleType {
         CUSTOM_PERMISSION,

@@ -46,12 +46,21 @@
           "versionNumber": "0.1.27.LATEST"
         }
       ]
+    },
+    {
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "path": "src/application-monitoring",
+      "default": false,
+      "package": "application-monitoring",
+      "versionDescription": "Rammeverk for logging"
     }
   ],
   "packageAliases": {
     "platform-data-model": "0HoKB00000000010AA",
     "custom-metadata-dao": "0HoKB000000000B0AQ",
     "custom-permission-helper": "0HoKB000000000f0AA",
-    "feature-toggle": "0HoKB000000000V0AQ"
+    "feature-toggle": "0HoKB000000000V0AQ",
+    "application-monitoring": "0HoQC00000004d70AA"
   }
 }
