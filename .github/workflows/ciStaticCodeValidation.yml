@@ -1,4 +1,7 @@
 name: Run static code validation
+concurrency:
+  group: static-code-validation-${{ github.ref }}
+  cancel-in-progress: true
 on:
   workflow_call:
     inputs:
@@ -12,6 +15,10 @@ on:
         default: ${{ github.ref }}
         required: false
         type: string
+    secrets:
+      GITHUB_TOKEN:
+        description: GitHub token for authentication
+        required: false
   workflow_dispatch:
     inputs:
       validateEntireRepo:
@@ -26,6 +33,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      pull-requests: write
     defaults:
       run:
         shell: bash
@@ -34,15 +42,6 @@ jobs:
         uses: navikt/sf-platform/.github/actions/installSfCli@eb5b379e3b162280de8f5b9566cb41c25f0832f5
         with:
           version: ${{ vars.SF_CLI_VERSION }}
-
-      - name: "Install Salesforce Code Analyzer"
-        run: |
-          echo "::group::Install Salesforce Code Analyzer Plugin"
-          sf plugins install code-analyzer@"$SF_SCANNER_VERSION"
-          sf plugins --core
-          echo "::endgroup::"
-        env:
-          SF_SCANNER_VERSION: ${{ vars.SF_SCANNER_VERSION }}
 
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -73,7 +72,7 @@ jobs:
           echo "prettierPathsToValidate=$prettierPathsToValidate" >> "$GITHUB_OUTPUT"
           echo "sfCodeAnalyzerPathToValidate=$sfCodeAnalyzerPathToValidate" >> "$GITHUB_OUTPUT"
         env:
-          VALIDATE_ENTIRE_REPO: ${{ inputs.validateEntireRepo != '' && inputs.validateEntireRepo || true }}
+          VALIDATE_ENTIRE_REPO: ${{ inputs.validateEntireRepo }}
 
       - name: Prettier Check
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
@@ -88,6 +87,7 @@ jobs:
         with:
           run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }} --view detail --output-file sfca_results.html --output-file sfca_results.json --output-file code-analyzer-report.sarif
           results-artifact-name: salesforce-code-analyzer-results
+          github-token: ${{ github.event_name == 'pull_request' && secrets.GITHUB_TOKEN || '' }}
 
       # Code Analyser generates an empty SARIF file if no violations are found.
       # In that case this step ensures that the SARIF file is valid and contains a default structure.
@@ -137,12 +137,51 @@ jobs:
           category: salesforce-code-analyzer
 
       - name: Check the Salesforce Code Analyzer outputs to determine whether to fail
-        if: ${{ !cancelled() && steps.paths.outcome == 'success' && ( steps.run-code-analyzer.outputs.exit-code > 0 || steps.run-code-analyzer.outputs.num-sev1-violations > 0 || steps.run-code-analyzer.outputs.num-violations > 10 ) }}
+        if: ${{ !cancelled() && steps.paths.outcome == 'success' && ( steps.run-code-analyzer.outputs.exit-code > 0 || steps.run-code-analyzer.outputs.num-sev1-violations > 0 || steps.run-code-analyzer.outputs.num-violations > 10) }}
         shell: bash
         run: |
-          echo "::error title=Code Analyzer failed with exit code: ${EXIT_CODE}::Number of Sev1 violations: ${NUM_SEV1_VIOLATIONS} (max 0). Number of violations: ${NUM_VIOLATIONS} (max 10)."
-          exit 1
+          set -euo pipefail
+
+          # Normalize (default to 0 if unset/empty)
+          EXIT_CODE=${EXIT_CODE:-0}
+            NUM_SEV1_VIOLATIONS=${NUM_SEV1_VIOLATIONS:-0}
+            NUM_SEV2_VIOLATIONS=${NUM_SEV2_VIOLATIONS:-0}
+            NUM_SEV3_VIOLATIONS=${NUM_SEV3_VIOLATIONS:-0}
+            NUM_SEV4_VIOLATIONS=${NUM_SEV4_VIOLATIONS:-0}
+            NUM_SEV5_VIOLATIONS=${NUM_SEV5_VIOLATIONS:-0}
+            NUM_VIOLATIONS=${NUM_VIOLATIONS:-0}
+
+          # Exclude Sev5 (Info) from total count threshold
+          totalViolations=$(( NUM_VIOLATIONS - NUM_SEV5_VIOLATIONS ))
+
+          if (( EXIT_CODE > 0 )); then
+            echo "::error title=Salesforce Code Analyzer failed::Exit code: ${EXIT_CODE}"
+          fi
+
+          if (( NUM_SEV1_VIOLATIONS > 0 )) || (( totalViolations > MAX_ALLOWED_VIOLATIONS )); then
+            
+          printf -v details \
+            "Number of Sev1 Critical violations: %s\n \
+            Number of Sev2 High violations: %s\n \
+            Number of Sev3 Medium violations: %s\n \
+            Number of Sev4 Low violations: %s\n \
+            Number of Sev5 Info violations: %s\n \
+            Total (excluding Sev5): %s (max %s)" \
+            "$NUM_SEV1_VIOLATIONS" "$NUM_SEV2_VIOLATIONS" "$NUM_SEV3_VIOLATIONS" "$NUM_SEV4_VIOLATIONS" "$NUM_SEV5_VIOLATIONS" "$totalViolations" "$MAX_ALLOWED_VIOLATIONS"
+            
+            # GitHub command: replace literal newlines with %0A
+            echo "::error title=Salesforce Code Analyzer threshold exceeded::${details//$'\n'/%0A}"
+          fi
+
+          if (( EXIT_CODE > 0 )) || (( NUM_SEV1_VIOLATIONS > 0 )) || (( totalViolations > MAX_ALLOWED_VIOLATIONS )); then
+            exit 1
+          fi
         env:
+          MAX_ALLOWED_VIOLATIONS: 10
           EXIT_CODE: ${{ steps.run-code-analyzer.outputs.exit-code }}
           NUM_SEV1_VIOLATIONS: ${{ steps.run-code-analyzer.outputs.num-sev1-violations }}
+          NUM_SEV2_VIOLATIONS: ${{ steps.run-code-analyzer.outputs.num-sev2-violations }}
+          NUM_SEV3_VIOLATIONS: ${{ steps.run-code-analyzer.outputs.num-sev3-violations }}
+          NUM_SEV4_VIOLATIONS: ${{ steps.run-code-analyzer.outputs.num-sev4-violations }}
+          NUM_SEV5_VIOLATIONS: ${{ steps.run-code-analyzer.outputs.num-sev5-violations }}
           NUM_VIOLATIONS: ${{ steps.run-code-analyzer.outputs.num-violations }}
