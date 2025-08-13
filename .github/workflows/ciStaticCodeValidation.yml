@@ -47,7 +47,7 @@ jobs:
           fi
 
       - name: Cache npm (sf CLI)
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809
         with:
           path: ~/.npm
           key: npm-${{ runner.os }}-sf-cli-$SF_CLI_VERSION-${{ steps.cachekey.outputs.suffix }}
