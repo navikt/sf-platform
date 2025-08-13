@@ -33,7 +33,25 @@ jobs:
     defaults:
       run:
         shell: bash
+    env:
+      SF_CLI_VERSION: ${{ vars.SF_CLI_VERSION || 'latest' }}
     steps:
+      - name: Compute cache key (sf CLI)
+        id: cachekey
+        run: |
+          if [ $SF_CLI_VERSION = "latest" ]; then
+            # Rotate weekly; change to +%Y-%m for monthly
+            echo "suffix=$(date +%Y-%V)" >> "$GITHUB_OUTPUT"
+          else
+            echo "suffix=static" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Cache npm (sf CLI)
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-sf-cli-$SF_CLI_VERSION-${{ steps.cachekey.outputs.suffix }}
+
       - name: Install SF CLI
         uses: navikt/sf-platform/.github/actions/installSfCli@eb5b379e3b162280de8f5b9566cb41c25f0832f5
         with:
