@@ -50,11 +50,6 @@ Salesforce is used as a platform to build and deliver applications that support 
 The Salesforce platform is only a tiny part of the overall solution, which includes various integrations and customizations to meet the specific needs of Nav and its users.
 Most applications in the organization are built on the NAIS platform, running on Google Cloud Platform.
 
-
-
-
-
-
 </context>
 
 ## Prerequisites and tooling
@@ -89,6 +84,7 @@ Most applications in the organization are built on the NAIS platform, running on
   - sf scanner run --target /src
 
 Prefer sfp for working with scratch pools:
+
 - sfp pool fetch --targetdevhubusername <devhub-username> --alias <alias> --tag <tag> --setdefaultusername
 - sfp pool list --targetdevhubusername <devhub-username> --allscratchorgs
 
@@ -131,6 +127,7 @@ export default class AccountHeader extends LightningElement {
 ```
 
 ## Static analysis (Code Analyzer)
+
 - Ensure the Code Analyzer plugin is installed:
   - `sf plugins install @salesforce/sfdx-code-analyzer`
 - Run analysis locally (relative path, not absolute):
