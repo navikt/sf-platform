@@ -48,12 +48,10 @@
       ]
     },
     {
-      "versionName": "ver 0.1",
-      "versionNumber": "0.1.0.NEXT",
       "path": "src/application-monitoring",
-      "default": false,
       "package": "application-monitoring",
-      "versionDescription": "Rammeverk for logging"
+      "versionNumber": "0.1.0.NEXT",
+      "definitionFile": "config/scratch-org-def.json"
     }
   ],
   "packageAliases": {
