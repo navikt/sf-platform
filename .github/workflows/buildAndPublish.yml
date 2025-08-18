@@ -25,6 +25,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      pull-requests: write
 
   detectPackageChanges:
     name: Detect Package Changes
