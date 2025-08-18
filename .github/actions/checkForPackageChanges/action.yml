@@ -32,10 +32,12 @@ runs:
 
 
         if [ "${EVENT_NAME}" = "pull_request" ]; then
-            changes=$(git diff "${PR_BASE_SHA}".."${PR_HEAD_SHA}" --ignore-all-space --name-only -- src/)
+            changes=$(git diff "${PR_BASE_SHA}..${PR_HEAD_SHA}" --ignore-all-space --name-only -- \
+            'src/' ':(glob,exclude)src/**/*.md')
         else
             # Fetch the parent commit SHA dynamically, ensuring we're always looking at the immediate predecessor.
-            changes=$(git diff $(git rev-parse "${REF_NAME}^") "${REF_NAME}" --ignore-all-space --name-only -- src/)
+            changes=$(git diff "$(git rev-parse "${REF_NAME}^")" "${REF_NAME}" --ignore-all-space --name-only -- \
+            'src/' ':(glob,exclude)src/**/*.md')
         fi
 
         if [ -n "$changes" ]; then
