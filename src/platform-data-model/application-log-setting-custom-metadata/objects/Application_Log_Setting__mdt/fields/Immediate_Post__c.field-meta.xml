@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Immediate_Post__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description
+    >Determines if the message should be posted immediately after logging, or can be handling in a separate aggregate error report.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText
+    >Determines if the message should be posted immediately after logging, or can be handling in a separate aggregate error report.</inlineHelpText>
+    <label>Immediate Post</label>
+    <type>Checkbox</type>
+</CustomField>
