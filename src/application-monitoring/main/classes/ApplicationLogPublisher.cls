@@ -45,6 +45,7 @@ public class ApplicationLogPublisher {
                                 new AppLog(
                                     log,
                                     hook,
+                                    Setting.Named_Credential__c,
                                     Setting.Message_Template__c
                                 )
                             );
@@ -75,42 +76,42 @@ public class ApplicationLogPublisher {
 
     @future(Callout=true)
     private static void publishToSlack(String jsonAppLogs) {
-        List<AppLog> logs = (List<AppLog>) JSON.deserialize(
-            jsonAppLogs,
-            List<AppLog>.class
-        );
-        ApiController apiCtrl = new ApiController();
-        for (AppLog log : logs) {
-            apiCtrl.setEndpoint(log.slackHook);
-            apiCtrl.setMethod('POST');
-            apiCtrl.addHeader('Content-Type', 'application/json');
+        try {
+            List<AppLog> logs = (List<AppLog>) JSON.deserialize(
+                jsonAppLogs,
+                List<AppLog>.class
+            );
+            SlackCalloutService slackCalloutService = new SlackCalloutService();
 
-            SlackMessage message = new SlackMessage(log.messageTemplate);
-            String errorMessage =
-                'Log level: ' +
-                log.logRecord.Log_Level__c +
-                '\n Source: ' +
-                log.logRecord.Source_Class__c +
-                '\n Link: ' +
-                URL.getSalesforceBaseUrl().toExternalForm() +
-                '/' +
-                log.logRecord.Id +
-                '\n Message: ' +
-                log.logRecord.Log_Message__c;
-            message.addSection(errorMessage);
+            for (AppLog log : logs) {
+                SlackMessage message = new SlackMessage(log.messageTemplate);
+                String errorMessage =
+                    'Log level: ' +
+                    log.logRecord.Log_Level__c +
+                    '\n Source: ' +
+                    log.logRecord.Source_Class__c +
+                    '\n Link: ' +
+                    URL.getSalesforceBaseUrl().toExternalForm() +
+                    '/' +
+                    log.logRecord.Id +
+                    '\n Message: ' +
+                    log.logRecord.Log_Message__c;
+                message.addSection(errorMessage);
 
-            apiCtrl.setBody(JSON.serialize(message));
-
-            apiCtrl.doCallout();
+                slackCalloutService.postMessage(
+                    log.namedCredential,
+                    log.slackHook,
+                    message
+                );
+            }
+        } catch (Exception e) {
+            System.debug(
+                'Error occurred while publishing logs to Slack: ' +
+                e.getMessage()
+            );
         }
     }
 
-    /**
-     * @description: Queries the relevant log settings for the defined application domains
-     * @author Stian Ruud Schikora | 02-23-2021
-     * @param appDomains
-     * @return List<Application_Log_Setting__mdt>
-     **/
     private static List<Application_Log_Setting__mdt> getLogSettings(
         Set<String> appDomains
     ) {
@@ -136,29 +137,18 @@ public class ApplicationLogPublisher {
         ];
     }
 
-    /**
-     * @description: Returns the correct slack hook for production or sandbox.
-     * @author Stian Ruud Schikora | 03-13-2021
-     * @param logSetting
-     * @return String
-     **/
+    //Returns the correct slack hook for production or sandbox.
+
     private static String getHook(Application_Log_Setting__mdt logSetting) {
         if (isSandbox) {
             return logSetting.Slack_Hook_Sandbox__c;
         }
-
-        return String.isNotBlank(logSetting.Named_Credential__c)
-            ? 'callout:' + logSetting.Named_Credential__c
-            : logSetting.Slack_Hook__c;
+        return logSetting.Slack_Hook__c;
     }
 
-    /**
-  * @description: Returns the log level ordinal for a input loglevel string
-  INFO = 0, WARNING = 1, ERROR = 2, CRITICAL = 3
-  * @author Stian Ruud Schikora | 02-22-2021
-  * @param logLevel
-  * @return Integer
-  **/
+    // Returns the log level ordinal for a input loglevel string
+    //INFO = 0, WARNING = 1, ERROR = 2, CRITICAL = 3
+
     private static Integer getLogLevelOrdinal(String logLevel) {
         return LoggerUtility.inverseLevelMap.get(logLevel).ordinal();
     }
@@ -167,15 +157,18 @@ public class ApplicationLogPublisher {
         private AppLog(
             Application_Log__c appLog,
             String slackHook,
+            String namedCredential,
             String messageTemplate
         ) {
             this.logRecord = appLog;
             this.slackHook = slackHook;
+            this.namedCredential = namedCredential;
             this.messageTemplate = messageTemplate;
         }
 
         private Application_Log__c logRecord;
         private String slackHook;
+        private String namedCredential;
         private String messageTemplate;
     }
 }

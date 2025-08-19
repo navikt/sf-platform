@@ -48,6 +48,12 @@
       ]
     },
     {
+      "path": "src/integration/slack-integration",
+      "package": "slack-integration",
+      "versionNumber": "0.1.0.NEXT",
+      "definitionFile": "config/project-scratch-def.json"
+    },
+    {
       "path": "src/application-monitoring",
       "package": "application-monitoring",
       "versionNumber": "0.1.0.NEXT",
@@ -56,6 +62,10 @@
         {
           "package": "platform-data-model",
           "versionNumber": "0.1.27.LATEST"
+        },
+        {
+          "package": "slack-integration",
+          "versionNumber": "0.1.0.LATEST"
         }
       ]
     }
