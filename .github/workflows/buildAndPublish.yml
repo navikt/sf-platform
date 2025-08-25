@@ -37,13 +37,13 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           fetch-depth: 0 # Full history needed for change detection
           persist-credentials: false
 
       # Check for changes in the src directory excluding .md files
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@eb5b379e3b162280de8f5b9566cb41c25f0832f5
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@0d7fbc7dd02eeb0ed965aa3f0ca1e8010a9ee83e
         id: checkChanges
 
   buildAndPublish:
@@ -68,7 +68,7 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           fetch-depth: 0 # Full history for release definition and changelog
           persist-credentials: true
@@ -128,7 +128,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Commit changes
-        uses: navikt/sf-platform/.github/actions/commitFiles@eb5b379e3b162280de8f5b9566cb41c25f0832f5
+        uses: navikt/sf-platform/.github/actions/commitFiles@0d7fbc7dd02eeb0ed965aa3f0ca1e8010a9ee83e
         if: steps.build.outputs.artifactsFound == 'true'
         with:
           files: sfdx-project.json
@@ -155,14 +155,14 @@ jobs:
 
       - name: Push logged metrics
         if: always() # Always push metrics regardless of build success
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@d77aeff38e7ba9938368c80e415f8615b1cc4308
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@0d7fbc7dd02eeb0ed965aa3f0ca1e8010a9ee83e
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
 
       # Upload build artifacts and logs if present
       - name: Upload Artifacts and Logs
         if: steps.build.outputs.artifactsFound == 'true'
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@eb5b379e3b162280de8f5b9566cb41c25f0832f5
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@0d7fbc7dd02eeb0ed965aa3f0ca1e8010a9ee83e
         with:
           artifactName: build-artifacts
           uploadArtifacts: true
