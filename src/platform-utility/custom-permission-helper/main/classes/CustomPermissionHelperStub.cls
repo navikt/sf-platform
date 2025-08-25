@@ -17,6 +17,7 @@
  * cph.validateCustomPermission('MyCustomPermission');
  * ```
  */
+@SuppressWarnings('PMD')
 @IsTest
 public with sharing class CustomPermissionHelperStub implements System.StubProvider {
     private List<Boolean> hasCustomPermissionList;

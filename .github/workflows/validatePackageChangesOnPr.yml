@@ -3,7 +3,8 @@ on:
   pull_request:
     types: [opened, ready_for_review, reopened]
     paths:
-      - src/**
+      - "src/**"
+      - "!src/**/*.md"
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
@@ -14,6 +15,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      pull-requests: write
 
   checkChanges:
     name: Check changes
@@ -30,7 +32,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@7bc720106cdadde69c31f5d7d8ff1f8d6b790d54
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@eb5b379e3b162280de8f5b9566cb41c25f0832f5
         id: checkChanges
 
   validateChanges:
@@ -105,7 +107,7 @@ jobs:
           fi
 
       - name: Push logged metrics
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@main
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@d77aeff38e7ba9938368c80e415f8615b1cc4308
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
 
@@ -119,6 +121,6 @@ jobs:
       pull-requests: write
     steps:
       - name: Set pull request to draft
-        uses: navikt/sf-platform/.github/actions/setPrToDraft@7bc720106cdadde69c31f5d7d8ff1f8d6b790d54
+        uses: navikt/sf-platform/.github/actions/setPrToDraft@eb5b379e3b162280de8f5b9566cb41c25f0832f5
         with:
           pullRequestId: ${{ github.event.pull_request.node_id }}
