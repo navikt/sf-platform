@@ -34,7 +34,7 @@ graph TD
     microsoft-graph-integration --> api-controller*
     ad-group-sync --> platform-datamodel;
     ad-group-sync --> application-monitoring*;
-    ad-grouup-sync --> platform-repository;
+    ad-group-sync --> platform-repository;
     platform-repository --> platform-domain;
 ```
 
