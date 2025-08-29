@@ -53,12 +53,7 @@
       "package": "custom-permission-helper",
       "versionNumber": "0.1.27.NEXT",
       "definitionFile": "config/scratch-org-def.json",
-      "dependencies": [
-        {
-          "package": "crm-platform-base",
-          "versionNumber": "0.276.0.LATEST"
-        }
-      ]
+      "dependencies": []
     },
     {
       "path": "src/frameworks/feature-toggle",
@@ -85,7 +80,12 @@
       "package": "microsoft-graph-integration",
       "versionNumber": "0.1.0.NEXT",
       "definitionFile": "config/scratch-org-def.json",
-      "dependencies": []
+      "dependencies": [
+        {
+          "package": "crm-platform-base",
+          "versionNumber": "0.276.0.LATEST"
+        }
+      ]
     },
     {
       "path": "src/login-flow",
@@ -99,6 +99,18 @@
         },
         {
           "package": "ad-group-sync",
+          "versionNumber": "0.1.0.LATEST"
+        },
+        {
+          "package": "crm-platform-base",
+          "versionNumber": "0.276.0.LATEST"
+        },
+        {
+          "package": "platform-domain",
+          "versionNumber": "0.1.25.LATEST"
+        },
+        {
+          "package": "platform-repository",
           "versionNumber": "0.1.0.LATEST"
         }
       ]
@@ -116,6 +128,10 @@
         {
           "package": "platform-repository",
           "versionNumber": "0.1.0.LATEST"
+        },
+        {
+          "package": "platform-domain",
+          "versionNumber": "0.1.25.LATEST"
         },
         {
           "package": "crm-platform-base",
