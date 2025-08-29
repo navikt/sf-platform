@@ -22,11 +22,11 @@ private class DefaultLoginFlowControllerTest {
 
         String expectedUrl = 'https://test.com/auth?client_id=abc&redirect_uri=https%3A%2F%2Ftest.com%2Fdefault&response_mode=query&response_type=code&scope=default&state=';
 
-        Assert.isTrue(
+        System.Assert.isTrue(
             nextPage.startsWith(expectedUrl),
             'The return URL is expected to be the same as the expected URL, except that the state is different'
         );
-        Assert.isTrue(
+        System.Assert.isTrue(
             nextPage.length() > expectedUrl.length(),
             'The state is expected to have a value in the actual URL'
         );
@@ -73,10 +73,10 @@ private class DefaultLoginFlowControllerTest {
         Test.stopTest();
 
         String expectedUrl = 'https://test.com';
-        System.assertEquals(
+        System.Assert.areEqual(
             expectedUrl,
             nextPage,
-            'Expected redirect url to be getched in the retUrl cookie'
+            'Expected redirect url to be fetched in the retUrl cookie'
         );
     }
 
@@ -107,11 +107,11 @@ private class DefaultLoginFlowControllerTest {
 
         String expectedUrl = 'https://test.com/auth?client_id=abc&redirect_uri=https%3A%2F%2Ftest.com%2Fdefault&response_mode=query&response_type=code&scope=default&state=';
 
-        Assert.isTrue(
+        System.Assert.isTrue(
             nextPage.startsWith(expectedUrl),
             'The return URL is expected to be the same as the expected URL, except that the state is different'
         );
-        Assert.isTrue(
+        System.Assert.isTrue(
             nextPage.length() > expectedUrl.length(),
             'The state is expected to have a value in the actual URL'
         );
@@ -142,6 +142,6 @@ private class DefaultLoginFlowControllerTest {
         String nextPage = controller.redirect().getUrl();
         Test.stopTest();
 
-        Assert.areEqual('/', nextPage);
+        System.Assert.areEqual('/', nextPage);
     }
 }

@@ -7,7 +7,8 @@ public without sharing class DefaultLoginFlowController {
         CRM_ApplicationDomain.Domain.PLATFORCE,
         'LoginFlow'
     );
-    UserDomain currentUser = new UserRepository().fetchCurrentUser();
+    UserRepository userRepository = new UserRepository();
+    UserDomain currentUser = UserRepository.fetchCurrentUser();
     OauthCodeFlowService oauthCodeFlowService = new OauthCodeFlowService();
     RefreshTokenService refreshTokenService = new RefreshTokenService();
     private String refreshToken;
@@ -58,7 +59,8 @@ public without sharing class DefaultLoginFlowController {
                 return Auth.SessionManagement.finishLoginFlow();
             }
 
-            currentUser.checkAccessToFortroligAndSkjermetByAdGroups(
+            UserRepository.checkAccessToFortroligAndSkjermetByAdGroups(
+                currentUser,
                 microsoftGraphResponse.groupIds
             );
 
@@ -160,11 +162,6 @@ public without sharing class DefaultLoginFlowController {
             logger.warningAndPublish('Unsuccessful microsoft graph response');
             return null;
         }
-        //get current users group memberships from Microsoft Graph
-
-        currentUser.checkAccessToFortroligAndSkjermetByAdGroups(
-            microsoftGraphResponse.groupIds
-        );
         return microsoftGraphResponse;
     }
 
