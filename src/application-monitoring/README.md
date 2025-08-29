@@ -18,7 +18,7 @@ logger.publish();
 The logger framework automatically adds the stacktrace, source function and source class to the log record when creating a log entry. To allow for application logging while also rolling back a transaction the framework includes also an _Application_Event\_\_e_ platform event counterpart that can be published even when rolling back transactions, _the standard publish() will generate a platform event_. Each log entry generates an unique UUID at runtime that can be handy for i.e. callouts requiring unique callout references in the callout chain. This examples returns the UUID of the last logged event:
 `logger.peek().UUID__c`
 
-The data model is available in [platform-data-model](src/platform-data-model/README.md)
+The data model is available in [platform-data-model](src/platform-data-model/README.md).
 
 |         |     |
 | ------- | --- |
