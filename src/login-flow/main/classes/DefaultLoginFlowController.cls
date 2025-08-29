@@ -20,8 +20,15 @@ public without sharing class DefaultLoginFlowController {
                 return Auth.SessionManagement.finishLoginFlow();
             }
 
-            String state = apexpages.currentPage().getParameters().get('state');
-            String code = apexpages.currentPage().getParameters().get('code');
+            String stateParam = apexpages.currentPage()
+                .getParameters()
+                .get('state');
+            String codeParam = apexpages.currentPage()
+                .getParameters()
+                .get('code');
+
+            String state = stateParam;
+            String code = codeParam;
 
             // refresh with added state if there is none
             if (code == null || state == null) {
@@ -96,7 +103,10 @@ public without sharing class DefaultLoginFlowController {
     private PageReference initiateAuthCodeFlow() {
         String state = StringUtil.generateRandomString(500);
         stateCookie = new Cookie('state', state, null, 180, true);
-        retUrl = ApexPages.currentPage().getParameters().get('retURL');
+        String retUrlParam = ApexPages.currentPage()
+            .getParameters()
+            .get('retURL');
+        retUrl = retUrlParam;
         retUrlCookie = new Cookie('retUrl', retURL, null, 180, true);
 
         retryCookie = ApexPages.currentPage().getCookies().get('retry');
