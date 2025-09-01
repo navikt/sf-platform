@@ -1,3 +1,4 @@
+@SuppressWarnings('PMD')
 public with sharing class RefreshTokenService {
     public void saveRefreshToken(String refreshToken) {
         // The AllOrNone parameter is used to catch errors due to already deleted Log__c

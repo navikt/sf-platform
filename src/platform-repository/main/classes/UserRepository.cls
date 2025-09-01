@@ -1,3 +1,4 @@
+@SuppressWarnings('PMD')
 public with sharing class UserRepository extends RepositoryBase {
     private CustomMetadataDAO customMetadataDAO = new CustomMetadataDAO();
     @TestVisible

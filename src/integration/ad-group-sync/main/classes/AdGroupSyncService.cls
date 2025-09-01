@@ -62,6 +62,7 @@ public without sharing class AdGroupSyncService {
                     SELECT Id
                     FROM PermissionSet
                     WHERE Name IN :permsetsToAssign
+                    WITH SECURITY_ENFORCED
                 ];
 
                 if (permissionSets.size() > 0) {
@@ -80,6 +81,7 @@ public without sharing class AdGroupSyncService {
                     SELECT Id
                     FROM PermissionSetGroup
                     WHERE DeveloperName IN :permsetGroupsToAssign
+                    WITH SECURITY_ENFORCED
                 ];
 
                 if (permsetGroups.size() > 0) {
@@ -142,6 +144,7 @@ public without sharing class AdGroupSyncService {
                     WHERE
                         UserOrGroupId = :currentUser.recordId
                         AND GroupId IN :groupMemberIdsToRemove
+                    WITH SECURITY_ENFORCED
                 ];
                 delete groupMembersToDelete;
             }
@@ -157,6 +160,7 @@ public without sharing class AdGroupSyncService {
                         AssigneeId = :currentUser.recordId
                         AND (PermissionSet.Name IN :permissionSetsToRemove
                         OR PermissionSetGroup.DeveloperName IN :permissionSetGroupsToRemove)
+                    WITH SECURITY_ENFORCED
                 ];
                 delete assignmentToRemove;
             }
@@ -194,6 +198,7 @@ public without sharing class AdGroupSyncService {
                 PermissionSetGroup__c
             FROM AdGroupMapping__mdt
             WHERE AccessType__c != :exludedAccessTypes
+            WITH SECURITY_ENFORCED
         ]) {
             String adGroupId = runningInASandbox || Test.isRunningTest()
                 ? mapping.AdGroupIdPreprod__c
@@ -233,6 +238,7 @@ public without sharing class AdGroupSyncService {
             SELECT GroupId
             FROM GroupMember
             WHERE UserOrGroupId = :userId AND GroupId IN :salesforceGroupIds
+            WITH SECURITY_ENFORCED
         ]) {
             groupIds.add(member.GroupId);
         }
@@ -286,6 +292,7 @@ public without sharing class AdGroupSyncService {
             SELECT PermissionSetId, PermissionSetGroup.Id
             FROM PermissionSetAssignment
             WHERE AssigneeId = :UserInfo.getUserId()
+            WITH SECURITY_ENFORCED
         ]) {
             if (assignment.PermissionSetId != null) {
                 existingPermissionSetIds.add(assignment.PermissionSetId);

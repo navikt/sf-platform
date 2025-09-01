@@ -27,8 +27,12 @@ public without sharing class DefaultLoginFlowController {
                 .getParameters()
                 .get('code');
 
-            String state = stateParam;
-            String code = codeParam;
+            String state = stateParam != null
+                ? EncodingUtil.urlEncode(stateParam, 'UTF-8')
+                : null;
+            String code = codeParam != null
+                ? EncodingUtil.urlEncode(codeParam, 'UTF-8')
+                : null;
 
             // refresh with added state if there is none
             if (code == null || state == null) {
@@ -106,7 +110,9 @@ public without sharing class DefaultLoginFlowController {
         String retUrlParam = ApexPages.currentPage()
             .getParameters()
             .get('retURL');
-        retUrl = retUrlParam;
+        retUrl = retUrlParam != null
+            ? EncodingUtil.urlEncode(retUrlParam, 'UTF-8')
+            : null;
         retUrlCookie = new Cookie('retUrl', retURL, null, 180, true);
 
         retryCookie = ApexPages.currentPage().getCookies().get('retry');
