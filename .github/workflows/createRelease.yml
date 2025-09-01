@@ -53,7 +53,7 @@ jobs:
           registry-url: https://npm.pkg.github.com
 
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           fetch-depth: 0 # Full history for release definition and changelog
           persist-credentials: true
@@ -272,6 +272,6 @@ jobs:
           echo "::endgroup::"
 
       - name: Push logged metrics
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@d77aeff38e7ba9938368c80e415f8615b1cc4308
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@0d7fbc7dd02eeb0ed965aa3f0ca1e8010a9ee83e
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}

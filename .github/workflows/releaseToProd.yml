@@ -54,6 +54,6 @@ jobs:
           auth_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push logged metrics
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@d77aeff38e7ba9938368c80e415f8615b1cc4308
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@0d7fbc7dd02eeb0ed965aa3f0ca1e8010a9ee83e
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
