@@ -61,8 +61,8 @@ public without sharing class AdGroupSyncService {
                 List<PermissionSet> permissionSets = [
                     SELECT Id
                     FROM PermissionSet
-                    WHERE Name IN :permsetsToAssign //NOPMD - Fetching permission sets should only be allowed in the context of the login flow
-                ];
+                    WHERE Name IN :permsetsToAssign
+                ]; //NOPMD - Fetching permission sets should only be allowed in the context of the login flow
 
                 if (permissionSets.size() > 0) {
                     //assign permission set
@@ -79,8 +79,8 @@ public without sharing class AdGroupSyncService {
                 List<PermissionSetGroup> permsetGroups = [
                     SELECT Id
                     FROM PermissionSetGroup
-                    WHERE DeveloperName IN :permsetGroupsToAssign //NOPMD - Fetching permission set groups should only be allowed in the context of the login flow
-                ];
+                    WHERE DeveloperName IN :permsetGroupsToAssign
+                ]; //NOPMD - Fetching permission set groups should only be allowed in the context of the login flow
 
                 if (permsetGroups.size() > 0) {
                     for (PermissionSetGroup permsetGroup : permsetGroups) {
