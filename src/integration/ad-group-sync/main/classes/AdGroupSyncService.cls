@@ -59,10 +59,11 @@ public without sharing class AdGroupSyncService {
 
             if (permsetsToAssign.size() > 0) {
                 List<PermissionSet> permissionSets = [
+                    //NOPMD - Fetching permission sets should only be allowed in the context of the login flow
                     SELECT Id
                     FROM PermissionSet
                     WHERE Name IN :permsetsToAssign
-                ]; //NOPMD - Fetching permission sets should only be allowed in the context of the login flow
+                ];
 
                 if (permissionSets.size() > 0) {
                     //assign permission set
@@ -77,10 +78,11 @@ public without sharing class AdGroupSyncService {
 
             if (permsetGroupsToAssign.size() > 0) {
                 List<PermissionSetGroup> permsetGroups = [
+                    //NOPMD - Fetching permission set groups should only be allowed in the context of the login flow
                     SELECT Id
                     FROM PermissionSetGroup
                     WHERE DeveloperName IN :permsetGroupsToAssign
-                ]; //NOPMD - Fetching permission set groups should only be allowed in the context of the login flow
+                ];
 
                 if (permsetGroups.size() > 0) {
                     for (PermissionSetGroup permsetGroup : permsetGroups) {
@@ -137,11 +139,12 @@ public without sharing class AdGroupSyncService {
 
             if (groupMemberIdsToRemove.size() > 0) {
                 List<GroupMember> groupMembersToDelete = [
+                    // NOPMD - Fetching and deleting group members should only be allowed in the context of the login flow
                     SELECT Id
                     FROM GroupMember
                     WHERE
                         UserOrGroupId = :currentUser.recordId
-                        AND GroupId IN :groupMemberIdsToRemove // NOPMD - Fetching and deleting group members should only be allowed in the context of the login flow
+                        AND GroupId IN :groupMemberIdsToRemove
                 ];
                 delete groupMembersToDelete;
             }
@@ -151,12 +154,13 @@ public without sharing class AdGroupSyncService {
                 permissionSetGroupsToRemove.size() > 0
             ) {
                 List<PermissionSetAssignment> assignmentToRemove = [
+                    // NOPMD - Fetching and deleting permission set assignments should only be allowed in the context of the login flow
                     SELECT Id
                     FROM PermissionSetAssignment
                     WHERE
                         AssigneeId = :currentUser.recordId
                         AND (PermissionSet.Name IN :permissionSetsToRemove
-                        OR PermissionSetGroup.DeveloperName IN :permissionSetGroupsToRemove) // NOPMD - Fetching and deleting permission set assignments should only be allowed in the context of the login flow
+                        OR PermissionSetGroup.DeveloperName IN :permissionSetGroupsToRemove)
                 ];
                 delete assignmentToRemove;
             }
@@ -174,7 +178,7 @@ public without sharing class AdGroupSyncService {
     public static Map<Id, AdGroup> getAdGroupBySalesforceGroupId(
         Boolean accessToThemesFromAdGroupsFeatureFlag
     ) {
-        Boolean runningInASandbox = [SELECT IsSandbox FROM Organization LIMIT 1]
+        Boolean runningInASandbox = [SELECT IsSandbox FROM Organization LIMIT 1] // NOPMD - Fetching organization should only be allowed in the context of the login flow
         .IsSandbox;
 
         //Temprary where clause to handle feature flag for theme access from Azure AD groups
@@ -186,6 +190,7 @@ public without sharing class AdGroupSyncService {
         //put AdGroup in a map
         Map<String, AdGroup> adGroupBySalesforceDeveloperName = new Map<String, AdGroup>();
         for (AdGroupMapping__mdt mapping : [
+            // NOPMD - Fetching AD Group mappings should only be allowed in the context of the login flow
             SELECT
                 AdGroupIdPreprod__c,
                 AdGroupIdProd__c,
@@ -193,7 +198,7 @@ public without sharing class AdGroupSyncService {
                 PermissionSet__c,
                 PermissionSetGroup__c
             FROM AdGroupMapping__mdt
-            WHERE AccessType__c != :exludedAccessTypes // NOPMD - Fetching AD Group mappings should only be allowed in the context of the login flow
+            WHERE AccessType__c != :exludedAccessTypes
         ]) {
             String adGroupId = runningInASandbox || Test.isRunningTest()
                 ? mapping.AdGroupIdPreprod__c
@@ -212,6 +217,7 @@ public without sharing class AdGroupSyncService {
         //get Salesforce group ids
         Map<Id, Adgroup> adGroupBySalesforceGroupId = new Map<Id, AdGroup>();
         for (Group g : [
+            // NOPMD - Fetching public groups should only be allowed in the context of the login flow
             SELECT Id, DeveloperName
             FROM Group
             WHERE DeveloperName IN :adGroupBySalesforceDeveloperName.keySet()
@@ -230,9 +236,10 @@ public without sharing class AdGroupSyncService {
     ) {
         Set<Id> groupIds = new Set<Id>();
         for (GroupMember member : [
+            // NOPMD - Fetching group members should only be allowed in the context of the login flow
             SELECT GroupId
             FROM GroupMember
-            WHERE UserOrGroupId = :userId AND GroupId IN :salesforceGroupIds // NOPMD - Fetching group members should only be allowed in the context of the login flow
+            WHERE UserOrGroupId = :userId AND GroupId IN :salesforceGroupIds
         ]) {
             groupIds.add(member.GroupId);
         }
@@ -283,9 +290,10 @@ public without sharing class AdGroupSyncService {
         Set<Id> existingPermissionSetIds = new Set<Id>();
         Set<Id> existingPermissionSetGroupIds = new Set<Id>();
         for (PermissionSetAssignment assignment : [
+            // NOPMD - Fetching permission set assignments should only be allowed in the context of the login flow
             SELECT PermissionSetId, PermissionSetGroup.Id
             FROM PermissionSetAssignment
-            WHERE AssigneeId = :UserInfo.getUserId() // NOPMD - Fetching permission set assignments should only be allowed in the context of the login flow
+            WHERE AssigneeId = :UserInfo.getUserId()
         ]) {
             if (assignment.PermissionSetId != null) {
                 existingPermissionSetIds.add(assignment.PermissionSetId);
