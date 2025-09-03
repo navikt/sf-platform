@@ -46,9 +46,12 @@ runs:
           keyfile=$(mktemp) || exit 1
           cat > "$keyfile" <<< "$METRICSKEY"
           sig=$(printf %s "$metrics" | openssl dgst -sha256 -sign "$keyfile" -out - | base64 -w0)
+
+          repo_name=$(basename "$GITHUB_REPOSITORY")
+
           jq --compact-output --null-input \
             --arg metrics "$metrics" \
-            --arg runner sf-platform \
+            --arg runner "$repo_name" \
             --arg sig "$sig" \
             '{"runner":$runner,"metrics":$metrics,"signature":$sig}' |
             tee >(curl -D- -H 'Content-Type: application/json' --data-binary @- \
@@ -59,3 +62,4 @@ runs:
         fi
       env:
         METRICSKEY: ${{ inputs.metricsKey }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
