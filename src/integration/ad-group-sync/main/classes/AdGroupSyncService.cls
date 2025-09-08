@@ -146,7 +146,7 @@ public without sharing class AdGroupSyncService {
                         UserOrGroupId = :currentUser.recordId
                         AND GroupId IN :groupMemberIdsToRemove
                 ];
-                delete groupMembersToDelete;
+                delete groupMembersToDelete; // NOPMD - Fetching and deleting group members should only be allowed in the context of the login flow
             }
 
             if (
@@ -162,7 +162,7 @@ public without sharing class AdGroupSyncService {
                         AND (PermissionSet.Name IN :permissionSetsToRemove
                         OR PermissionSetGroup.DeveloperName IN :permissionSetGroupsToRemove)
                 ];
-                delete assignmentToRemove;
+                delete assignmentToRemove; // NOPMD - Fetching and deleting permission set assignments should only be allowed in the context of the login flow
             }
         } catch (Exception e) {
             logger.errorAndPublish(
