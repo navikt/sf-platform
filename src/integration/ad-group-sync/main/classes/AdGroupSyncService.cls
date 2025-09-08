@@ -58,8 +58,7 @@ public without sharing class AdGroupSyncService {
             }
 
             if (permsetsToAssign.size() > 0) {
-                List<PermissionSet> permissionSets = [
-                    //NOPMD - Fetching permission sets should only be allowed in the context of the login flow
+                List<PermissionSet> permissionSets = [//NOPMD - Fetching permission sets should only be allowed in the context of the login flow
                     SELECT Id
                     FROM PermissionSet
                     WHERE Name IN :permsetsToAssign
