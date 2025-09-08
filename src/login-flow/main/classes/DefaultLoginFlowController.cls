@@ -138,7 +138,7 @@ public without sharing class DefaultLoginFlowController {
             state
         );
 
-        pageReference pg = new pageReference(initiateUrl);
+        pageReference pg = new pageReference(initiateUrl); // NOPMD - Fetching and redirecting to the authorization URL is the intended behavior here
         return pg.setRedirect(true);
     }
 
