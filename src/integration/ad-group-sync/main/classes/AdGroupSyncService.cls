@@ -58,10 +58,11 @@ public without sharing class AdGroupSyncService {
             }
 
             if (permsetsToAssign.size() > 0) {
-                List<PermissionSet> permissionSets = [
+                // prettier-ignore
+                List<PermissionSet> permissionSets = [// NOPMD - Fetching permission sets should only be allowed in the context of the login flow
                     SELECT Id
                     FROM PermissionSet
-                    WHERE Name IN :permsetsToAssign // NOPMD - Fetching permission sets should only be allowed in the context of the login flow
+                    WHERE Name IN :permsetsToAssign
                 ];
 
                 if (permissionSets.size() > 0) {
@@ -76,8 +77,8 @@ public without sharing class AdGroupSyncService {
             }
 
             if (permsetGroupsToAssign.size() > 0) {
-                List<PermissionSetGroup> permsetGroups = [
-                    //NOPMD - Fetching permission set groups should only be allowed in the context of the login flow
+                // prettier-ignore
+                List<PermissionSetGroup> permsetGroups = [// NOPMD - Fetching permission set groups should only be allowed in the context of the login flow
                     SELECT Id
                     FROM PermissionSetGroup
                     WHERE DeveloperName IN :permsetGroupsToAssign
@@ -137,8 +138,8 @@ public without sharing class AdGroupSyncService {
             }
 
             if (groupMemberIdsToRemove.size() > 0) {
-                List<GroupMember> groupMembersToDelete = [
-                    // NOPMD - Fetching and deleting group members should only be allowed in the context of the login flow
+                // prettier-ignore
+                List<GroupMember> groupMembersToDelete = [// NOPMD - Fetching and deleting group members should only be allowed in the context of the login flow
                     SELECT Id
                     FROM GroupMember
                     WHERE
@@ -152,8 +153,8 @@ public without sharing class AdGroupSyncService {
                 permissionSetsToRemove.size() > 0 ||
                 permissionSetGroupsToRemove.size() > 0
             ) {
-                List<PermissionSetAssignment> assignmentToRemove = [
-                    // NOPMD - Fetching and deleting permission set assignments should only be allowed in the context of the login flow
+                // prettier-ignore
+                List<PermissionSetAssignment> assignmentToRemove = [// NOPMD - Fetching and deleting permission set assignments should only be allowed in the context of the login flow
                     SELECT Id
                     FROM PermissionSetAssignment
                     WHERE
@@ -188,8 +189,8 @@ public without sharing class AdGroupSyncService {
 
         //put AdGroup in a map
         Map<String, AdGroup> adGroupBySalesforceDeveloperName = new Map<String, AdGroup>();
-        for (AdGroupMapping__mdt mapping : [
-            // NOPMD - Fetching AD Group mappings should only be allowed in the context of the login flow
+        // prettier-ignore
+        for (AdGroupMapping__mdt mapping : [// NOPMD - Fetching AD Group mappings should only be allowed in the context of the login flow
             SELECT
                 AdGroupIdPreprod__c,
                 AdGroupIdProd__c,
@@ -215,8 +216,8 @@ public without sharing class AdGroupSyncService {
 
         //get Salesforce group ids
         Map<Id, Adgroup> adGroupBySalesforceGroupId = new Map<Id, AdGroup>();
-        for (Group g : [
-            // NOPMD - Fetching public groups should only be allowed in the context of the login flow
+        // prettier-ignore
+        for (Group g : [// NOPMD - Fetching public groups should only be allowed in the context of the login flow
             SELECT Id, DeveloperName
             FROM Group
             WHERE DeveloperName IN :adGroupBySalesforceDeveloperName.keySet()
@@ -234,8 +235,8 @@ public without sharing class AdGroupSyncService {
         Set<Id> salesforceGroupIds
     ) {
         Set<Id> groupIds = new Set<Id>();
-        for (GroupMember member : [
-            // NOPMD - Fetching group members should only be allowed in the context of the login flow
+        // prettier-ignore
+        for (GroupMember member : [// NOPMD - Fetching group members should only be allowed in the context of the login flow
             SELECT GroupId
             FROM GroupMember
             WHERE UserOrGroupId = :userId AND GroupId IN :salesforceGroupIds
@@ -288,8 +289,8 @@ public without sharing class AdGroupSyncService {
     ) {
         Set<Id> existingPermissionSetIds = new Set<Id>();
         Set<Id> existingPermissionSetGroupIds = new Set<Id>();
-        for (PermissionSetAssignment assignment : [
-            // NOPMD - Fetching permission set assignments should only be allowed in the context of the login flow
+        // prettier-ignore
+        for (PermissionSetAssignment assignment : [// NOPMD - Fetching permission set assignments should only be allowed in the context of the login flow
             SELECT PermissionSetId, PermissionSetGroup.Id
             FROM PermissionSetAssignment
             WHERE AssigneeId = :UserInfo.getUserId()
