@@ -53,7 +53,7 @@ jobs:
           key: npm-${{ runner.os }}-sf-cli-$SF_CLI_VERSION-${{ steps.cachekey.outputs.suffix }}
 
       - name: Install SF CLI
-        uses: navikt/sf-platform/.github/actions/installSfCli@cfe393a0ec7dd2fa8af1388bc159192673a87c94
+        uses: navikt/sf-gha-install-sf-cli@3f1abbc990b03fb544e80169920fea2e94946d1a
         with:
           version: ${{ vars.SF_CLI_VERSION }}
 
