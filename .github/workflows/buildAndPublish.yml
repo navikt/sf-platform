@@ -128,7 +128,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Commit changes
-        uses: navikt/sf-platform/.github/actions/commitFiles@06dfcd9b3ba08f6c27a650c6f315ed5730491540
+        uses: navikt/sf-gha-commit-files@216c5afbc28f2122a1385838e65bceb88af7a1c1
         if: steps.build.outputs.artifactsFound == 'true'
         with:
           files: sfdx-project.json
