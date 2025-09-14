@@ -1,7 +1,23 @@
-/* Get data from Microosft Graph Api behalf of active user **/
+/**
+ * @description
+ * Service class for integrating with Microsoft Graph API to fetch group memberships for the active user.
+ * Handles authentication, API requests, pagination, error handling, and response parsing.
+ *
+ * @see https://learn.microsoft.com/en-us/graph/api/user-getmembergroups
+ */
 public with sharing class MicrosoftGraphService {
-    private final string apiConfigName = 'Microsoft_Graph_API'; //API Config name to set when using the ApiController
+    /**
+     * API Config name to set when using the ApiController.
+     */
+    public static final String API_CONFIG_NAME = 'Microsoft_Graph_API';
 
+    /**
+     * Fetches group memberships for the active user from Microsoft Graph API.
+     * Handles pagination and error responses.
+     *
+     * @param accessToken OAuth access token for Microsoft Graph API.
+     * @return MicrosoftGraphResponse containing group IDs and status.
+     */
     public MicrosoftGraphResponse getMyMemberGroups(String accessToken) {
         MicrosoftGraphResponse resp = new MicrosoftGraphResponse();
 
@@ -35,6 +51,13 @@ public with sharing class MicrosoftGraphService {
         return resp;
     }
 
+    /**
+     * Handles pagination for group membership requests using skip tokens.
+     *
+     * @param apiCtrl Initialized ApiController for Microsoft Graph.
+     * @param resp MicrosoftGraphResponse to update with additional group IDs.
+     * @return Updated MicrosoftGraphResponse with all group IDs.
+     */
     private MicrosoftGraphResponse getMoreGroupsWithUseOfSkipToken(
         ApiController apiCtrl,
         MicrosoftGraphResponse resp
@@ -62,6 +85,14 @@ public with sharing class MicrosoftGraphService {
         return resp;
     }
 
+    /**
+     * Handles error responses from Microsoft Graph API and logs details.
+     *
+     * @param statusCode HTTP status code from API response.
+     * @param responseFromApiCtrl HttpResponse object from ApiController.
+     * @param resp MicrosoftGraphResponse to update with error message.
+     * @return Updated MicrosoftGraphResponse with error details.
+     */
     private MicrosoftGraphResponse getErrors(
         Integer statusCode,
         HttpResponse responseFromApiCtrl,
@@ -86,6 +117,13 @@ public with sharing class MicrosoftGraphService {
         return resp;
     }
 
+    /**
+     * Logs error details using LoggerUtility and returns a unique error reference.
+     *
+     * @param resp HttpResponse object containing error details.
+     * @param message Custom error message for logging.
+     * @return Unique error reference string for troubleshooting.
+     */
     private String logError(HttpResponse resp, String message) {
         String errorRef = '';
 
@@ -108,18 +146,30 @@ public with sharing class MicrosoftGraphService {
 
         return errorRef;
     }
+
+    /**
+     * DTO for Microsoft Graph API group membership response.
+     */
     public class MicrosoftGraphResponse {
         public Boolean success;
         public String nextlink;
         public List<String> groupIds;
         public String errorMessage;
 
+        /**
+         * Initializes a new MicrosoftGraphResponse.
+         */
         public MicrosoftGraphResponse() {
             this.success = false;
             this.groupIds = new List<String>();
             this.errorMessage = null;
         }
 
+        /**
+         * Parses the JSON response from Microsoft Graph API and extracts group IDs and next link.
+         *
+         * @param jsonResponse JSON string from Microsoft Graph API.
+         */
         public void parse(String jsonResponse) {
             Map<String, Object> jsonMap = (Map<String, Object>) JSON.deserializeUntyped(
                 jsonResponse
