@@ -2,16 +2,16 @@
  * @description
  * Service class for integrating with Microsoft Graph API to fetch group memberships for the active user.
  * Handles authentication, API requests, pagination, error handling, and response parsing.
- *
  * @see https://learn.microsoft.com/en-us/graph/api/user-getmembergroups
  */
 public with sharing class MicrosoftGraphService {
     /**
-     * API Config name to set when using the ApiController.
+     * @description API Config name to set when using the ApiController.
      */
-    public static final String API_CONFIG_NAME = 'Microsoft_Graph_API';
+    public static final String apiConfigName = 'Microsoft_Graph_API';
 
     /**
+     * @description
      * Fetches group memberships for the active user from Microsoft Graph API.
      * Handles pagination and error responses.
      *
@@ -52,6 +52,7 @@ public with sharing class MicrosoftGraphService {
     }
 
     /**
+     * @description
      * Handles pagination for group membership requests using skip tokens.
      *
      * @param apiCtrl Initialized ApiController for Microsoft Graph.
@@ -86,6 +87,7 @@ public with sharing class MicrosoftGraphService {
     }
 
     /**
+     * @description
      * Handles error responses from Microsoft Graph API and logs details.
      *
      * @param statusCode HTTP status code from API response.
@@ -118,6 +120,7 @@ public with sharing class MicrosoftGraphService {
     }
 
     /**
+     * @description
      * Logs error details using LoggerUtility and returns a unique error reference.
      *
      * @param resp HttpResponse object containing error details.
@@ -148,16 +151,29 @@ public with sharing class MicrosoftGraphService {
     }
 
     /**
+     * @description
      * DTO for Microsoft Graph API group membership response.
      */
     public class MicrosoftGraphResponse {
+        /**
+         * @description Indicates if the API call was successful.
+         */
         public Boolean success;
+        /**
+         * @description Next link for paginated results from Microsoft Graph API.
+         */
         public String nextlink;
+        /**
+         * @description List of group IDs returned from Microsoft Graph API.
+         */
         public List<String> groupIds;
+        /**
+         * @description Error message if the API call failed.
+         */
         public String errorMessage;
 
         /**
-         * Initializes a new MicrosoftGraphResponse.
+         * @description Initializes a new MicrosoftGraphResponse.
          */
         public MicrosoftGraphResponse() {
             this.success = false;
@@ -166,6 +182,7 @@ public with sharing class MicrosoftGraphService {
         }
 
         /**
+         * @description
          * Parses the JSON response from Microsoft Graph API and extracts group IDs and next link.
          *
          * @param jsonResponse JSON string from Microsoft Graph API.

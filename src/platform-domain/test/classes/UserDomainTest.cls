@@ -144,7 +144,7 @@ private with sharing class UserDomainTest {
     }
 
     @IsTest
-    private static void shouldNotSetAccessForUnknownAccessType_fullArgs() {
+    private static void shouldNotSetAccessForUnknownAccessTypeFullArgs() {
         // Arrange
         Id userId = UserInfo.getUserId();
         String navId = 'NAV123';
@@ -180,7 +180,7 @@ private with sharing class UserDomainTest {
     }
 
     @IsTest
-    private static void shouldAllowMultipleAccessLevelsToBeSet_fullArgs() {
+    private static void shouldAllowMultipleAccessLevelsToBeSetFullArgs() {
         // Arrange
         Id userId = UserInfo.getUserId();
         String navId = 'NAV123';

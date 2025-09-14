@@ -1,4 +1,18 @@
+/**
+ * @description
+ * Abstract base class for repository implementations.
+ * Provides utility methods for handling save and delete results with error aggregation and exception handling.
+ * Extend this class to standardize error handling for DML operations in repository classes.
+ */
 public virtual with sharing class RepositoryBase {
+    /**
+     * @description
+     * Handles the results of Database.save operations.
+     * Aggregates errors from failed save results and throws a RepositorySaveException if any errors are found.
+     *
+     * @param srList List of Database.SaveResult objects from a DML operation.
+     * @throws RepositorySaveException if any save errors are present.
+     */
     protected void handleSaveResult(List<Database.SaveResult> srList) {
         List<Database.Error> errors = new List<Database.Error>();
 
@@ -16,6 +30,14 @@ public virtual with sharing class RepositoryBase {
         }
     }
 
+    /**
+     * @description
+     * Handles the results of Database.delete operations.
+     * Aggregates errors from failed delete results and throws a RepositorySaveException if any errors are found.
+     *
+     * @param srList List of Database.DeleteResult objects from a DML operation.
+     * @throws RepositorySaveException if any delete errors are present.
+     */
     protected void handleDeleteResult(List<Database.DeleteResult> srList) {
         List<Database.Error> errors = new List<Database.Error>();
 

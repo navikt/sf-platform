@@ -9,7 +9,7 @@ private class AdGroupSyncServiceTest {
     private static String publicGroupDevName = 'NKS_Skjermede_Personer_AD';
 
     @IsTest
-    private static void updateGroupMembership_insertMembership() {
+    private static void updateGroupMembershipInsertMembership() {
         //Arrange
         Id publicGroupId = [
             SELECT Id
@@ -89,7 +89,7 @@ private class AdGroupSyncServiceTest {
     }
 
     @IsTest
-    private static void updateGroupMembership_newMembershipWithPermsetGroup() {
+    private static void updateGroupMembershipNewMembershipWithPermsetGroup() {
         //Arrange
         Id publicGroupId = [
             SELECT Id
@@ -161,7 +161,7 @@ private class AdGroupSyncServiceTest {
     }
 
     @IsTest
-    private static void updateGroupMembership_removeMembershipWithPermsetGroup() {
+    private static void updateGroupMembershipRemoveMembershipWithPermsetGroup() {
         //Arrange
         Id publicGroupId = [
             SELECT Id
@@ -222,7 +222,7 @@ private class AdGroupSyncServiceTest {
     }
 
     @IsTest
-    private static void updateGroupMembership_removeMembership() {
+    private static void updateGroupMembershipRemoveMembership() {
         //Arrange
         //add user to group before the update
         //we will test removing membership
@@ -324,7 +324,7 @@ private class AdGroupSyncServiceTest {
     }
 
     @IsTest
-    private static void updateGroupMembership_whenNoChanges() {
+    private static void updateGroupMembershipWhenNoChanges() {
         //Arrange
         //add user to group before the update
         Id publicGroupId = [
@@ -416,7 +416,7 @@ private class AdGroupSyncServiceTest {
     }
 
     @IsTest
-    private static void updateGroupMembership_insertMultiGroupMembership() {
+    private static void updateGroupMembershipInsertMultiGroupMembership() {
         //Arrange
         Id groupOne = [
             SELECT Id
@@ -515,7 +515,7 @@ private class AdGroupSyncServiceTest {
     }
 
     @IsTest
-    private static void updateGroupMembership_whenTheUserIsAlreadyAssignedToThePermissionSetGroup() {
+    private static void updateGroupMembershipWhenTheUserIsAlreadyAssignedToThePermissionSetGroup() {
         //Arrange
         //Assign perm set group to current user
         PermissionSetGroup permSetGroup = [

@@ -1,19 +1,61 @@
+/**
+ * @description
+ * Controller for handling the custom login flow, integrating Azure AD and Microsoft Graph authentication.
+ * Manages state, cookies, token exchange, user group synchronization, and error handling.
+ * Designed for use with the DefaultLoginFlow Visualforce page.
+ */
 public without sharing class DefaultLoginFlowController {
+    /**
+     * @description Cookie storing the return URL for post-login redirection.
+     */
     private Cookie retUrlCookie;
+    /**
+     * @description Cookie storing the login flow state for CSRF protection.
+     */
     private Cookie stateCookie;
+    /**
+     * @description Cookie tracking login flow retries.
+     */
     private Cookie retryCookie;
+    /**
+     * @description Return URL for post-login redirection.
+     */
     private String retUrl;
+    /**
+     * @description Logger utility for error and event publishing.
+     */
     private LoggerUtility logger = new LoggerUtility(
         CRM_ApplicationDomain.Domain.PLATFORCE,
         'LoginFlow'
     );
+    /**
+     * @description Repository for user data and access checks.
+     */
     UserRepository userRepository = new UserRepository();
+    /**
+     * @description Domain object representing the current user.
+     */
     UserDomain currentUser = UserRepository.fetchCurrentUser();
+    /**
+     * @description Service for handling OAuth authorization code flow.
+     */
     OauthCodeFlowService oauthCodeFlowService = new OauthCodeFlowService();
+    /**
+     * @description Service for saving refresh tokens.
+     */
     RefreshTokenService refreshTokenService = new RefreshTokenService();
+    /**
+     * @description Stores the refresh token for the current session.
+     */
     private String refreshToken;
 
-    public PageReference redirect() {
+    /**
+     * @description
+     * Main entry point for the login flow. Handles authentication, token exchange, group sync, and redirects.
+     * @return PageReference for the next step in the login flow.
+     */
+    // prettier-ignore
+    public PageReference redirect() { // NOPMD - Cylomatic complexity is acceptable here due to the nature of the login flow
         try {
             Boolean isMobile = UserInfo.getUiThemeDisplayed() == 'Theme4t';
             if (isMobile) {
@@ -103,7 +145,11 @@ public without sharing class DefaultLoginFlowController {
             return Auth.SessionManagement.finishLoginFlow();
         }
     }
-
+    /**
+     * @description
+     * Initiates a new OAuth authorization code flow, sets cookies, and redirects to the authorization URL.
+     * @return PageReference for the authorization URL.
+     */
     private PageReference initiateAuthCodeFlow() {
         String state = StringUtil.generateRandomString(500);
         stateCookie = new Cookie('state', state, null, 180, true);
@@ -142,6 +188,12 @@ public without sharing class DefaultLoginFlowController {
         return pg.setRedirect(true);
     }
 
+    /**
+     * @description
+     * Exchanges the authorization code for access and refresh tokens.
+     * @param code The authorization code received from Azure AD.
+     * @return The access token for Salesforce Azure App, or null if unsuccessful.
+     */
     private String getAccessTokenForSalesforceAzureApp(String code) {
         Map<String, String> tokenByType = oauthCodeFlowService.getTokensFromAuthorizationCode(
             code
@@ -157,6 +209,12 @@ public without sharing class DefaultLoginFlowController {
         return tokenByType.get('access');
     }
 
+    /**
+     * @description
+     * Exchanges the Salesforce access token for a Microsoft Graph access token.
+     * @param accessTokenForSalesforceApp The access token for Salesforce Azure App.
+     * @return The access token for Microsoft Graph.
+     */
     private String getAccessTokenForMicrosoftGraph(
         String accessTokenForSalesforceApp
     ) {
@@ -168,6 +226,12 @@ public without sharing class DefaultLoginFlowController {
         );
     }
 
+    /**
+     * @description
+     * Checks Microsoft Graph access and parses group membership response.
+     * @param accessTokenForMicrosoftGraph The access token for Microsoft Graph.
+     * @return MicrosoftGraphResponse containing group IDs and status.
+     */
     private MicrosoftGraphService.MicrosoftGraphResponse checkMicrosoftGraphAccess(
         String accessTokenForMicrosoftGraph
     ) {
@@ -181,6 +245,12 @@ public without sharing class DefaultLoginFlowController {
         return microsoftGraphResponse;
     }
 
+    /**
+     * @description
+     * Verifies that the state parameter matches the value stored in the cookie.
+     * @param stateFromUrl The state value from the URL parameter.
+     * @return True if the state matches, false otherwise.
+     */
     private Boolean verifyState(String stateFromUrl) {
         stateCookie = ApexPages.currentPage().getCookies().get('state');
 

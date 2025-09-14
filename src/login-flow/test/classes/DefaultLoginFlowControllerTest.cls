@@ -39,12 +39,7 @@ private class DefaultLoginFlowControllerTest {
             new AzureAdMockHttpResponseGenerator()
         );
         String body = '{"@odata.context": "https://graph.microsoft.com/v1.0/$metadata#Collection(Edm.String)","value": ["dec3ee50-b683-4644-9507-520e8f054ac2","fb8ffc82-b404-4dd4-86d2-94c2a97ed229","928636f4-fd0d-4149-978e-a6fb68bb19de","1b961619-2a3c-45d6-8ca1-0ae12b3c935f"]}';
-        SingleRequestMock httpMock = new SingleRequestMock(
-            200,
-            'Success',
-            body,
-            null
-        );
+        new SingleRequestMock(200, 'Success', body, null);
 
         Pagereference pageRef = Page.DefaultLoginFlow;
 
