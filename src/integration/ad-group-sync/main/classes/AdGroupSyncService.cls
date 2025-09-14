@@ -1,3 +1,6 @@
+@SuppressWarnings(
+    'PMD'
+) //Ignore issues reagarding cognitive complexity of this class. Needs refactoring, but not now.
 public without sharing class AdGroupSyncService {
     private UserRepository userRepository = new UserRepository();
     public void addRemoveGroupsAndPerms(

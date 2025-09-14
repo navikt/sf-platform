@@ -1,7 +1,7 @@
 @IsTest
 private with sharing class UserDomainTest {
     @IsTest
-    private static void shouldNotHaveSensitiveDataAccessInitially_fullArgs() {
+    private static void shouldNotHaveSensitiveDataAccessInitiallyFullArgs() {
         // Arrange
         Id userId = UserInfo.getUserId();
         String navId = 'NAV123';

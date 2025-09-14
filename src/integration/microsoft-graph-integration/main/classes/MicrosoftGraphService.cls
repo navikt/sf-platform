@@ -1,13 +1,13 @@
 /* Get data from Microosft Graph Api behalf of active user **/
 public with sharing class MicrosoftGraphService {
-    private final string API_CONFIG_NAME = 'Microsoft_Graph_API'; //API Config name to set when using the ApiController
+    private final string apiConfigName = 'Microsoft_Graph_API'; //API Config name to set when using the ApiController
 
     public MicrosoftGraphResponse getMyMemberGroups(String accessToken) {
         MicrosoftGraphResponse resp = new MicrosoftGraphResponse();
 
         ApiController apiCtrl = new ApiController();
 
-        apiCtrl.initRequest(API_CONFIG_NAME, 'GET_MEMBER_GROUPS', null);
+        apiCtrl.initRequest(apiConfigName, 'GET_MEMBER_GROUPS', null);
 
         apiCtrl.addHeader('Authorization', 'Bearer ' + accessToken);
         apiCtrl.addHeader('Content-Type', 'application/json');
