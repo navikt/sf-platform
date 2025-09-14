@@ -1,4 +1,4 @@
-name: SHEDULED Replenish platform pools
+name: SCHEDULED Replenish platform pools
 on:
   # Det er satt opp skedulering for når poolet oppdateres.
   # Det er ikke behov for å kjøre denne jobber 24/7 og det er derfor satt opp noen skeduleringer (husk at tid er UTC)
@@ -10,13 +10,14 @@ on:
     - cron: "15 1 * * 1-5" # At 01:15 from Monday through Friday.
 jobs:
   createPool:
-    uses: navikt/sf-platform/.github/workflows/ciCreatePlatformPool.yml@main
+    uses: navikt/crm-workflows-base/.github/workflows/manageScratchPool.yml@main
     with:
-      clearPools: ${{ github.event.schedule == '15 1 * * 1-5' }}
-      poolMatrixDefPath: "config/poolMatrixdef.json"
+      clear-pools: ${{ github.event.schedule == '15 1 * * 1-5' }}
+      pool-matrix-def-path: "config/poolMatrixdef.json"
+      sfp-version: ${{ vars.SFP_CONTAINER_VERSION }}
     secrets:
-      METRICS_KEYS: ${{ secrets.METRICS_KEYS }}
-      SF_DEVHUB_URL: ${{ secrets.SF_DEVHUB_URL }}
+      METRICS_KEY: ${{ secrets.METRICS_KEYS }}
+      DEV_HUB_SFDX_URL: ${{ secrets.SF_DEVHUB_URL }}
     permissions:
       contents: read
       packages: read
