@@ -8,7 +8,7 @@ public with sharing class MicrosoftGraphService {
     /**
      * @description API Config name to set when using the ApiController.
      */
-    public static final String apiConfigName = 'Microsoft_Graph_API';
+    public static final String API_CONFIG_NAME = 'Microsoft_Graph_API';
 
     /**
      * @description
@@ -23,7 +23,7 @@ public with sharing class MicrosoftGraphService {
 
         ApiController apiCtrl = new ApiController();
 
-        apiCtrl.initRequest(apiConfigName, 'GET_MEMBER_GROUPS', null);
+        apiCtrl.initRequest(API_CONFIG_NAME, 'GET_MEMBER_GROUPS', null);
 
         apiCtrl.addHeader('Authorization', 'Bearer ' + accessToken);
         apiCtrl.addHeader('Content-Type', 'application/json');
