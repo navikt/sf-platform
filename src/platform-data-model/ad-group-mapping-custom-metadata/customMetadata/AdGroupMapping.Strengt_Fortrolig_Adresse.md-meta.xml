@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Strengt Fortrolig Adresse</label>
+    <protected>false</protected>
+    <values>
+        <field>AccessType__c</field>
+        <value xsi:type="xsd:string">Strengt_Fortrolig</value>
+    </values>
+    <values>
+        <field>AdGroupIdPreprod__c</field>
+        <value xsi:type="xsd:string">5ef775f2-61f8-4283-bf3d-8d03f428aa14</value>
+    </values>
+    <values>
+        <field>AdGroupIdProd__c</field>
+        <value xsi:type="xsd:string">ad7b87a6-9180-467c-affc-20a566b0fec0</value>
+    </values>
+    <values>
+        <field>PermissionSetGroup__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>PermissionSet__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>SalesforceGroupDeveloperName__c</field>
+        <value xsi:type="xsd:string">Strengt_Fortrolig_Adresse_AD</value>
+    </values>
+</CustomMetadata>

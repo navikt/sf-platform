@@ -55,3 +55,11 @@ mdapi/
 *.vim
 TAGS
 tags
+src/platform-data-model/ad-group-mapping-custom-metadata/layouts/AdGroupMapping__mdt-AD group mapping Layout.layout-meta.xml
+src/platform-data-model/ad-group-mapping-custom-metadata/objects/AdGroupMapping__mdt/AdGroupMapping__mdt.object-meta.xml
+src/platform-data-model/ad-group-mapping-custom-metadata/objects/AdGroupMapping__mdt/fields/AccessType__c.field-meta.xml
+src/platform-data-model/ad-group-mapping-custom-metadata/objects/AdGroupMapping__mdt/fields/AdGroupIdPreprod__c.field-meta.xml
+src/platform-data-model/ad-group-mapping-custom-metadata/objects/AdGroupMapping__mdt/fields/AdGroupIdProd__c.field-meta.xml
+src/platform-data-model/ad-group-mapping-custom-metadata/objects/AdGroupMapping__mdt/fields/PermissionSet__c.field-meta.xml
+src/platform-data-model/ad-group-mapping-custom-metadata/objects/AdGroupMapping__mdt/fields/PermissionSetGroup__c.field-meta.xml
+src/platform-data-model/ad-group-mapping-custom-metadata/objects/AdGroupMapping__mdt/fields/SalesforceGroupDeveloperName__c.field-meta.xml

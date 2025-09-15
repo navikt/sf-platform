@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>GET_MEMBER_GROUPS</label>
+    <protected>false</protected>
+    <values>
+        <field>API_Base_Configuration__c</field>
+        <value xsi:type="xsd:string">Microsoft_Graph_API</value>
+    </values>
+    <values>
+        <field>HTTP_Method__c</field>
+        <value xsi:type="xsd:string">GET</value>
+    </values>
+    <values>
+        <field>Has_Path_Parameters__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Mock_Response__c</field>
+        <value xsi:type="xsd:string">{
+            &quot;200&quot;: {
+            &quot;headers&quot;: null,
+            &quot;body&quot;: {
+            &quot;@odata.context&quot;:
+            &quot;https://graph.microsoft.com/v1.0/$metadata#directoryObjects(id)&quot;,
+            &quot;@odata.nextLink&quot;:
+            &quot;https://graph.microsoft.com/v1.0/me/memberOf?$top=3&amp;$select=id&amp;$securityEnabled=true&amp;$skiptoken=RFNwdAoAAQAAAAAAAAAAFAAAAJF6tSeosDFFjaU5ONA8PrsBAAAAAAAAAAAAAAAAAAAXMS4yLjg0MC4xMTM1NTYuMS40LjIzMzEGAAAAAAABYIllzAN7m0ClfcbIsfndBwENAQAAAQIAAAA&quot;,
+            &quot;value&quot;: [
+            {
+            &quot;@odata.type&quot;: &quot;#microsoft.graph.group&quot;,
+            &quot;id&quot;: &quot;1b961619-2a3c-45d6-8ca1-0ae12b3c935f&quot;
+            },
+            {
+            &quot;@odata.type&quot;: &quot;#microsoft.graph.group&quot;,
+            &quot;id&quot;: &quot;30b83849-8695-4de4-a69d-917cd41ce1c8&quot;
+            },
+            {
+            &quot;@odata.type&quot;: &quot;#microsoft.graph.group&quot;,
+            &quot;id&quot;: &quot;fb8ffc82-b404-4dd4-86d2-94c2a97ed229&quot;
+            }
+            ]
+            }},
+            &quot;401&quot;: {
+            &quot;headers&quot;: null,
+            &quot;body&quot;: null
+            },
+            &quot;404&quot;: {&quot;headers&quot;: null,
+            &quot;body&quot;: null
+            },
+            &quot;500&quot;: {
+            &quot;headers&quot;: null,
+            &quot;body&quot;: null
+            }
+            }</value>
+    </values>
+    <values>
+        <field>Service_Path__c</field>
+        <value xsi:type="xsd:string">/me/memberOf</value>
+    </values>
+</CustomMetadata>

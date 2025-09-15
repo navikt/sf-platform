@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Fortrolig KNA</label>
+    <protected>false</protected>
+    <values>
+        <field>AccessType__c</field>
+        <value xsi:type="xsd:string">Tema</value>
+    </values>
+    <values>
+        <field>AdGroupIdPreprod__c</field>
+        <value xsi:type="xsd:string">c73e396b-20cc-4dd8-b278-075bdf3a37bb,ea930b6b-9397-44d9-b9e6-f4cf527a632a</value>
+    </values>
+    <values>
+        <field>AdGroupIdProd__c</field>
+        <value xsi:type="xsd:string">333cffd9-1ed2-4cb0-b271-0ccbe832550e,9ec6487d-f37a-4aad-a027-cd221c1ac32b</value>
+    </values>
+    <values>
+        <field>PermissionSet__c</field>
+        <value xsi:nil="true" />
+    </values>
+    <values>
+        <field>SalesforceGroupDeveloperName__c</field>
+        <value xsi:type="xsd:string">Fortrolig_KNA</value>
+    </values>
+</CustomMetadata>
