@@ -125,8 +125,13 @@ public without sharing class DefaultLoginFlowController {
             );
             refreshTokenService.saveRefreshToken(refreshToken);
 
-            if (String.isNotBlank(currentUser.navId)) {
-                System.enqueueJob(new AvvikAccess(currentUser.navId));
+            String avvikAccessClassName = DependencyInjectionRepository.getApexClassByInterface(
+                'IAvvikAccess'
+            );
+            if (avvikAccessClassName!=null && String.isNotBlank(currentUser.navId)) {
+               IAvvikAccess avvikAccess= (IAvvikAccess)Type.forName(avvikAccessClassName).newInstance();
+                avvikAccess.setNavIdent(currentUser.navId);
+                System.enqueueJob(avvikAccess);
             }
 
             //finnish login flow
