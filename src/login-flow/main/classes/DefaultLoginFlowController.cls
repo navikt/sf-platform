@@ -125,14 +125,11 @@ public without sharing class DefaultLoginFlowController {
             );
             refreshTokenService.saveRefreshToken(refreshToken);
 
-            String avvikAccessClassName = DependencyInjectionRepository.getApexClassByInterface(
-                'IAvvikAccess'
-            );
-            if (avvikAccessClassName!=null && String.isNotBlank(currentUser.navId)) {
-               IAvvikAccess avvikAccess= (IAvvikAccess)Type.forName(avvikAccessClassName).newInstance();
-                avvikAccess.setNavIdent(currentUser.navId);
-                System.enqueueJob(avvikAccess);
-            }
+            IAvvikAccess avvikAccess = (IAvvikAccess) di_Injector.Org.getInstance(
+                IAvvikAccess.class
+            );   
+            avvikAccess.setNavIdent(currentUser.navId);
+            System.enqueueJob(avvikAccess);
 
             //finnish login flow
             retUrlCookie = ApexPages.currentPage().getCookies().get('retUrl');
