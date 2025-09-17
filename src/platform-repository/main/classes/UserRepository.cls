@@ -1,9 +1,7 @@
 @SuppressWarnings('PMD')
 public with sharing class UserRepository extends RepositoryBase {
     private CustomMetadataDAO customMetadataDAO = new CustomMetadataDAO();
-    @TestVisible
     public String PROFILES_THEME_ACCESS_METADATA_QUERY = 'SELECT MasterLabel FROM ThemeMappingProfile__mdt';
-    @TestVisible
     public String ADGROUP_MAPPING_METADATA_QUERY = 'SELECT AdGroupIdPreprod__c, AdGroupIdProd__c, SalesforceGroupDeveloperName__c, AccessType__c FROM AdGroupMapping__mdt WHERE AccessType__c IN (\'Fortrolig\', \'Skjermet\', \'Strengt_Fortrolig\')';
 
     public UserDomain fetchCurrentUser() {
