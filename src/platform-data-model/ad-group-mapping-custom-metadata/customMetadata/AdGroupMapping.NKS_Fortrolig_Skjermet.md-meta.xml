@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>NKS Fortrolig Skjermet</label>
+    <protected>false</protected>
+    <values>
+        <field>AccessType__c</field>
+        <value xsi:nil="true" />
+    </values>
+    <values>
+        <field>AdGroupIdPreprod__c</field>
+        <value xsi:type="xsd:string">cd0a9215-9673-48ca-84a1-6a6ef349811a,ea930b6b-9397-44d9-b9e6-f4cf527a632a</value>
+    </values>
+    <values>
+        <field>AdGroupIdProd__c</field>
+        <value xsi:type="xsd:string">e66658dc-1027-4d86-b8ee-687bd8740313,9ec6487d-f37a-4aad-a027-cd221c1ac32b</value>
+    </values>
+    <values>
+        <field>PermissionSetGroup__c</field>
+        <value xsi:nil="true" />
+    </values>
+    <values>
+        <field>PermissionSet__c</field>
+        <value xsi:nil="true" />
+    </values>
+    <values>
+        <field>SalesforceGroupDeveloperName__c</field>
+        <value xsi:type="xsd:string">NKS_Fortrolig_Skjermet_AD</value>
+    </values>
+</CustomMetadata>

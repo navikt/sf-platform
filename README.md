@@ -28,7 +28,20 @@ graph TD
     feature-toggle --> platform-datamodel;
     feature-toggle --> custom-metadata-dao;
     feature-toggle --> custom-pemission-helper;
+    login-flow
+    login-flow --> ad-group-sync;
+    login-flow --> microsoft-graph-integration;
+    microsoft-graph-integration --> api-controller;
+    ad-group-sync --> platform-datamodel;
+    ad-group-sync --> application-monitoring*;
+    ad-group-sync --> platform-repository;
+    platform-repository --> platform-domain;
 ```
+
+\* Følgende pakker er fortsatt i crm-platform-base og vil flyttes opp på et senere tidspunkt
+
+- application-monitoring
+- api-controller
 
 ## Komme i gang
 
