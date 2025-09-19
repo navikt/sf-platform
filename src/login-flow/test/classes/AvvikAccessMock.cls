@@ -4,6 +4,7 @@
  * Implements Queueable to simulate asynchronous job behavior.
  * Used in test classes to verify DI and job enqueuing without invoking real AvvikAccess logic.
  */
+@SuppressWarnings('PMD')
 public with sharing class AvvikAccessMock implements IAvvikAccess, Queueable {
     /**
      * @description NAV identifier for the user, used to simulate AvvikAccess logic.
@@ -16,7 +17,7 @@ public with sharing class AvvikAccessMock implements IAvvikAccess, Queueable {
      */
     public void setNavIdent(String navIdent) {
         this.navIdent = navIdent;
-        System.debug('Mock setNavIdent called with: ' + navIdent); // NOPMD - System debug is temporary
+        System.debug('Mock setNavIdent called with: ' + navIdent);
     }
 
     /**
@@ -24,6 +25,6 @@ public with sharing class AvvikAccessMock implements IAvvikAccess, Queueable {
      * @param context QueueableContext provided by the platform.
      */
     public void execute(QueueableContext context) {
-        System.debug('Mock execute method called with navIdent: ' + navIdent); // NOPMD - System debug is temporary
+        System.debug('Mock execute method called with navIdent: ' + navIdent);
     }
 }
