@@ -20,7 +20,7 @@
     </values>
     <values>
         <field>To__c</field>
-        <value xsi:type="xsd:string">AvvikAccess</value>
+        <value xsi:type="xsd:string">AvvikAccessMock</value>
     </values>
     <values>
         <field>Type__c</field>
