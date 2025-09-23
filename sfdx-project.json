@@ -48,11 +48,9 @@
       ]
     },
     {
-      "path": "src/platform-interfaces",
+      "path": "src/platform-utility/platform-interfaces",
       "package": "platform-interfaces",
-      "versionNumber": "0.1.0.NEXT",
-      "definitionFile": "config/scratch-org-def.json",
-      "dependencies": []
+      "versionNumber": "0.1.0.NEXT"
     }
   ],
   "packageAliases": {
