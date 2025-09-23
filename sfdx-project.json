@@ -48,17 +48,17 @@
       ]
     },
     {
-      "path": "src/application-monitoring",
-      "package": "application-monitoring",
+      "path": "src/platform-interfaces",
+      "package": "platform-interfaces",
       "versionNumber": "0.1.0.NEXT",
-      "definitionFile": "config/scratch-org-def.json"
+      "definitionFile": "config/scratch-org-def.json",
+      "dependencies": []
     }
   ],
   "packageAliases": {
     "platform-data-model": "0HoKB00000000010AA",
     "custom-metadata-dao": "0HoKB000000000B0AQ",
     "custom-permission-helper": "0HoKB000000000f0AA",
-    "feature-toggle": "0HoKB000000000V0AQ",
-    "application-monitoring": "0HoQC00000004d70AA"
+    "feature-toggle": "0HoKB000000000V0AQ"
   }
 }
