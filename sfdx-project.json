@@ -50,7 +50,13 @@
     {
       "path": "src/platform-utility/platform-interfaces",
       "package": "platform-interfaces",
-      "versionNumber": "0.1.0.NEXT"
+      "versionNumber": "0.1.0.NEXT",
+      "dependencies": [
+        {
+          "package": "sf-external-force-di",
+          "versionNumber": "0.1.0.LATEST"
+        }
+      ]
     }
   ],
   "packageAliases": {
