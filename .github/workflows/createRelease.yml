@@ -272,6 +272,6 @@ jobs:
           echo "::endgroup::"
 
       - name: Push logged metrics
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@06dfcd9b3ba08f6c27a650c6f315ed5730491540
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@d6f0aae98bc4187fcf85b6769ca3534838e76c95
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}

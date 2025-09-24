@@ -36,6 +36,7 @@ graph TD
     ad-group-sync --> application-monitoring*;
     ad-group-sync --> platform-repository;
     platform-repository --> platform-domain;
+    platform-interfaces
 ```
 
 \* Følgende pakker er fortsatt i crm-platform-base og vil flyttes opp på et senere tidspunkt

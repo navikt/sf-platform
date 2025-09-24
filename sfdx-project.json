@@ -76,66 +76,13 @@
       ]
     },
     {
-      "path": "src/integration/microsoft-graph-integration",
-      "package": "microsoft-graph-integration",
+      "path": "src/platform-utility/platform-interfaces",
+      "package": "platform-interfaces",
       "versionNumber": "0.1.0.NEXT",
-      "definitionFile": "config/scratch-org-def.json",
       "dependencies": [
         {
-          "package": "crm-platform-base",
-          "versionNumber": "0.276.0.LATEST"
-        }
-      ]
-    },
-    {
-      "path": "src/login-flow",
-      "package": "login-flow",
-      "versionNumber": "0.1.0.NEXT",
-      "definitionFile": "config/scratch-org-def.json",
-      "dependencies": [
-        {
-          "package": "microsoft-graph-integration",
+          "package": "sf-external-force-di",
           "versionNumber": "0.1.0.LATEST"
-        },
-        {
-          "package": "ad-group-sync",
-          "versionNumber": "0.1.0.LATEST"
-        },
-        {
-          "package": "crm-platform-base",
-          "versionNumber": "0.276.0.LATEST"
-        },
-        {
-          "package": "platform-domain",
-          "versionNumber": "0.1.25.LATEST"
-        },
-        {
-          "package": "platform-repository",
-          "versionNumber": "0.1.0.LATEST"
-        }
-      ]
-    },
-    {
-      "path": "src/integration/ad-group-sync",
-      "package": "ad-group-sync",
-      "versionNumber": "0.1.0.NEXT",
-      "definitionFile": "config/scratch-org-def.json",
-      "dependencies": [
-        {
-          "package": "platform-data-model",
-          "versionNumber": "0.1.25.LATEST"
-        },
-        {
-          "package": "platform-repository",
-          "versionNumber": "0.1.0.LATEST"
-        },
-        {
-          "package": "platform-domain",
-          "versionNumber": "0.1.25.LATEST"
-        },
-        {
-          "package": "crm-platform-base",
-          "versionNumber": "0.276.0.LATEST"
         }
       ]
     }
@@ -145,6 +92,7 @@
     "custom-metadata-dao": "0HoKB000000000B0AQ",
     "custom-permission-helper": "0HoKB000000000f0AA",
     "feature-toggle": "0HoKB000000000V0AQ",
-    "crm-platform-base": "0Ho2o0000008ORmCAM"
+    "platform-interfaces": "0HoKB000000000Q0AQ",
+    "sf-external-force-di": "0HoQC000000052v0AA"
   }
 }
