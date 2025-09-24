@@ -28,6 +28,7 @@ graph TD
     feature-toggle --> platform-datamodel;
     feature-toggle --> custom-metadata-dao;
     feature-toggle --> custom-pemission-helper;
+    platform-interfaces
 ```
 
 ## Komme i gang
