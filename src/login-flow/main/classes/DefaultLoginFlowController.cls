@@ -125,9 +125,11 @@ public without sharing class DefaultLoginFlowController {
             );
             refreshTokenService.saveRefreshToken(refreshToken);
 
-            if (String.isNotBlank(currentUser.navId)) {
-                System.enqueueJob(new AvvikAccess(currentUser.navId));
-            }
+            IAvvikAccess avvikAccess = (IAvvikAccess) di_Injector.Org.getInstance(
+                IAvvikAccess.class
+            );   
+            avvikAccess.setNavIdent(currentUser.navId);
+            System.enqueueJob(avvikAccess);
 
             //finnish login flow
             retUrlCookie = ApexPages.currentPage().getCookies().get('retUrl');

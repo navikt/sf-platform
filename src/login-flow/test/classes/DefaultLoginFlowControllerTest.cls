@@ -34,6 +34,9 @@ private class DefaultLoginFlowControllerTest {
 
     @IsTest
     private static void shouldGetAccessToken() {
+        di_Injector.Org.Bindings.set(
+            new di_Module().bind('IAvvikAccess').apex().to('AvvikAccessMock')
+        );
         Test.setMock(
             HttpCalloutMock.class,
             new AzureAdMockHttpResponseGenerator()
