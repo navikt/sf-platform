@@ -18,6 +18,7 @@ jobs:
     secrets:
       METRICS_KEY: ${{ secrets.METRICS_KEYS }}
       DEV_HUB_SFDX_URL: ${{ secrets.SF_DEVHUB_URL }}
+      CRM_PACKAGE_KEY: ${{ secrets.PACKAGE_KEY }}
     permissions:
       contents: read
       packages: read
