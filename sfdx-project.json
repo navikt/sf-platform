@@ -88,6 +88,13 @@
       ]
     },
     {
+      "path": "src/integration/ad-group-sync",
+      "package": "ad-group-sync",
+      "versionNumber": "0.1.0.NEXT",
+      "definitionFile": "config/scratch-org-def.json",
+      "dependencies": []
+    },
+    {
       "path": "src/platform-utility/platform-interfaces",
       "package": "platform-interfaces",
       "versionNumber": "0.1.0.NEXT",
@@ -97,13 +104,6 @@
           "versionNumber": "0.1.0.LATEST"
         }
       ]
-    },
-    {
-      "path": "src/platform-interfaces",
-      "package": "platform-interfaces",
-      "versionNumber": "0.1.0.NEXT",
-      "definitionFile": "config/scratch-org-def.json",
-      "dependencies": []
     },
     {
       "path": "src/login-flow",
