@@ -125,7 +125,8 @@ public without sharing class AdGroupSyncService {
                     salesforceGroupId
                 );
                 if (
-                    !adGroupIds.contains(adGroup.adGroupId) &&
+                    !new Set<String>(adGroupIds)
+                        .containsAll(adGroup.adGroupId.split(',')) &&
                     usersSalesforceMembership.contains(salesforceGroupId)
                 ) {
                     groupMemberIdsToRemove.add(salesforceGroupId);
