@@ -43,7 +43,7 @@ jobs:
           persist-credentials: false
 
       # Check for changes in the src directory excluding .md files
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@d6f0aae98bc4187fcf85b6769ca3534838e76c95
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@4591965e00c659878b6671ad54156e002d4709af
         id: checkChanges
 
   buildAndPublish:
@@ -155,14 +155,14 @@ jobs:
 
       - name: Push logged metrics
         if: always() # Always push metrics regardless of build success
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@d6f0aae98bc4187fcf85b6769ca3534838e76c95
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@4591965e00c659878b6671ad54156e002d4709af
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
 
       # Upload build artifacts and logs if present
       - name: Upload Artifacts and Logs
         if: steps.build.outputs.artifactsFound == 'true'
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@d6f0aae98bc4187fcf85b6769ca3534838e76c95
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@4591965e00c659878b6671ad54156e002d4709af
         with:
           artifactName: build-artifacts
           uploadArtifacts: true
