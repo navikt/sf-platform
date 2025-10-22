@@ -43,7 +43,7 @@ jobs:
           persist-credentials: false
 
       # Check for changes in the src directory excluding .md files
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@4591965e00c659878b6671ad54156e002d4709af
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@6a0baa17871b9ecb6b8d2b235c27ecaab120ed68
         id: checkChanges
 
   buildAndPublish:
@@ -74,7 +74,7 @@ jobs:
           persist-credentials: true
 
       - name: Authenticate Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           registry-url: "https://npm.pkg.github.com"
 
@@ -155,14 +155,14 @@ jobs:
 
       - name: Push logged metrics
         if: always() # Always push metrics regardless of build success
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@4591965e00c659878b6671ad54156e002d4709af
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@6a0baa17871b9ecb6b8d2b235c27ecaab120ed68
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
 
       # Upload build artifacts and logs if present
       - name: Upload Artifacts and Logs
         if: steps.build.outputs.artifactsFound == 'true'
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@4591965e00c659878b6671ad54156e002d4709af
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@6a0baa17871b9ecb6b8d2b235c27ecaab120ed68
         with:
           artifactName: build-artifacts
           uploadArtifacts: true
