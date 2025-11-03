@@ -48,7 +48,7 @@ jobs:
           printf 'RELEASE_NAME=%q%s' "$RELEASE_NAME_PREFIX" "$(date +%s%3N)" >> "$GITHUB_ENV"
 
       - name: Authenticate Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           registry-url: https://npm.pkg.github.com
 
@@ -272,6 +272,6 @@ jobs:
           echo "::endgroup::"
 
       - name: Push logged metrics
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@4591965e00c659878b6671ad54156e002d4709af
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@6a0baa17871b9ecb6b8d2b235c27ecaab120ed68
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
