@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <label>Sladding</label>
+    <label>TEST_MAPPING</label>
     <protected>false</protected>
     <values>
         <field>AccessType__c</field>
@@ -8,15 +8,15 @@
     </values>
     <values>
         <field>AdGroupIdPreprod__c</field>
-        <value xsi:type="xsd:string">2c78db62-c2d2-4de7-89b9-7866ce7cdbb7</value>
+        <value xsi:type="xsd:string">597b2345-5846-4c9c-ba9d-15323preprod</value>
     </values>
     <values>
         <field>AdGroupIdProd__c</field>
-         <value xsi:type="xsd:string">cd81a2e6-b81c-4b42-8573-449b6f37a039</value>        
+        <value xsi:type="xsd:string">123prod</value>
     </values>
     <values>
         <field>PermissionSetGroup__c</field>
-        <value xsi:type="xsd:string">Redaction</value>
+        <value xsi:type="xsd:string">Test</value>
     </values>
     <values>
         <field>PermissionSet__c</field>
@@ -24,6 +24,6 @@
     </values>
     <values>
         <field>SalesforceGroupDeveloperName__c</field>
-        <value xsi:type="xsd:string">NKS_Redaction</value>
+        <value xsi:type="xsd:string">AD_Test</value>
     </values>
 </CustomMetadata>

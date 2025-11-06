@@ -24,6 +24,6 @@
     </values>
     <values>
         <field>SalesforceGroupDeveloperName__c</field>
-        <value xsi:type="xsd:string">Strengt_Fortrolig_Adresse_AD</value>
+        <value xsi:type="xsd:string">AD_Strengt_Fortrolig_Adresse</value>
     </values>
 </CustomMetadata>

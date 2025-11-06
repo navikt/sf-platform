@@ -36,9 +36,13 @@ graph TD
     microsoft-graph-integration --> platform-data-model;
     platform-data-model --> crm-platform-base;
     ad-group-sync --> crm-platform-base;
+    ad-group-sync --> custom-metadata-dao;
     ad-group-sync --> platform-data-model;
     ad-group-sync --> platform-domain;
     ad-group-sync --> platform-repository;
+    platform-repository --> custom-metadata-dao;
+    platform-repository --> crm-platform-base;
+    platform-repository --> platform-data-model;
     platform-repository --> platform-domain;
     platform-interfaces --> sf-external-force-di
 ```

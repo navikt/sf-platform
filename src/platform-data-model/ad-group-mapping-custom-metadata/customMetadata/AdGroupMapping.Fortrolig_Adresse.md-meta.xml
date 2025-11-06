@@ -22,6 +22,6 @@
     </values>
     <values>
         <field>SalesforceGroupDeveloperName__c</field>
-        <value xsi:type="xsd:string">group_AD_Fortrolig_Adresse</value>
+        <value xsi:type="xsd:string">AD_Fortrolig_Adresse</value>
     </values>
 </CustomMetadata>

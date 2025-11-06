@@ -6,7 +6,7 @@ private class AdGroupSyncServiceTest {
         'cd0a9215-9673-48ca-84a1-6a6ef349811a',
         'ea930b6b-9397-44d9-b9e6-f4cf527a632a'
     };
-    private static String publicGroupDevName = 'NKS_Skjermede_Personer_AD';
+    private static String publicGroupDevName = 'AD_Skjermede_Personer';
 
     @IsTest
     private static void updateGroupMembershipInsertMembership() {
@@ -94,7 +94,7 @@ private class AdGroupSyncServiceTest {
         Id publicGroupId = [
             SELECT Id
             FROM Group
-            WHERE DeveloperName = 'group_410098'
+            WHERE DeveloperName = 'AD_Test'
             LIMIT 1
         ]
         .Id;
@@ -166,7 +166,7 @@ private class AdGroupSyncServiceTest {
         Id publicGroupId = [
             SELECT Id
             FROM Group
-            WHERE DeveloperName = 'group_410098'
+            WHERE DeveloperName = 'AD_Test'
             LIMIT 1
         ]
         .Id;
@@ -229,7 +229,7 @@ private class AdGroupSyncServiceTest {
         Id publicGroupId = [
             SELECT Id
             FROM Group
-            WHERE DeveloperName = 'NKS_Skjermede_Personer_AD'
+            WHERE DeveloperName = 'AD_Skjermede_Personer'
             LIMIT 1
         ]
         .Id;
@@ -330,7 +330,7 @@ private class AdGroupSyncServiceTest {
         Id publicGroupId = [
             SELECT Id
             FROM Group
-            WHERE DeveloperName = 'NKS_Skjermede_Personer_AD'
+            WHERE DeveloperName = 'AD_Skjermede_Personer'
             LIMIT 1
         ]
         .Id;
@@ -421,21 +421,21 @@ private class AdGroupSyncServiceTest {
         Id groupOne = [
             SELECT Id
             FROM Group
-            WHERE DeveloperName = 'NKS_Skjermede_Personer_AD'
+            WHERE DeveloperName = 'AD_Skjermede_Personer'
             LIMIT 1
         ]
         .Id;
         Id groupTwo = [
             SELECT Id
             FROM Group
-            WHERE DeveloperName = 'group_AD_Fortrolig_Adresse'
+            WHERE DeveloperName = 'AD_Fortrolig_Adresse'
             LIMIT 1
         ]
         .Id;
         Id multiGroup = [
             SELECT Id
             FROM Group
-            WHERE DeveloperName = 'NKS_Fortrolig_Skjermet_AD'
+            WHERE DeveloperName = 'AD_Fortrolig_Skjermet'
             LIMIT 1
         ]
         .Id;
@@ -544,7 +544,7 @@ private class AdGroupSyncServiceTest {
         Id publicGroupId = [
             SELECT Id
             FROM Group
-            WHERE DeveloperName = 'group_410098'
+            WHERE DeveloperName = 'AD_Test'
             LIMIT 1
         ]
         .Id;
