@@ -31,14 +31,19 @@ graph TD
     login-flow
     login-flow --> ad-group-sync;
     login-flow --> microsoft-graph-integration;
-    microsoft-graph-integration --> api-controller;
-    ad-group-sync --> platform-datamodel;
+    login-flow --> crm-platform-base;
+    microsoft-graph-integration --> crm-platform-base;
+    microsoft-graph-integration --> platform-data-model;
+    platform-data-model --> crm-platform-base;
+    ad-group-sync --> crm-platform-base;
+    ad-group-sync --> platform-data-model;
+    ad-group-sync --> platform-domain;
     ad-group-sync --> platform-repository;
     platform-repository --> platform-domain;
-    platform-interfaces
+    platform-interfaces --> sf-external-force-di
 ```
 
-\* Følgende pakker er fortsatt i crm-platform-base og vil flyttes opp på et senere tidspunkt
+\* crm-platform-base vil flyttes opp og splittes i flere pakker på et senere tidspunkt.
 
 - application-monitoring
 - api-controller
