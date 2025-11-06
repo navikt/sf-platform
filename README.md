@@ -28,10 +28,6 @@ graph TD
     feature-toggle --> platform-datamodel;
     feature-toggle --> custom-metadata-dao;
     feature-toggle --> custom-pemission-helper;
-    login-flow
-    login-flow --> ad-group-sync;
-    login-flow --> microsoft-graph-integration;
-    login-flow --> crm-platform-base;
     microsoft-graph-integration --> crm-platform-base;
     microsoft-graph-integration --> platform-data-model;
     platform-data-model --> crm-platform-base;
@@ -45,6 +41,15 @@ graph TD
     platform-repository --> platform-data-model;
     platform-repository --> platform-domain;
     platform-interfaces --> sf-external-force-di
+    login-flow --> crm-platform-base;  
+    login-flow --> custom-metadata-dao;
+    login-flow --> platform-data-model; 
+    login-flow --> platform-domain;   
+    login-flow --> platform-repository;
+    login-flow --> microsoft-graph-integration;  
+    login-flow --> ad-group-sync;
+    login-flow --> sf-external-force-di;
+    login-flow --> platform-interfaces;
 ```
 
 \* crm-platform-base vil flyttes opp og splittes i flere pakker på et senere tidspunkt.

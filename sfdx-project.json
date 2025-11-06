@@ -6,13 +6,27 @@
       "path": "src-temp",
       "default": true
     },
+     {
+      "path": "src/platform-utility/custom-metadata-dao",
+      "package": "custom-metadata-dao",
+      "versionNumber": "0.1.27.NEXT",
+      "definitionFile": "config/scratch-org-def.json",
+      "dependencies": []
+    },
+    {
+      "path": "src/platform-utility/custom-permission-helper",
+      "package": "custom-permission-helper",
+      "versionNumber": "0.1.27.NEXT",
+      "definitionFile": "config/scratch-org-def.json",
+      "dependencies": []
+    },
     {
       "path": "src/platform-data-model",
       "package": "platform-data-model",
       "versionNumber": "0.1.27.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": [
-         {
+        {
           "package": "crm-platform-base",
           "versionNumber": "0.291.0.LATEST"
         }
@@ -31,37 +45,23 @@
       "versionNumber": "0.1.0.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": [
-          {
+        {
           "package": "custom-metadata-dao",
           "versionNumber": "0.1.27.LATEST"
-          },
-          {
-            "package": "crm-platform-base",
-            "versionNumber": "0.291.0.LATEST"
-          },
-          {
-            "package": "platform-data-model",
-            "versionNumber": "0.1.27.LATEST"
-          },
-          {
-            "package": "platform-domain",
-            "versionNumber": "0.1.0.LATEST"
-          }
+        },
+        {
+          "package": "crm-platform-base",
+          "versionNumber": "0.291.0.LATEST"
+        },
+        {
+          "package": "platform-data-model",
+          "versionNumber": "0.1.27.LATEST"
+        },
+        {
+          "package": "platform-domain",
+          "versionNumber": "0.1.0.LATEST"
+        }
       ]
-    },
-    {
-      "path": "src/platform-utility/custom-metadata-dao",
-      "package": "custom-metadata-dao",
-      "versionNumber": "0.1.27.NEXT",
-      "definitionFile": "config/scratch-org-def.json",
-      "dependencies": []
-    },
-    {
-      "path": "src/platform-utility/custom-permission-helper",
-      "package": "custom-permission-helper",
-      "versionNumber": "0.1.27.NEXT",
-      "definitionFile": "config/scratch-org-def.json",
-      "dependencies": []
     },
     {
       "path": "src/frameworks/feature-toggle",
@@ -88,8 +88,8 @@
       "package": "microsoft-graph-integration",
       "versionNumber": "0.1.0.NEXT",
       "definitionFile": "config/scratch-org-def.json",
-       "dependencies": [
-         {
+      "dependencies": [
+        {
           "package": "crm-platform-base",
           "versionNumber": "0.291.0.LATEST"
         },
@@ -108,10 +108,6 @@
         {
           "package": "crm-platform-base",
           "versionNumber": "0.291.0.LATEST"
-        },
-        {
-          "package": "custom-metadata-dao",
-          "versionNumber": "0.1.27.LATEST"
         },
         {
           "package": "platform-data-model",
@@ -145,23 +141,31 @@
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": [
         {
+          "package": "crm-platform-base",
+          "versionNumber": "0.291.0.LATEST"
+        },
+        {
+          "package": "custom-metadata-dao",
+          "versionNumber": "0.1.27.LATEST"
+        },
+        {
+          "package": "platform-data-model",
+          "versionNumber": "0.1.27.LATEST"
+        },
+        {
+          "package": "platform-domain",
+          "versionNumber": "0.1.0.LATEST"
+        },
+        {
+          "package": "platform-repository",
+          "versionNumber": "0.1.0.LATEST"
+        },
+        {
           "package": "microsoft-graph-integration",
           "versionNumber": "0.1.0.LATEST"
         },
         {
           "package": "ad-group-sync",
-          "versionNumber": "0.1.0.LATEST"
-        },
-        {
-          "package": "crm-platform-base",
-          "versionNumber": "0.291.0.LATEST"
-        },
-        {
-          "package": "platform-domain",
-          "versionNumber": "0.1.25.LATEST"
-        },
-        {
-          "package": "platform-repository",
           "versionNumber": "0.1.0.LATEST"
         },
         {
@@ -186,6 +190,7 @@
     "platform-domain": "0HoQC00000005UL0AY",
     "platform-repository": "0HoQC00000005Vx0AI",
     "microsoft-graph-integration": "0HoQC00000005XZ0AY",
-    "ad-group-sync": "0HoQC00000005cP0AQ"
+    "ad-group-sync": "0HoQC00000005cP0AQ",
+    "login-flow": "0HoQC00000005e10AA"
   }
 }
