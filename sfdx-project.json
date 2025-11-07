@@ -6,7 +6,7 @@
       "path": "src-temp",
       "default": true
     },
-     {
+    {
       "path": "src/platform-utility/custom-metadata-dao",
       "package": "custom-metadata-dao",
       "versionNumber": "0.1.27.NEXT",

@@ -5,7 +5,7 @@ private class RefreshTokenServiceTest {
         BaseTestFactory.insertEncryptionKey();
     }
 
-    @isTest
+    @IsTest
     private static void shouldSaveNewDecryptedToken() {
         // Arrange
         Log__c oldToken = new Log__c(

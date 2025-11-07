@@ -1,4 +1,4 @@
-@isTest
+@IsTest
 private class UserRepositoryTest {
     @TestSetup
     private static void makeData() {

@@ -41,12 +41,12 @@ graph TD
     platform-repository --> platform-data-model;
     platform-repository --> platform-domain;
     platform-interfaces --> sf-external-force-di
-    login-flow --> crm-platform-base;  
+    login-flow --> crm-platform-base;
     login-flow --> custom-metadata-dao;
-    login-flow --> platform-data-model; 
-    login-flow --> platform-domain;   
+    login-flow --> platform-data-model;
+    login-flow --> platform-domain;
     login-flow --> platform-repository;
-    login-flow --> microsoft-graph-integration;  
+    login-flow --> microsoft-graph-integration;
     login-flow --> ad-group-sync;
     login-flow --> sf-external-force-di;
     login-flow --> platform-interfaces;
