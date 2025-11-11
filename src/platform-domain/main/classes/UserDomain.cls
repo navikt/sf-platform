@@ -73,4 +73,26 @@ public with sharing class UserDomain {
             hasAccessToSkjermet ||
             hasAccessToStrengtFortrolig;
     }
+
+    /** Temporary due to deployment issue */
+    public Boolean accessToThemesFromAdGroups;
+    public UserDomain(Id recordId, String navId) {
+        this.recordId = recordId;
+        this.navId = navId;
+        this.accessToThemesFromAdGroups = false; // Default value
+    }
+    public UserDomain(
+        Id recordId,
+        String navId,
+        Boolean accessToThemesFromAdGroups
+    ) {
+        this.recordId = recordId;
+        this.navId = navId;
+        this.accessToThemesFromAdGroups = accessToThemesFromAdGroups;
+    }
+
+    public void checkAccessToFortroligAndSkjermetByAdGroups(
+        List<String> usersAdGroupIds
+    ) {
+    }
 }
