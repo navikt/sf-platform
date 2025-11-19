@@ -21,6 +21,13 @@
       "dependencies": []
     },
     {
+      "path": "src/platform-groups",
+      "package": "platform-groups",
+      "versionNumber": "0.1.0.NEXT",
+      "definitionFile": "config/scratch-org-def.json",
+      "dependencies": []
+    },
+    {
       "path": "src/platform-data-model",
       "package": "platform-data-model",
       "versionNumber": "0.1.27.NEXT",
@@ -110,6 +117,10 @@
           "versionNumber": "0.291.0.LATEST"
         },
         {
+          "package": "platform-groups",
+          "versionNumber": "0.1.0.LATEST"
+        },
+        {
           "package": "platform-data-model",
           "versionNumber": "0.1.27.LATEST"
         },
@@ -191,6 +202,7 @@
     "platform-repository": "0HoQC00000005Vx0AI",
     "microsoft-graph-integration": "0HoQC00000005XZ0AY",
     "ad-group-sync": "0HoQC00000005cP0AQ",
-    "login-flow": "0HoQC00000005e10AA"
+    "login-flow": "0HoQC00000005e10AA",
+    "platform-groups": "0HoQC00000005ir0AA"
   }
 }
