@@ -117,6 +117,10 @@
           "versionNumber": "0.291.0.LATEST"
         },
         {
+          "package": "custom-metadata-dao",
+          "versionNumber": "0.1.27.LATEST"
+        },
+        {
           "package": "platform-groups",
           "versionNumber": "0.1.0.LATEST"
         },
