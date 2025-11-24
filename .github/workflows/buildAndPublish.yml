@@ -37,13 +37,13 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
           fetch-depth: 0 # Full history needed for change detection
           persist-credentials: false
 
       # Check for changes in the src directory excluding .md files
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@8e4d95d394a4c0824ca56036b86a438894a84b49
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@b79b17356be49158fff788019a38a8cf0e60d964
         id: checkChanges
 
   buildAndPublish:
@@ -68,7 +68,7 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
           fetch-depth: 0 # Full history for release definition and changelog
           persist-credentials: true
@@ -155,14 +155,14 @@ jobs:
 
       - name: Push logged metrics
         if: always() # Always push metrics regardless of build success
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@8e4d95d394a4c0824ca56036b86a438894a84b49
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@b79b17356be49158fff788019a38a8cf0e60d964
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
 
       # Upload build artifacts and logs if present
       - name: Upload Artifacts and Logs
         if: steps.build.outputs.artifactsFound == 'true'
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@8e4d95d394a4c0824ca56036b86a438894a84b49
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@b79b17356be49158fff788019a38a8cf0e60d964
         with:
           artifactName: build-artifacts
           uploadArtifacts: true
