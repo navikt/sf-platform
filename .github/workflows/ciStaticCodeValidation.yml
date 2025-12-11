@@ -119,6 +119,23 @@ jobs:
                 {
                   "tool": {
                     "driver": {
+                      "name": "flow",
+                      "rules": []
+                    }
+                  },
+                  "results": [],
+                  "invocations": [
+                    {
+                      "executionSuccessful": true,
+                      "workingDirectory": {
+                        "uri": $wd
+                      }
+                    }
+                  ]
+                },
+                {
+                  "tool": {
+                    "driver": {
                       "name": "pmd",
                       "rules": []
                     }
