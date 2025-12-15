@@ -28,7 +28,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@59d2c0b9eb64aafaee1c59f9627daa28594b84e2
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@a8782aa68b760325cad54dd9758ec3227c1bc267
         id: checkChanges
 
   quickBuild:
@@ -64,7 +64,7 @@ jobs:
 
       - name: Upload artifacts and logs
         if: always()
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@59d2c0b9eb64aafaee1c59f9627daa28594b84e2
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@a8782aa68b760325cad54dd9758ec3227c1bc267
         with:
           artifactName: build-artifacts
           uploadArtifacts: true
