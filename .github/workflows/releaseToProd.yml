@@ -38,7 +38,7 @@ jobs:
 
       # Sets up Salesforce CLI authentication for the DevHub
       - name: Authenticate Production
-        uses: navikt/sf-gha-authenticateOrg@da2f995ee865e05111574719abfc5ba12b459f0c
+        uses: navikt/sf-gha-authenticateOrg@bb934753f101b4e30086e42c8e7db642ffe05b07
         with:
           auth-url: ${{ secrets.SF_DEVHUB_URL }}
           alias: prod
@@ -54,6 +54,6 @@ jobs:
           auth_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push logged metrics
-        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@a8782aa68b760325cad54dd9758ec3227c1bc267
+        uses: navikt/sf-platform/.github/actions/pushLoggedMetrics@b80d60ab6ca84e6076abda1f28caa5446901f93d
         with:
           metricsKey: ${{ secrets.METRICS_KEYS }}
