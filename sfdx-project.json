@@ -57,6 +57,17 @@
           "versionNumber": "0.1.0.LATEST"
         }
       ]
+    },
+    {
+      "path": "src/saas-proxy-tmp-toggles",
+      "package": "saas-proxy-tmp-toggles",
+      "versionNumber": "0.1.0.NEXT",
+      "dependencies": [
+        {
+          "package": "feature-toggle",
+          "versionNumber": "0.1.28.LATEST"
+        }
+      ]
     }
   ],
   "packageAliases": {
