@@ -91,14 +91,14 @@ jobs:
 
       - name: Prettier Check
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: navikt/sf-platform/.github/actions/prettierCheck@b80d60ab6ca84e6076abda1f28caa5446901f93d
+        uses: navikt/sf-platform/.github/actions/prettierCheck@51e12891636ba939a31029dbba735b0df9453d70
         with:
           pathToValidate: ${{ steps.paths.outputs.prettierPathsToValidate }}
 
       - name: Run Salesforce Code Analyzer
         id: run-code-analyzer
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: forcedotcom/run-code-analyzer@a1f89d329e1b86edb58dedb220b579cbd2979264
+        uses: forcedotcom/run-code-analyzer@e78e9ccdfb63a9ec88cf98e8caae5f2de27965de
         with:
           run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }} --view detail --output-file sfca_results.html --output-file sfca_results.json --output-file code-analyzer-report.sarif
           results-artifact-name: salesforce-code-analyzer-results
