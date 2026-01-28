@@ -24,11 +24,11 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@b80d60ab6ca84e6076abda1f28caa5446901f93d
+      - uses: navikt/sf-platform/.github/actions/checkForPackageChanges@665633a540eab0add9f4c9edd56049f2eb5f44fe
         id: checkChanges
 
   quickBuild:
@@ -42,7 +42,7 @@ jobs:
       packages: write
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
           persist-credentials: true
@@ -64,7 +64,7 @@ jobs:
 
       - name: Upload artifacts and logs
         if: always()
-        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@b80d60ab6ca84e6076abda1f28caa5446901f93d
+        uses: navikt/sf-platform/.github/actions/uploadWorkflowArtifactsAndLogs@665633a540eab0add9f4c9edd56049f2eb5f44fe
         with:
           artifactName: build-artifacts
           uploadArtifacts: true
