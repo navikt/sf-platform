@@ -68,6 +68,11 @@
           "versionNumber": "0.1.32.LATEST"
         }
       ]
+    },
+    {
+      "path": "src/platform-utility/record-type-cache",
+      "package": "record-type-cache",
+      "versionNumber": "0.1.0.NEXT"
     }
   ],
   "packageAliases": {
@@ -76,6 +81,7 @@
     "custom-permission-helper": "0HoKB000000000f0AA",
     "feature-toggle": "0HoKB000000000V0AQ",
     "platform-interfaces": "0HoKB000000000Q0AQ",
-    "sf-external-force-di": "0HoQC000000052v0AA"
+    "sf-external-force-di": "0HoQC000000052v0AA",
+    "record-type-cache": "0HoQC000000063p0AA"
   }
 }
