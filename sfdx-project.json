@@ -72,13 +72,7 @@
     {
       "path": "src/platform-utility/record-type-cache",
       "package": "record-type-cache",
-      "versionNumber": "0.1.1.NEXT",
-      "dependencies": [
-        {
-          "package": "platform-data-model",
-          "versionNumber": "0.1.33.1"
-        }
-      ]
+      "versionNumber": "0.1.1.NEXT"
     }
   ],
   "packageAliases": {
