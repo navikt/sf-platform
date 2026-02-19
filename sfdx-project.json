@@ -35,15 +35,15 @@
       "dependencies": [
         {
           "package": "platform-data-model",
-          "versionNumber": "0.1.33.LATEST"
+          "versionNumber": "0.1.33.1"
         },
         {
           "package": "custom-metadata-dao",
-          "versionNumber": "0.1.33.LATEST"
+          "versionNumber": "0.1.33.1"
         },
         {
           "package": "custom-permission-helper",
-          "versionNumber": "0.1.33.LATEST"
+          "versionNumber": "0.1.33.1"
         }
       ]
     },
@@ -54,7 +54,7 @@
       "dependencies": [
         {
           "package": "sf-external-force-di",
-          "versionNumber": "0.1.0.LATEST"
+          "versionNumber": "0.1.0.1"
         }
       ]
     },
@@ -65,7 +65,7 @@
       "dependencies": [
         {
           "package": "feature-toggle",
-          "versionNumber": "0.1.34.LATEST"
+          "versionNumber": "0.1.34.1"
         }
       ]
     },
@@ -76,7 +76,7 @@
       "dependencies": [
         {
           "package": "platform-data-model",
-          "versionNumber": "0.1.33.LATEST"
+          "versionNumber": "0.1.33.1"
         }
       ]
     }
