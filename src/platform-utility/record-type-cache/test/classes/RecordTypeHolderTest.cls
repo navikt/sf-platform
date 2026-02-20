@@ -294,4 +294,200 @@ private with sharing class RecordTypeHolderTest {
             'Expected null for empty sObjectType string'
         );
     }
+
+    /** Verify getRecordTypeIdMap returns all record types indexed by Id. */
+    @IsTest
+    private static void getRecordTypeIdMapReturnsAllRecordTypes() {
+        RecordTypeHolder rtHolder = RecordTypeCacheTestUtility.getCacheHolderWithMocks();
+
+        Test.startTest();
+        Map<Id, RecordType> result = rtHolder.getRecordTypeIdMap();
+        Test.stopTest();
+
+        System.Assert.isNotNull(result, 'Expected map to not be null');
+        System.Assert.areEqual(
+            3,
+            result.size(),
+            'Expected map to contain all 3 mock record types'
+        );
+        System.Assert.isTrue(
+            result.containsKey('012RR000007iE9hAAA'),
+            'Expected map to contain first record type by Id'
+        );
+        System.Assert.isTrue(
+            result.containsKey('012RR000007iE9hBBB'),
+            'Expected map to contain second record type by Id'
+        );
+        System.Assert.isTrue(
+            result.containsKey('012RR000007iE9hCCC'),
+            'Expected map to contain third record type by Id'
+        );
+    }
+
+    /** Verify getRecordTypeIdMap returns a deep clone. */
+    @IsTest
+    private static void getRecordTypeIdMapReturnsDeepClone() {
+        RecordTypeHolder rtHolder = RecordTypeCacheTestUtility.getCacheHolderWithMocks();
+
+        Test.startTest();
+        Map<Id, RecordType> result1 = rtHolder.getRecordTypeIdMap();
+        Map<Id, RecordType> result2 = rtHolder.getRecordTypeIdMap();
+        Test.stopTest();
+
+        System.Assert.isNotNull(
+            result1,
+            'Expected first result to not be null'
+        );
+        System.Assert.isNotNull(
+            result2,
+            'Expected second result to not be null'
+        );
+
+        RecordType rt1 = result1.get('012RR000007iE9hAAA');
+        String originalName = rt1.Name;
+        rt1.Name = 'Modified Name';
+
+        RecordType rt2 = result2.get('012RR000007iE9hAAA');
+        System.Assert.areEqual(
+            originalName,
+            rt2.Name,
+            'Modifying one result should not affect another result from a separate call'
+        );
+    }
+
+    /** Verify getRecordTypeIdMap returns empty map when no record types exist. */
+    @IsTest
+    private static void getRecordTypeIdMapWithNoRecordTypes() {
+        RecordTypeHolder rtHolder = RecordTypeCacheTestUtility.getCacheHolderWithMocks(
+            new List<RecordType>()
+        );
+
+        Test.startTest();
+        Map<Id, RecordType> result = rtHolder.getRecordTypeIdMap();
+        Test.stopTest();
+
+        System.Assert.isNotNull(result, 'Expected map to not be null');
+        System.Assert.isTrue(
+            result.isEmpty(),
+            'Expected map to be empty when no record types exist'
+        );
+    }
+
+    /** Verify getRecordTypeIdMap returns empty map when record types are null. */
+    @IsTest
+    private static void getRecordTypeIdMapWithNullRecordTypes() {
+        RecordTypeHolder rtHolder = RecordTypeCacheTestUtility.getCacheHolderWithMocks(
+            null
+        );
+
+        Test.startTest();
+        Map<Id, RecordType> result = rtHolder.getRecordTypeIdMap();
+        Test.stopTest();
+
+        System.Assert.isNotNull(result, 'Expected map to not be null');
+        System.Assert.isTrue(
+            result.isEmpty(),
+            'Expected map to be empty when record types are null'
+        );
+    }
+
+    /** Verify getAllRecordTypes returns all record types. */
+    @IsTest
+    private static void getAllRecordTypesReturnsAllRecordTypes() {
+        RecordTypeHolder rtHolder = RecordTypeCacheTestUtility.getCacheHolderWithMocks();
+
+        Test.startTest();
+        List<RecordType> result = rtHolder.getAllRecordTypes();
+        Test.stopTest();
+
+        System.Assert.isNotNull(result, 'Expected list to not be null');
+        System.Assert.areEqual(
+            3,
+            result.size(),
+            'Expected list to contain all 3 mock record types'
+        );
+
+        Set<Id> resultIds = new Set<Id>();
+        for (RecordType rt : result) {
+            resultIds.add(rt.Id);
+        }
+
+        System.Assert.isTrue(
+            resultIds.contains('012RR000007iE9hAAA'),
+            'Expected list to contain first record type'
+        );
+        System.Assert.isTrue(
+            resultIds.contains('012RR000007iE9hBBB'),
+            'Expected list to contain second record type'
+        );
+        System.Assert.isTrue(
+            resultIds.contains('012RR000007iE9hCCC'),
+            'Expected list to contain third record type'
+        );
+    }
+
+    /** Verify getAllRecordTypes returns a deep clone. */
+    @IsTest
+    private static void getAllRecordTypesReturnsDeepClone() {
+        RecordTypeHolder rtHolder = RecordTypeCacheTestUtility.getCacheHolderWithMocks();
+
+        Test.startTest();
+        List<RecordType> result1 = rtHolder.getAllRecordTypes();
+        List<RecordType> result2 = rtHolder.getAllRecordTypes();
+        Test.stopTest();
+
+        System.Assert.isNotNull(
+            result1,
+            'Expected first result to not be null'
+        );
+        System.Assert.isNotNull(
+            result2,
+            'Expected second result to not be null'
+        );
+
+        String originalName = result1[0].Name;
+        result1[0].Name = 'Modified Name';
+
+        System.Assert.areEqual(
+            originalName,
+            result2[0].Name,
+            'Modifying one result should not affect another result from a separate call'
+        );
+    }
+
+    /** Verify getAllRecordTypes returns empty list when no record types exist. */
+    @IsTest
+    private static void getAllRecordTypesWithNoRecordTypes() {
+        RecordTypeHolder rtHolder = RecordTypeCacheTestUtility.getCacheHolderWithMocks(
+            new List<RecordType>()
+        );
+
+        Test.startTest();
+        List<RecordType> result = rtHolder.getAllRecordTypes();
+        Test.stopTest();
+
+        System.Assert.isNotNull(result, 'Expected list to not be null');
+        System.Assert.isTrue(
+            result.isEmpty(),
+            'Expected list to be empty when no record types exist'
+        );
+    }
+
+    /** Verify getAllRecordTypes returns empty list when record types are null. */
+    @IsTest
+    private static void getAllRecordTypesWithNullRecordTypes() {
+        RecordTypeHolder rtHolder = RecordTypeCacheTestUtility.getCacheHolderWithMocks(
+            null
+        );
+
+        Test.startTest();
+        List<RecordType> result = rtHolder.getAllRecordTypes();
+        Test.stopTest();
+
+        System.Assert.isNotNull(result, 'Expected list to not be null');
+        System.Assert.isTrue(
+            result.isEmpty(),
+            'Expected list to be empty when record types are null'
+        );
+    }
 }

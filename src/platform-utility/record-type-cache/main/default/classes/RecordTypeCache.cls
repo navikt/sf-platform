@@ -80,6 +80,22 @@ public inherited sharing class RecordTypeCache {
     }
 
     /**
+     * Get a map of RecordType Id to RecordType for all cached RecordTypes.
+     * @return Map of RecordType Id to RecordType
+     */
+    public static Map<Id, RecordType> getRecordTypeIdMap() {
+        return rtCache.getRecordTypeIdMap();
+    }
+
+    /**
+     * Get a list of all cached RecordTypes.
+     * @return List of all RecordTypes
+     */
+    public static List<RecordType> getAllRecordTypes() {
+        return rtCache.getAllRecordTypes();
+    }
+
+    /**
      * Retrieve a cached RecordType by its Id.
      * @param recordTypeId The RecordType Id to look up
      * @return Matching RecordType, or null if not found

@@ -21,6 +21,24 @@ public inherited sharing class RecordTypeHolder {
     }
 
     /**
+     * Get a map of RecordType Id to RecordType, deep cloned to prevent external modification.
+     * @return Map of RecordType Id to RecordType
+     */
+    public Map<Id, RecordType> getRecordTypeIdMap() {
+        return this.recordTypeByIdMap.deepClone();
+    }
+
+    /**
+     * Get a list of all RecordTypes, deep cloned to prevent external modification.
+     * @return List of all RecordTypes
+     */
+    public List<RecordType> getAllRecordTypes() {
+        return new List<RecordType>(
+            this.recordTypeByIdMap.deepClone().values()
+        );
+    }
+
+    /**
      * Get a RecordType by its Id.
      * @param recordTypeId The RecordType Id to look up
      * @return Cloned RecordType, or null if not found
