@@ -72,7 +72,7 @@
     {
       "path": "src/platform-utility/record-type-cache",
       "package": "record-type-cache",
-      "versionNumber": "0.1.1.NEXT"
+      "versionNumber": "0.1.2.NEXT"
     }
   ],
   "packageAliases": {

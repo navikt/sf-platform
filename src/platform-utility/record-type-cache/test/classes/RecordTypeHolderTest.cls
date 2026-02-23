@@ -1,3 +1,9 @@
+/**
+ * Test class for RecordTypeHolder, which serves as the in-memory cache for record type information.
+ *
+ * @author Tor Håkon Sigurdsen
+ * @since 2026-02
+ */
 @SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
 @IsTest
 private with sharing class RecordTypeHolderTest {
