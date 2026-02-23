@@ -1,5 +1,8 @@
 /**
  * In-memory holder for RecordType data, indexed by Id and SObjectType/DeveloperName.
+ *
+ * @author Tor Håkon Sigurdsen
+ * @since 2026-02
  */
 public inherited sharing class RecordTypeHolder {
     @TestVisible
