@@ -1,5 +1,8 @@
 /**
  * In-memory holder for RecordType data, indexed by Id and SObjectType/DeveloperName.
+ *
+ * @author Tor Håkon Sigurdsen
+ * @since 2026-02
  */
 public inherited sharing class RecordTypeHolder {
     @TestVisible
@@ -18,6 +21,24 @@ public inherited sharing class RecordTypeHolder {
         this.selector = selector;
         this.recordTypeByIdMap = new Map<Id, RecordType>();
         this.recordTypesBySObjectTypeMap = new Map<String, Map<String, RecordType>>();
+    }
+
+    /**
+     * Get a map of RecordType Id to RecordType, deep cloned to prevent external modification.
+     * @return Map of RecordType Id to RecordType
+     */
+    public Map<Id, RecordType> getRecordTypeIdMap() {
+        return this.recordTypeByIdMap.deepClone();
+    }
+
+    /**
+     * Get a list of all RecordTypes, deep cloned to prevent external modification.
+     * @return List of all RecordTypes
+     */
+    public List<RecordType> getAllRecordTypes() {
+        return new List<RecordType>(
+            this.recordTypeByIdMap.deepClone().values()
+        );
     }
 
     /**

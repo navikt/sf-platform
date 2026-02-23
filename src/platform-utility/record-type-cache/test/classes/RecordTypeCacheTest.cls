@@ -209,4 +209,56 @@ private with sharing class RecordTypeCacheTest {
             expectedException.getMessage()
         );
     }
+
+    /** Verify getRecordTypeIdMap returns a map of all cached record types by Id. */
+    @IsTest
+    private static void getRecordTypeIdMap() {
+        RecordTypeCacheTestUtility.initCacheWithMocks();
+
+        Test.startTest();
+        Map<Id, RecordType> result = RecordTypeCache.getRecordTypeIdMap();
+        Test.stopTest();
+
+        System.Assert.isNotNull(
+            result,
+            'Expected to have a map of record types returned'
+        );
+        System.Assert.areEqual(
+            3,
+            result.size(),
+            'Expected to have 3 record types in the map'
+        );
+        System.Assert.isTrue(
+            result.containsKey('012RR000007iE9hAAA'),
+            'Expected to have the first mocked record type in the result'
+        );
+        System.Assert.isTrue(
+            result.containsKey('012RR000007iE9hBBB'),
+            'Expected to have the second mocked record type in the result'
+        );
+        System.Assert.isTrue(
+            result.containsKey('012RR000007iE9hCCC'),
+            'Expected to have the third mocked record type in the result'
+        );
+    }
+
+    /** Verify getAllRecordTypes returns a list of all cached record types. */
+    @IsTest
+    private static void getAllRecordTypes() {
+        RecordTypeCacheTestUtility.initCacheWithMocks();
+
+        Test.startTest();
+        List<RecordType> result = RecordTypeCache.getAllRecordTypes();
+        Test.stopTest();
+
+        System.Assert.isNotNull(
+            result,
+            'Expected to have a list of record types returned'
+        );
+        System.Assert.areEqual(
+            3,
+            result.size(),
+            'Expected to have 3 record types in the list'
+        );
+    }
 }
