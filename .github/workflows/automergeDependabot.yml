@@ -29,8 +29,6 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
           blackout-periods: "Sat,Sun,Jul 1-Jul 31,Dec 20-Jan 5"
-          always-allow-labels: "security,automerge"
-          semver-filter: "patch"
           merge-method: "squash"
           auto-approve: "true"
           update-branch-before-merge: "true"
