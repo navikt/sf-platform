@@ -9,48 +9,48 @@
     {
       "path": "src/platform-data-model",
       "package": "platform-data-model",
-      "versionNumber": "0.1.36.NEXT",
+      "versionNumber": "0.1.37.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": []
     },
     {
       "path": "src/platform-utility/custom-metadata-dao",
       "package": "custom-metadata-dao",
-      "versionNumber": "0.1.36.NEXT",
+      "versionNumber": "0.1.37.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": []
     },
     {
       "path": "src/platform-utility/custom-permission-helper",
       "package": "custom-permission-helper",
-      "versionNumber": "0.1.36.NEXT",
+      "versionNumber": "0.1.37.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": []
     },
     {
       "path": "src/frameworks/feature-toggle",
       "package": "feature-toggle",
-      "versionNumber": "0.1.37.NEXT",
+      "versionNumber": "0.1.38.NEXT",
       "definitionFile": "config/scratch-org-def.json",
       "dependencies": [
         {
           "package": "platform-data-model",
-          "versionNumber": "0.1.36.LATEST"
+          "versionNumber": "0.1.37.LATEST"
         },
         {
           "package": "custom-metadata-dao",
-          "versionNumber": "0.1.36.LATEST"
+          "versionNumber": "0.1.37.LATEST"
         },
         {
           "package": "custom-permission-helper",
-          "versionNumber": "0.1.36.LATEST"
+          "versionNumber": "0.1.37.LATEST"
         }
       ]
     },
     {
       "path": "src/platform-utility/platform-interfaces",
       "package": "platform-interfaces",
-      "versionNumber": "0.1.9.NEXT",
+      "versionNumber": "0.1.10.NEXT",
       "dependencies": [
         {
           "package": "sf-external-force-di",
@@ -61,18 +61,18 @@
     {
       "path": "src/saas-proxy-tmp-toggles",
       "package": "saas-proxy-tmp-toggles",
-      "versionNumber": "0.1.8.NEXT",
+      "versionNumber": "0.1.9.NEXT",
       "dependencies": [
         {
           "package": "feature-toggle",
-          "versionNumber": "0.1.37.LATEST"
+          "versionNumber": "0.1.38.LATEST"
         }
       ]
     },
     {
       "path": "src/platform-utility/record-type-cache",
       "package": "record-type-cache",
-      "versionNumber": "0.1.4.NEXT"
+      "versionNumber": "0.1.5.NEXT"
     }
   ],
   "packageAliases": {
