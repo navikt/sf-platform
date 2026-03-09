@@ -185,8 +185,7 @@ private with sharing class RecordTypeHolderTest {
 
         System.Assert.isNotNull(
             result,
-            'Expected to have a mock recordtype returned' +
-            RecordTypeCache.rtCache
+            'Expected to have a mock recordtype returned'
         );
         System.Assert.areEqual(
             '012RR000007iE9hAAA',
