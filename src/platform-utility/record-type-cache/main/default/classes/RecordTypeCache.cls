@@ -6,6 +6,7 @@
  * @example
  * {@code
  * // Example usage of the RecordTypeCache class
+ * List<RecordType> recordTypeList = RecordTypeCache.getAllRecordTypes();
  * RecordType recordTypeById = RecordTypeCache.getRecordTypeById('012000000000001AAA');
  * RecordType recordTypeByDeveloperName = RecordTypeCache.getRecordTypeByDeveloperName('Account', 'Business_Account');
  * Map<String, RecordType> accountRecordTypes = RecordTypeCache.getRecordTypesBySObjectType('Account');
