@@ -59,17 +59,6 @@
       ]
     },
     {
-      "path": "src/saas-proxy-tmp-toggles",
-      "package": "saas-proxy-tmp-toggles",
-      "versionNumber": "0.1.20.NEXT",
-      "dependencies": [
-        {
-          "package": "feature-toggle",
-          "versionNumber": "0.1.49.LATEST"
-        }
-      ]
-    },
-    {
       "path": "src/platform-utility/record-type-cache",
       "package": "record-type-cache",
       "versionNumber": "0.1.16.NEXT",
