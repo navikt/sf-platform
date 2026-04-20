@@ -45,7 +45,7 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Authenticate Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v6.3.0
         with:
           registry-url: https://npm.pkg.github.com
 
