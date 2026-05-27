@@ -19,20 +19,20 @@ private with sharing class FeatureToggleInvokableTest {
             featureFlags
         );
 
-        List<FeatureToggleInvokable.FeatureToogleResponse> response;
+        List<FeatureToggleInvokable.FeatureToggleResponse> response;
 
         Test.startTest();
-        FeatureToggleInvokable.FeatureToogleRequest request1 = new FeatureToggleInvokable.FeatureToogleRequest(
+        FeatureToggleInvokable.FeatureToggleRequest request1 = new FeatureToggleInvokable.FeatureToggleRequest(
             'Feature1',
             'FEATURE_FLAG'
         );
-        FeatureToggleInvokable.FeatureToogleRequest request2 = new FeatureToggleInvokable.FeatureToogleRequest(
+        FeatureToggleInvokable.FeatureToggleRequest request2 = new FeatureToggleInvokable.FeatureToggleRequest(
             'Feature2',
             'CUSTOM_PERMISSION'
         );
 
         response = FeatureToggleInvokable.isFeatureEnabledInvokable(
-            new List<FeatureToggleInvokable.FeatureToogleRequest>{
+            new List<FeatureToggleInvokable.FeatureToggleRequest>{
                 request1,
                 request2
             }
