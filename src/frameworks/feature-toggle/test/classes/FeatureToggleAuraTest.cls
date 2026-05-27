@@ -40,7 +40,7 @@ private with sharing class FeatureToggleAuraTest {
             System.Assert.isTrue(
                 e.getMessage()
                     .startsWith(
-                        'Something went wrong when checking the feature Feature1 with toogle type CUSTOM_PERMISSION:'
+                        'Something went wrong when checking the feature Feature1 with toggle type CUSTOM_PERMISSION:'
                     ),
                 'Expected a specific error message. got: ' + e.getMessage()
             );
@@ -57,7 +57,7 @@ private with sharing class FeatureToggleAuraTest {
             System.Assert.isTrue(
                 e.getMessage()
                     .startsWith(
-                        'Something went wrong when checking the feature Feature2 with toogle type CUSTOM_PERMISSION:'
+                        'Something went wrong when checking the feature Feature2 with toggle type CUSTOM_PERMISSION:'
                     ),
                 'Expected a specific error message. got: ' + e.getMessage()
             );

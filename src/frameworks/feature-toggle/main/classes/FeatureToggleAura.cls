@@ -13,7 +13,7 @@ public with sharing class FeatureToggleAura {
      * @description Checks if a feature is enabled for a specific toggle type.
      *
      * @param featureName The feature name.
-     * @param toogleType The type (FEATURE_FLAG or CUSTOM_PERMISSION).
+     * @param toggleType The type (FEATURE_FLAG or CUSTOM_PERMISSION).
      * @return `true` if enabled, `false` otherwise.
      *
      * @exception throws `AuraHandledException` if something goes wrong.
@@ -24,18 +24,18 @@ public with sharing class FeatureToggleAura {
     @AuraEnabled(cacheable=true)
     public static Boolean isFeatureEnabled(
         String featureName,
-        String toogleType
+        String toggleType
     ) {
         try {
             return new FeatureToggleBase()
                 .isFeatureEnabled(
                     featureName,
-                    FeatureToggle.ToggleType.valueOf(toogleType)
+                    FeatureToggle.ToggleType.valueOf(toggleType)
                 );
         } catch (Exception e) {
             String exceptionMessage = String.format(
-                'Something went wrong when checking the feature {0} with toogle type {1}: {2}',
-                new List<String>{ featureName, toogleType, e.getMessage() }
+                'Something went wrong when checking the feature {0} with toggle type {1}: {2}',
+                new List<String>{ featureName, toggleType, e.getMessage() }
             );
             AuraHandledException auraException = new AuraHandledException(
                 exceptionMessage
