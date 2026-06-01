@@ -98,7 +98,7 @@ jobs:
       - name: Run Salesforce Code Analyzer
         id: run-code-analyzer
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: forcedotcom/run-code-analyzer@ffeceb0898b281c491756e4bc3062faf0a6a60e2
+        uses: forcedotcom/run-code-analyzer@5470f6c3cdbfa3aeaf289160652ab17cdd22d41c
         with:
           run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }} --view detail --output-file sfca_results.html --output-file sfca_results.json --output-file code-analyzer-report.sarif
           results-artifact-name: salesforce-code-analyzer-results
