@@ -48,7 +48,7 @@ jobs:
           fi
 
       - name: Cache npm (sf CLI)
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ~/.npm
           key: npm-${{ runner.os }}-sf-cli-$SF_CLI_VERSION-${{ steps.cachekey.outputs.suffix }}
@@ -59,7 +59,7 @@ jobs:
           version: ${{ vars.SF_CLI_VERSION }}
 
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ inputs.gitRef }}
           fetch-depth: "0"
@@ -98,7 +98,7 @@ jobs:
       - name: Run Salesforce Code Analyzer
         id: run-code-analyzer
         if: ${{ !cancelled() && steps.paths.outcome == 'success' }}
-        uses: forcedotcom/run-code-analyzer@f75cebd59250e423677b9884b8c368077f156a76
+        uses: forcedotcom/run-code-analyzer@38a9be7f2dd5b18cf0f03e05f6f7a38b8f2662f6
         with:
           run-arguments: --workspace ${{ steps.paths.outputs.sfCodeAnalyzerPathToValidate }} --view detail --output-file sfca_results.html --output-file sfca_results.json --output-file code-analyzer-report.sarif
           results-artifact-name: salesforce-code-analyzer-results
