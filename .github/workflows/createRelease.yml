@@ -48,7 +48,7 @@ jobs:
           printf 'RELEASE_NAME=%q%s' "$RELEASE_NAME_PREFIX" "$(date +%s%3N)" >> "$GITHUB_ENV"
 
       - name: Authenticate Node
-        uses: actions/setup-node@v7.1.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 #v7.1.0
         with:
           registry-url: https://npm.pkg.github.com
 

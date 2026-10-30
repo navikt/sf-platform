@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 jobs:
   createPool:
-    uses: navikt/crm-workflows-base/.github/workflows/manageScratchPool.yml@main
+    uses: navikt/crm-workflows-base/.github/workflows/manageScratchPool.yml@173b39095bddf9303baee483b12b0e43907c024a
     with:
       clear-pools: ${{ github.event.schedule == '15 1 * * 1-5' }}
       pool-matrix-def-path: "config/poolMatrixdef.json"
