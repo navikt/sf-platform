@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    uses: navikt/sf-platform/.github/workflows/buildAndPublish.yml@a7ce8722cade289c7ba9cdd69e0bfa4878b4ff0e
+    uses: navikt/sf-platform/.github/workflows/buildAndPublish.yml@a97fa7077aadcab4b8a83dd2e5b5397cb34b3f94
     permissions:
       contents: write
       packages: write
@@ -20,7 +20,7 @@ jobs:
   create_release:
     needs: build
     if: needs.build.outputs.hasNewArtifacts == 'true'
-    uses: navikt/sf-platform/.github/workflows/createRelease.yml@a7ce8722cade289c7ba9cdd69e0bfa4878b4ff0e
+    uses: navikt/sf-platform/.github/workflows/createRelease.yml@a97fa7077aadcab4b8a83dd2e5b5397cb34b3f94
     permissions:
       contents: write
       packages: read
@@ -30,7 +30,7 @@ jobs:
   release_to_dev:
     needs: create_release
     if: needs.create_release.result == 'success'
-    uses: navikt/sf-platform/.github/workflows/releaseToDev.yml@a7ce8722cade289c7ba9cdd69e0bfa4878b4ff0e
+    uses: navikt/sf-platform/.github/workflows/releaseToDev.yml@a97fa7077aadcab4b8a83dd2e5b5397cb34b3f94
     permissions:
       contents: read
       packages: read
