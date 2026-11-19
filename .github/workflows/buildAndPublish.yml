@@ -21,7 +21,7 @@ concurrency:
 jobs:
   staticCodeValidation:
     name: Validation Jobs
-    uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@a97fa7077aadcab4b8a83dd2e5b5397cb34b3f94
+    uses: navikt/sf-platform/.github/workflows/ciStaticCodeValidation.yml@a429175618dc6755742cc34d4be30922f1871167
     permissions:
       contents: read
       security-events: write
